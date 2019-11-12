@@ -27,7 +27,6 @@
     "react-native-image-picker": "^1.1.0",
     "react-native-image-resizer": "^1.1.0",
     "react-native-image-view": "^2.1.6",
-    "react-native-keep-awake": "^4.0.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-modal-datetime-picker": "^7.6.0",
     "react-native-parallax-scroll-view": "^0.21.3",
