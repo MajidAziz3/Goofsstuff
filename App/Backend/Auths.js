@@ -30,7 +30,7 @@ export async function signUp(
         .signInWithEmailAndPassword(email, password)
         .then(
           (result = async () => {
-            console.log('result',user.user.uid);
+            console.log('result', user.user.uid);
             await _storeData('user', user.user.uid);
             await saveData('users', user.user.uid, {
               userId: user.user.uid,
@@ -48,11 +48,10 @@ export async function signUp(
               location: location,
               profile_picture: profile_picture,
               gallery: gallery,
-            }).then(res=>{
-              
-      console.log('res', res);
-              return res
-            })
+            }).then(res => {
+              console.log('res', res);
+              return res;
+            });
           }),
         )
         .catch(err => alert(err));

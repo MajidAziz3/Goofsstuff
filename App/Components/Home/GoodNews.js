@@ -74,12 +74,9 @@ export default class GoodNews extends Component {
     };
   }
 
-  componentDidMount = async () => {
-    await getAllOfCollection('News')
-      .then(result => {
-        this.setState({post_data: result, loading: false});
-      })
-      .catch(error => alert(error));
+  componentDidMount() {
+    this.showPost();
+
     const {addListener} = this.props.navigation;
     const {isDisplayed} = this.state;
     const self = this;
@@ -99,6 +96,12 @@ export default class GoodNews extends Component {
         }
       }),
     ];
+  }
+  async showPost() {
+    let data = await getAllOfCollection('News')
+      this.setState({post_data:data, loading:false})
+    
+    
   };
 
   handleChoosePhoto = () => {

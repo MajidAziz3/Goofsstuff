@@ -148,7 +148,7 @@ class Signup extends Component {
       favorite,
       family_member,
     ).then(() => {
-        this.props.navigation.navigate('App');
+      this.props.navigation.navigate('App');
     });
   };
 
@@ -270,7 +270,7 @@ class Signup extends Component {
                       nameInput = full_name;
                     }}
                     value={full_name}
-                    placeholder="Jhone william"
+                    placeholder="Full Name"
                     style={{padding: 5, fontWeight: 'bold'}}
                     onChangeText={full_name => this.setState({full_name})}
                   />

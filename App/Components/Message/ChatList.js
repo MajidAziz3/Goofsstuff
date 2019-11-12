@@ -5,8 +5,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
-  ScrollView,
   FlatList,
 } from 'react-native';
 import {Left, Thumbnail, Badge} from 'native-base';
@@ -24,7 +22,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import GlobalConst from '../../Backend/GlobalConst';
+import { getAllOfCollection } from '../../Backend/Utility';
 
 // import { formatResultsErrors } from 'jest-message-util';
 ///Inbox swiplist
@@ -36,35 +34,16 @@ class ChatList extends Component {
     this.state = {
       datasource: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
       datasource2: [1, 2],
-      isDisplayed: null,
+      data: [],
+      loading: true,
     };
   }
-  componentDidMount() {
-    const {addListener} = this.props.navigation;
-    const {isDisplayed} = this.state;
-    const self = this;
-
-    this.listeners = [
-      addListener('didFocus', () => {
-        if (self.state.isDisplayed !== true) {
-          GlobalConst.STORAGE_KEYS.ScreenType = '5';
-          self.setState({isDisplayed: true});
-        }
-      }),
-      addListener('willBlur', () => {
-        if (self.state.isDisplayed !== false) {
-          GlobalConst.STORAGE_KEYS.ScreenType = '5';
-
-          self.setState({isDisplayed: false});
-        }
-      }),
-    ];
-  }
-
-  navigateChart() {
-    console.log('Charlist press');
-    this.props.navigation.navigate('Login');
-  }
+  componentDidMount = async () => {
+    const {diff, pending_request, data} = this.state;
+    await getAllOfCollection('users').then(result => {
+      this.setState({data: result, loading: false});
+    });
+  };
   render() {
     const swipeoutBtns = () => [
       {
@@ -220,19 +199,16 @@ class ChatList extends Component {
             marginBottom: 6,
           }}>
           <FlatList
-            data={this.state.datasource}
+            data={this.state.data}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => (
-              <TouchableOpacity
-                style={{
-                  paddingHorizontal: 5,
-                  width: 70,
-                  height: '100%',
-                  backgroundColor: 'white',
-                }}
-                onPress={() => this.props.navigation.navigate('Chat')}>
+              <TouchableOpacity style={{paddingHorizontal: 5,
+               width: 70, height: '100%'}}
+               key={index}
+               onPress={()=>this.props.navigation.navigate('Chat',{id:item.userId})}
+               >
                 <View style={{backgroundColor: 'white', height: '70%'}}>
                   <Thumbnail
                     source={{
@@ -256,7 +232,7 @@ class ChatList extends Component {
                       flex: 1,
                       fontSize: responsiveFontSize(1.5),
                     }}>
-                    Jhon
+                    {item.name}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -281,9 +257,7 @@ class ChatList extends Component {
                 autoClose={true}
                 right={swipeoutBtns()}
                 style={{borderRadius: 0}}>
-                <TouchableOpacity
-                  style={styles.row}
-                  onPress={() => this.props.navigation.navigate('Chat')}>
+                <View style={styles.row}>
                   <View
                     style={{
                       backgroundColor: 'white',
@@ -384,7 +358,7 @@ class ChatList extends Component {
                       </View>
                     </View>
                   </View>
-                </TouchableOpacity>
+                </View>
               </Swipeout>
             )}></FlatList>
         </View>

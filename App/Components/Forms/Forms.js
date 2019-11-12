@@ -36,6 +36,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import {News} from '../../Backend/Create/News';
 import {Watch} from '../../Backend/Create/Watch';
+import {Community_Event} from '../../Backend/Create/Community_Event';
+import {Create_Job} from '../../Backend/Create/Job';
 
 export default class Forms extends Component {
   constructor(props) {
@@ -73,6 +75,7 @@ export default class Forms extends Component {
       like: [],
       favorite: [],
       comments: [],
+      company_name: '',
 
       dataSource: [
         {
@@ -112,6 +115,29 @@ export default class Forms extends Component {
           description: 'User 9',
         },
       ],
+      Event_Category: '',
+      event_sub_category: '',
+      location_event: '',
+      event_date: '',
+      event_description: '',
+      event_start_timing: '',
+      phone_number: '',
+      email_address: '',
+      invite_friends: [],
+      joining_members: [],
+      title: '',
+      img: null,
+      ending_timing_event: '',
+      company_atteeched: false,
+
+      job_category: '',
+      img: null,
+      job_title: '',
+      email_address_job: '',
+      job_description: '',
+      job_compensation: '',
+      about_job: '',
+      phone_job: '',
     };
   }
 
@@ -700,41 +726,40 @@ export default class Forms extends Component {
                 placeholder={'Tell viewers a little about you'}
               />
             </View>
-
+          </View>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              backgroundColor: '#32cd32',
+              height: '10%',
+              width: '95%',
+              borderRadius: 15,
+            }}
+            onPress={() => {
+              this.sentWatch();
+            }}>
+            <View
+              style={{
+                width: '40%',
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+              }}>
+              <EIcon name="upload" size={30} color="white" />
             </View>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: '#32cd32',
-                  height: '10%',
-                  width: '95%',
-                  borderRadius: 15,
-                }}
-                onPress={() => {
-                   this.sentWatch();
-                }}>
-                <View
-                  style={{
-                    width: '40%',
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                  }}>
-                  <EIcon name="upload" size={30} color="white" />
-                </View>
-                <View
-                  style={{
-                    width: '60%',
-                    alignSelf: 'center',
-                    marginHorizontal: 20,
-                  }}
-                  onPress={() => {
-                    // this.sentWatch();
-                    alert('pressed!');
-                  }}>
-                  <Text style={{fontSize: 16, color: 'white'}}>UPLOAD Image</Text>
-                </View>
-              </TouchableOpacity>
-            {/* <View
+            <View
+              style={{
+                width: '60%',
+                alignSelf: 'center',
+                marginHorizontal: 20,
+              }}
+              onPress={() => {
+                // this.sentWatch();
+                alert('pressed!');
+              }}>
+              <Text style={{fontSize: 16, color: 'white'}}>UPLOAD Image</Text>
+            </View>
+          </TouchableOpacity>
+          {/* <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -755,7 +780,7 @@ export default class Forms extends Component {
                 conditions for The Good Stuff App
               </Text>
             </View> */}
-          
+
           <View
             style={{
               flexDirection: 'row',
@@ -782,6 +807,22 @@ export default class Forms extends Component {
         </View>
       );
     } else if (GlobalConst.STORAGE_KEYS.ScreenType == '4') {
+      const {
+        Event_Category,
+        event_sub_category,
+        location_event,
+        event_date,
+        event_description,
+        event_start_timing,
+        phone_number,
+        email_address,
+        invite_friends,
+        joining_members,
+        title,
+        img,
+        ending_timing_event,
+        company_atteeched,
+      } = this.state;
       return (
         <View>
           <View
@@ -852,6 +893,8 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={title}
+                  onChangeText={title => this.setState({title})}
                   placeholder="Training Hike"
                   style={{
                     fontSize: 12,
@@ -867,11 +910,8 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '60%',width:'100%' }} placeholder='Training Hike'> */}
-
-                  {/* </TextInput> */}
-                </TextInput>
+                  }}
+                />
               </View>
 
               <View
@@ -898,6 +938,8 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={phone_number}
+                  onChangeText={phone_number => this.setState({phone_number})}
                   placeholder="1234567"
                   style={{
                     fontSize: 12,
@@ -913,444 +955,455 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '60%',width:'100%' }} placeholder='Training Hike'> */}
-
-                  {/* </TextInput> */}
-                </TextInput>
-              </View>
-
-              <View
-                style={{
-                  marginTop: 0,
-                  backgroundColor: 'white',
-                  height: '8%',
-                  flexDirection: 'row',
-                  padding: 0,
-                }}>
-                <View
-                  style={{
-                    width: '30%',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
-                    }}>
-                    Email
-                  </Text>
-                </View>
-                <TextInput
-                  placeholder="user123@gmail.com"
-                  style={{
-                    fontSize: 12,
-                    marginTop: 5,
-                    padding: 5,
-                    justifyContent: 'center',
-                    backgroundColor: 'white',
-                    width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 2,
-                    borderRadius: 5,
-                  }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '60%',width:'100%' }} placeholder='Training Hike'> */}
-
-                  {/* </TextInput> */}
-                </TextInput>
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  height: '8%',
-                  flexDirection: 'row',
-                  padding: 0,
-                }}>
-                <View
-                  style={{
-                    width: '30%',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
-                    }}>
-                    Category*
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: 5,
-                    justifyContent: 'center',
-                    width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 1,
-                    backgroundColor: 'white',
-                    borderRadius: 5,
-                  }}>
-                  <Picker
-                    selectedValue={this.state.category}
-                    onValueChange={this.updateCategory}
-                    style={{height: '100%', width: '100%', color: '#7e7a7a'}}
-                    // onValueChange={(itemValue, itemIndex) =>
-                    //     this.setState({ language: itemValue })}
-                  >
-                    <Picker.Item label="Sports" value="Sport" />
-                    <Picker.Item label="Event" value="Event" />
-                  </Picker>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  height: '8%',
-                  flexDirection: 'row',
-                  padding: 0,
-                }}>
-                <View
-                  style={{
-                    width: '30%',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
-                    }}>
-                    Sub Category*
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: 5,
-                    justifyContent: 'center',
-                    width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 1,
-                    backgroundColor: 'white',
-                    borderRadius: 5,
-                  }}>
-                  {this.state.category == 'Sport' ? (
-                    <Picker
-                      selectedValue={this.state.subcategory}
-                      onValueChange={this.updateSubCategory}
-                      style={{height: '100%', width: '100%', color: '#7e7a7a'}}
-                      // onValueChange={(itemValue, itemIndex) =>
-                      //     this.setState({ language: itemValue })}
-                    >
-                      <Picker.Item label="Foot Ball" value="Foot Ball" />
-                      <Picker.Item label="Cricket" value="Cricket" />
-                      <Picker.Item label="Volley Ball" value="Volley Ball" />
-                    </Picker>
-                  ) : (
-                    <Picker
-                      selectedValue={this.state.subcategory}
-                      onValueChange={this.updateSubCategory}
-                      style={{height: '100%', width: '100%', color: '#7e7a7a'}}
-                      // onValueChange={(itemValue, itemIndex) =>
-                      //     this.setState({ language: itemValue })}
-                    >
-                      <Picker.Item label="Birth Day" value="Birth Day" />
-                      <Picker.Item label="Party" value="Party" />
-                      <Picker.Item label="Other" value="Other" />
-                    </Picker>
-                  )}
-                </View>
-              </View>
-
-              <View
-                style={{
-                  marginTop: 0,
-                  backgroundColor: 'white',
-                  height: '8%',
-                  flexDirection: 'row',
-                }}>
-                <View
-                  style={{
-                    width: '30%',
-                    height: '100%',
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
-                    }}>
-                    Upload Image
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={this.handleChoosePhoto}
-                  style={{
-                    fontSize: 12,
-                    marginTop: 5,
-                    padding: 5,
-                    justifyContent: 'center',
-                    backgroundColor: '#32cd32',
-                    width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 2,
-                    borderRadius: 5,
-                  }}>
-                  <Text style={{color: 'white', textAlign: 'center'}}>
-                    Select Image
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View
-                style={{
-                  height: '5%',
-                  backgroundColor: 'white',
-                  flexDirection: 'row',
-                  marginTop: 5,
-                }}>
-                <View
-                  style={{
-                    width: '50%',
-                    justifyContent: 'center',
-                    marginHorizontal: 10,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
-                    }}>
-                    Date
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    width: '50%',
-                    justifyContent: 'center',
-                    backgroundColor: 'white',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      left: 20,
-                    }}>
-                    Time
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  height: '8%',
-                  backgroundColor: 'white',
-                  flexDirection: 'row',
-                }}>
-                <View
-                  style={{
-                    width: '30%',
-                    justifyContent: 'center',
-                    marginHorizontal: 10,
-                    top: 8,
-                  }}>
-                  <Button
-                    title="Select Date"
-                    onPress={this.showDateTimePicker1}
-                    color={'#32cd32'}
-                  />
-                  <DateTimePicker
-                    mode="date"
-                    isVisible={this.state.isDateTimePickerVisible1}
-                    onConfirm={this.handleDatePicked}
-                    onCancel={this.hideDateTimePicker}
-                  />
-                </View>
-                <View
-                  style={{
-                    width: '70%',
-                    backgroundColor: 'white',
-                    height: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <View style={{width: '40%'}}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(1.6),
-                        color: '#000',
-                      }}>
-                      Start Time
-                    </Text>
-                    <Button
-                      title="Select Time"
-                      onPress={this.showDateTimePicker}
-                      color={'#32cd32'}
-                    />
-                    <DateTimePicker
-                      mode="time"
-                      isVisible={this.state.isDateTimePickerVisible}
-                      onConfirm={this.handleDatePicked}
-                      onCancel={this.hideDateTimePicker}
-                    />
-                  </View>
-                  <View style={{width: '40%', alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(1.6),
-                        color: '#000',
-                      }}>
-                      End Time
-                    </Text>
-                    <Button
-                      title="Select Time"
-                      onPress={this.showDateTimePicker2}
-                      color={'#32cd32'}
-                    />
-                    <DateTimePicker
-                      mode="time"
-                      isVisible={this.state.isDateTimePickerVisible2}
-                      onConfirm={this.handleDatePicked}
-                      onCancel={this.hideDateTimePicker}
-                    />
-                  </View>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  height: '15%',
-                  width: '95%',
-                  alignSelf: 'center',
-                  flexDirection: 'row',
-                  padding: 0,
-                  borderRadius: 10,
-                  shadowColor: 'black',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 1.41,
-                  elevation: 5,
-                  backgroundColor: 'white',
-                  marginTop: 20,
-                }}>
-                <TextInput
-                  placeholderTextColor="grey"
-                  numberOfLines={7}
-                  style={{
-                    textAlignVertical: 'top',
-                    fontSize: 12,
-                    height: '90%',
                   }}
-                  placeholder="Description..."></TextInput>
-              </View>
+                />
 
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  width: '100%',
-                  height: '7%',
-                  flexDirection: 'row',
-                  top: 9,
-                }}>
                 <View
                   style={{
-                    paddingHorizontal: 5,
+                    marginTop: 0,
                     backgroundColor: 'white',
-                    width: '80%',
-                    height: '100%',
-                    justifyContent: 'center',
+                    height: '8%',
+                    flexDirection: 'row',
+                    padding: 0,
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
-                      alignSelf: 'flex-start',
+                      width: '30%',
+                      height: '100%',
+                      justifyContent: 'center',
                     }}>
-                    Attach Event to Company ?
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Email
+                    </Text>
+                  </View>
+                  <TextInput
+                    value={email_address}
+                    onChangeText={email_address =>
+                      this.setState({email_address})
+                    }
+                    placeholder="user123@gmail.com"
+                    style={{
+                      fontSize: 12,
+                      marginTop: 5,
+                      padding: 5,
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      width: '65%',
+                      height: '70%',
+                      shadowColor: 'black',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 2,
+                      borderRadius: 5,
+                    }}
+                  />
                 </View>
-                <TouchableOpacity
+
+                <View
                   style={{
-                    marginTop: 5,
-                    marginHorizontal: 20,
-                    borderRadius: 100,
-                    backgroundColor: '#32cd32',
-                    width: 30,
-                    height: 30,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    height: '8%',
+                    flexDirection: 'row',
+                    padding: 0,
                   }}>
-                  <EIcon name="check" size={20} color="white" />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  marginTop: 15,
-                  backgroundColor: 'white',
-                  height: '12%',
-                  flexDirection: 'row',
-                  padding: 0,
-                }}>
-                <TouchableOpacity
+                  <View
+                    style={{
+                      width: '30%',
+                      height: '100%',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Category*
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginTop: 5,
+                      justifyContent: 'center',
+                      width: '65%',
+                      height: '70%',
+                      shadowColor: 'black',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 1,
+                      backgroundColor: 'white',
+                      borderRadius: 5,
+                    }}>
+                    <Picker
+                      selectedValue={this.state.category}
+                      onValueChange={this.updateCategory}
+                      style={{height: '100%', width: '100%', color: '#7e7a7a'}}
+                      // onValueChange={(itemValue, itemIndex) =>
+                      //     this.setState({ language: itemValue })}
+                    >
+                      <Picker.Item label="Sports" value="Sport" />
+                      <Picker.Item label="Event" value="Event" />
+                    </Picker>
+                  </View>
+                </View>
+
+                <View
                   style={{
-                    backgroundColor: '#32cd32',
-                    marginHorizontal: 10,
-                    width: 50,
-                    height: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    height: '8%',
+                    flexDirection: 'row',
+                    padding: 0,
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      height: '100%',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Sub Category*
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginTop: 5,
+                      justifyContent: 'center',
+                      width: '65%',
+                      height: '70%',
+                      shadowColor: 'black',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 1,
+                      backgroundColor: 'white',
+                      borderRadius: 5,
+                    }}>
+                    {this.state.category == 'Sport' ? (
+                      <Picker
+                        selectedValue={this.state.subcategory}
+                        onValueChange={this.updateSubCategory}
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          color: '#7e7a7a',
+                        }}
+                        // onValueChange={(itemValue, itemIndex) =>
+                        //     this.setState({ language: itemValue })}
+                      >
+                        <Picker.Item label="Foot Ball" value="Foot Ball" />
+                        <Picker.Item label="Cricket" value="Cricket" />
+                        <Picker.Item label="Volley Ball" value="Volley Ball" />
+                      </Picker>
+                    ) : (
+                      <Picker
+                        selectedValue={this.state.subcategory}
+                        onValueChange={this.updateSubCategory}
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          color: '#7e7a7a',
+                        }}
+                        // onValueChange={(itemValue, itemIndex) =>
+                        //     this.setState({ language: itemValue })}
+                      >
+                        <Picker.Item label="Birth Day" value="Birth Day" />
+                        <Picker.Item label="Party" value="Party" />
+                        <Picker.Item label="Other" value="Other" />
+                      </Picker>
+                    )}
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    marginTop: 0,
+                    backgroundColor: 'white',
+                    height: '8%',
+                    flexDirection: 'row',
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      height: '100%',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Upload Image
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={this.handleChoosePhoto}
+                    style={{
+                      fontSize: 12,
+                      marginTop: 5,
+                      padding: 5,
+                      justifyContent: 'center',
+                      backgroundColor: '#32cd32',
+                      width: '65%',
+                      height: '70%',
+                      shadowColor: 'black',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 2,
+                      borderRadius: 5,
+                    }}>
+                    <Text style={{color: 'white', textAlign: 'center'}}>
+                      Select Image
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View
+                  style={{
+                    height: '5%',
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    marginTop: 5,
+                  }}>
+                  <View
+                    style={{
+                      width: '50%',
+                      justifyContent: 'center',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Date
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      width: '50%',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        left: 20,
+                      }}>
+                      Time
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    height: '8%',
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      justifyContent: 'center',
+                      marginHorizontal: 10,
+                      top: 8,
+                    }}>
+                    <Button
+                      title="Select Date"
+                      onPress={this.showDateTimePicker1}
+                      color={'#32cd32'}
+                    />
+                    <DateTimePicker
+                      mode="date"
+                      isVisible={this.state.isDateTimePickerVisible1}
+                      onConfirm={this.handleDatePicked}
+                      onCancel={this.hideDateTimePicker}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      width: '70%',
+                      backgroundColor: 'white',
+                      height: '100%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <View style={{width: '40%'}}>
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(1.6),
+                          color: '#000',
+                        }}>
+                        Start Time
+                      </Text>
+                      <Button
+                        title="Select Time"
+                        onPress={this.showDateTimePicker}
+                        color={'#32cd32'}
+                      />
+                      <DateTimePicker
+                        mode="time"
+                        isVisible={this.state.isDateTimePickerVisible}
+                        onConfirm={this.handleDatePicked}
+                        onCancel={this.hideDateTimePicker}
+                      />
+                    </View>
+                    <View style={{width: '40%', alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(1.6),
+                          color: '#000',
+                        }}>
+                        End Time
+                      </Text>
+                      <Button
+                        title="Select Time"
+                        onPress={this.showDateTimePicker2}
+                        color={'#32cd32'}
+                      />
+                      <DateTimePicker
+                        mode="time"
+                        isVisible={this.state.isDateTimePickerVisible2}
+                        onConfirm={this.handleDatePicked}
+                        onCancel={this.hideDateTimePicker}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    height: '15%',
+                    width: '95%',
+                    alignSelf: 'center',
+                    flexDirection: 'row',
+                    padding: 0,
+                    borderRadius: 10,
+                    shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
                     shadowRadius: 1.41,
                     elevation: 5,
-                    borderRadius: 100,
-                  }}>
-                  <Icon name="location" size={40} color="white" />
-                </TouchableOpacity>
-                <TextInput
-                  placeholder="Annapolia Rock"
-                  style={{
-                    fontSize: 12,
-                    padding: 5,
-                    borderRadius: 10,
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    width: '80%',
-                    height: '65%',
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 2,
                     backgroundColor: 'white',
+                    marginTop: 20,
                   }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '100%', }} placeholder='Annapolia Rock'> */}
-                </TextInput>
-                {/* </View> */}
-              </View>
-              <View
+                  <TextInput
+                    value={event_description}
+                    onChangeText={event_description =>
+                      this.setState({event_description})
+                    }
+                    placeholderTextColor="grey"
+                    numberOfLines={7}
+                    style={{
+                      textAlignVertical: 'top',
+                      fontSize: 12,
+                      height: '90%',
+                    }}
+                    placeholder="Description..."></TextInput>
+                </View>
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    width: '100%',
+                    height: '7%',
+                    flexDirection: 'row',
+                    top: 9,
+                  }}>
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      backgroundColor: 'white',
+                      width: '80%',
+                      height: '100%',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        color: '#7e7a7a',
+                        alignSelf: 'flex-start',
+                      }}>
+                      Attach Event to Company ?
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 5,
+                      marginHorizontal: 20,
+                      borderRadius: 100,
+                      backgroundColor: '#32cd32',
+                      width: 30,
+                      height: 30,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <EIcon name="check" size={20} color="white" />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    marginTop: 15,
+                    backgroundColor: 'white',
+                    height: '12%',
+                    flexDirection: 'row',
+                    padding: 0,
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#32cd32',
+                      marginHorizontal: 10,
+                      width: 50,
+                      height: 50,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 5,
+                      borderRadius: 100,
+                    }}>
+                    <Icon name="location" size={40} color="white" />
+                  </TouchableOpacity>
+                  <TextInput
+                    value={location_event}
+                    onChangeText={location_event =>
+                      this.setState({location_event})
+                    }
+                    placeholder="Annapolia Rock"
+                    style={{
+                      fontSize: 12,
+                      padding: 5,
+                      borderRadius: 10,
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
+                      width: '80%',
+                      height: '65%',
+                      shadowColor: 'black',
+                      shadowOffset: {width: 0, height: 1},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 2,
+                      backgroundColor: 'white',
+                    }}
+                  />
+                </View>
+                {/* <View
                 style={{
                   backgroundColor: 'white',
                   height: '10%',
@@ -1424,9 +1477,9 @@ export default class Forms extends Component {
                         only me
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
 
-                  <View
+                {/* <View
                     style={{
                       left: -10,
                       flexDirection: 'column',
@@ -1469,8 +1522,8 @@ export default class Forms extends Component {
                         Friends
                       </Text>
                     </View>
-                  </View>
-
+                  </View> */}
+                {/* 
                   <View
                     style={{
                       left: -15,
@@ -1515,7 +1568,7 @@ export default class Forms extends Component {
                       </Text>
                     </View>
                   </View>
-                </View>
+                </View> */}
               </View>
             </ScrollView>
             <View
@@ -1546,7 +1599,25 @@ export default class Forms extends Component {
                     width: '60%',
                     alignSelf: 'center',
                     marginHorizontal: 20,
-                  }}>
+                  }}
+                  onPress={() =>
+                    Community_Event(
+                      Event_Category,
+                      event_sub_category,
+                      location_event,
+                      event_date,
+                      event_description,
+                      event_start_timing,
+                      phone_number,
+                      email_address,
+                      invite_friends,
+                      joining_members,
+                      title,
+                      img,
+                      ending_timing_event,
+                      company_atteeched,
+                    )
+                  }>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
               </View>
@@ -1558,6 +1629,18 @@ export default class Forms extends Component {
 
     ////Upload Jobs
     else if (GlobalConst.STORAGE_KEYS.ScreenType == '3') {
+      const {
+        job_category,
+        img,
+        job_title,
+        email_address_job,
+        job_description,
+        job_compensation,
+        about_job,
+        phone_job,
+        uploading_time,
+        company_name,
+      } = this.state;
       return (
         <View>
           <View
@@ -1631,6 +1714,8 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={company_name}
+                  onChangeText={company_name => this.setState({company_name})}
                   placeholder="Training Hike"
                   style={{
                     fontSize: 12,
@@ -1646,11 +1731,8 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '60%',width:'100%' }} placeholder='Training Hike'> */}
-
-                  {/* </TextInput> */}
-                </TextInput>
+                  }}
+                />
               </View>
 
               <View
@@ -1679,6 +1761,8 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={phone_job}
+                  onChangeText={phone_job => this.setState({phone_job})}
                   placeholder="Phone Number"
                   style={{
                     fontSize: 12,
@@ -1694,11 +1778,8 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}>
-                  {/* <TextInput style={{ fontSize: 12, height: '60%',width:'100%' }} placeholder='Training Hike'> */}
-
-                  {/* </TextInput> */}
-                </TextInput>
+                  }}
+                />
               </View>
 
               <View
@@ -1727,6 +1808,10 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={email_address_job}
+                  onChangeText={email_address_job =>
+                    this.setState({email_address_job})
+                  }
                   placeholder="Email "
                   style={{
                     fontSize: 12,
@@ -1742,7 +1827,8 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}></TextInput>
+                  }}
+                />
               </View>
 
               <View
@@ -1771,6 +1857,8 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={job_title}
+                  onChangeText={job_title => this.setState({job_title})}
                   placeholder="job Title "
                   style={{
                     fontSize: 12,
@@ -1786,7 +1874,8 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}></TextInput>
+                  }}
+                />
               </View>
 
               <View
@@ -1911,6 +2000,12 @@ export default class Forms extends Component {
                   marginTop: 20,
                 }}>
                 <TextInput
+                  value={job_description}
+                  onChangeText={job_description =>
+                    this.setState({
+                      job_description,
+                    })
+                  }
                   placeholderTextColor="grey"
                   numberOfLines={7}
                   style={{
@@ -1918,7 +2013,8 @@ export default class Forms extends Component {
                     fontSize: 12,
                     height: '90%',
                   }}
-                  placeholder="Job Description..."></TextInput>
+                  placeholder="Job Description..."
+                />
               </View>
 
               <View
@@ -1949,6 +2045,10 @@ export default class Forms extends Component {
                   </Text>
                 </View>
                 <TextInput
+                  value={job_compensation}
+                  onChangeText={job_compensation =>
+                    this.setState({job_compensation})
+                  }
                   placeholder=" Job  Compensation"
                   style={{
                     fontSize: 12,
@@ -1964,7 +2064,42 @@ export default class Forms extends Component {
                     shadowRadius: 1.41,
                     elevation: 2,
                     borderRadius: 5,
-                  }}></TextInput>
+                  }}
+                />
+              </View>
+
+              <View
+                style={{
+                  height: '15%',
+                  width: '95%',
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  padding: 0,
+                  borderRadius: 10,
+                  shadowColor: 'black',
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.2,
+                  shadowRadius: 1.41,
+                  elevation: 5,
+                  backgroundColor: 'white',
+                  marginTop: 20,
+                }}>
+                <TextInput
+                  value={about_job}
+                  onChangeText={about_job =>
+                    this.setState({
+                      about_job,
+                    })
+                  }
+                  placeholderTextColor="grey"
+                  numberOfLines={7}
+                  style={{
+                    textAlignVertical: 'top',
+                    fontSize: 12,
+                    height: '90%',
+                  }}
+                  placeholder="about job..."
+                />
               </View>
 
               {/* <View
@@ -2020,7 +2155,7 @@ export default class Forms extends Component {
                 />
               </View> */}
 
-              <View
+              {/* <View
                 style={{
                   backgroundColor: 'white',
                   height: '10%',
@@ -2187,7 +2322,7 @@ export default class Forms extends Component {
                     </View>
                   </View>
                 </View>
-              </View>
+              </View> */}
 
               <TouchableOpacity
                 style={{
@@ -2332,7 +2467,21 @@ export default class Forms extends Component {
                     width: '60%',
                     alignSelf: 'center',
                     marginHorizontal: 20,
-                  }}>
+                  }}
+                  onPress={() =>
+                    Create_Job(
+                      job_category,
+                      img,
+                      job_title,
+                      email_address_job,
+                      job_description,
+                      job_compensation,
+                      about_job,
+                      phone_job,
+                      uploading_time,
+                      company_name,
+                    )
+                  }>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
               </View>

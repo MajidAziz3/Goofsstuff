@@ -25,6 +25,7 @@ import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {withNavigationFocus} from 'react-navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {GreatNewPost} from '../../Backend/Create/GreatNewPost';
 
 const uri = 'https://randomuser.me/api/portraits/men/1.jpg';
 class GreatNews extends Component {
@@ -60,9 +61,38 @@ class GreatNews extends Component {
           imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
         },
       ],
+      description: '',
+      uploading_time: '',
+      comment: [],
+      like: [],
+      favorite: [],
+      file: null,
     };
   }
+
+  componentDidMount = () => {
+    var that = this;
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    that.setState({
+      //Setting the value of the date time
+      uploading_time:
+        date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+    });
+  };
   render() {
+    const {
+      description,
+      uploading_time,
+      comment,
+      like,
+      favorite,
+      file,
+    } = this.state;
     return (
       <View style={styles.container}>
         <View style={{marginBottom: 10}}>
@@ -113,6 +143,8 @@ class GreatNews extends Component {
             alignSelf: 'center',
           }}>
           <TextInput
+            value={description}
+            onChangeText={description => this.setState({description})}
             multiline={true}
             numberOfLines={6}
             style={{
@@ -146,7 +178,14 @@ class GreatNews extends Component {
               elevation: 1,
             }}
             onPress={() => {
-              alert('Posted');
+              GreatNewPost(
+                description,
+                uploading_time,
+                comment,
+                like,
+                favorite,
+                file,
+              );
             }}>
             <FontAwesome name="upload" size={18} color="white" style={{}} />
 
