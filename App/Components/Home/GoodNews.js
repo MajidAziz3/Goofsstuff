@@ -14,11 +14,14 @@ import {
   Text,
   StatusBar,
   Dimensions,
+  Modal,
   TextInput,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
 import {Thumbnail, Item} from 'native-base';
+import FA from 'react-native-vector-icons/Entypo';
+import AIcon from 'react-native-vector-icons/AntDesign';
 import {jsxAttribute} from '@babel/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import GlobalConst from '../../Backend/GlobalConst';
@@ -26,9 +29,16 @@ import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {withNavigationFocus} from 'react-navigation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
+import firebase from 'firebase';
 import ImagePicker from 'react-native-image-picker';
-import {getAllOfCollection} from '../../Backend/Utility';
+import {
+  getAllOfCollection,
+  getDocByKeyValue,
+  getDocRefByKeyValue,
+  getData,
+  addToArray,
+} from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 
 const height = Dimensions.get('screen').height / 3.2;
 const width = Dimensions.get('screen').width;
@@ -40,7 +50,11 @@ export default class GoodNews extends Component {
       isDisplayed: false,
       isDateTimePickerVisible: false,
       post_data: [],
+      hit_like: false,
+      hit_favorite: false,
       loading: true,
+      modalVisible: false,
+      comment_data: [],
       datasource: [
         {
           name: 'Woody Allen',
@@ -71,11 +85,14 @@ export default class GoodNews extends Component {
         },
       ],
       photo: null,
+      uploading_time: '',
+      comments_data: [],
     };
   }
 
   componentDidMount() {
     this.showPost();
+    // this.CommentPost();
 
     const {addListener} = this.props.navigation;
     const {isDisplayed} = this.state;
@@ -96,13 +113,68 @@ export default class GoodNews extends Component {
         }
       }),
     ];
+    var that = this;
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    that.setState({
+      //Setting the value of the date time
+      uploading_time:
+        date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+    });
+  }
+  setModalVisible() {
+    this.setState({modalVisible: !this.state.modalVisible});
+  }
+
+  CommentsPost = async item => {
+    await _retrieveData('user').then(
+      async result =>
+        await getData('users', result).then(
+          async res =>
+            await addToArray('Comments', item, 'comments', {
+              comments: this.state.comments_words,
+              post_id: item,
+              user_id: res.userId,
+              user_name: res.name,
+              user_image: res.profile_picture,
+              time: this.state.uploading_time,
+            }),
+        ),
+    );
+  };
+  likePost = async item => {
+    await _retrieveData('user').then(
+      async result =>
+        await addToArray('NewsLike', item, 'like', {
+          user_id: result,
+          post_id: item,
+        }),
+    );
+  };
+
+  favoritePost = async item => {
+    await _retrieveData('user').then(
+      async result =>
+        await addToArray('NewsFavorite', item, 'Favorite', {
+          user_id: result,
+          post_id: item,
+        }),
+    );
+  };
+
+  async CommentPost(item) {
+    let data = await getData('Comments', item);
+    this.setState({comment_data: data, loading: false});
+    console.log('comment data', this.state.comment_data);
   }
   async showPost() {
-    let data = await getAllOfCollection('News')
-      this.setState({post_data:data, loading:false})
-    
-    
-  };
+    let data = await getAllOfCollection('News');
+    this.setState({post_data: data, loading: false});
+  }
 
   handleChoosePhoto = () => {
     var options = {
@@ -140,6 +212,90 @@ export default class GoodNews extends Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}>
+          <View style={{height: '90%'}}>
+            <FA
+              name="cross"
+              size={30}
+              color={'#32cd32'}
+              style={styles.modalcross}
+              onPress={() => {
+                this.setModalVisible();
+              }}
+            />
+            <FlatList
+              data={this.state.comment_data.comments}
+              keyExtractor={item => item.user_id}
+              renderItem={({item, index}) => (
+                <View
+                  key={index}
+                  style={{
+                    justifyContent: 'space-evenly',
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 2,
+                    backgroundColor: '#eee',
+                    height: responsiveHeight(20),
+                    borderRadius: 35,
+                    paddingVertical: 0,
+                    paddingHorizontal: 10,
+                    backgroundColor: 'white',
+                    marginHorizontal: 10,
+                    marginBottom: 5,
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      top: 2,
+                      borderRadius: 25,
+                      backgroundColor: 'white',
+                      width: '98%',
+                      height: 60,
+                      flexDirection: 'row',
+                      marginBottom: 1,
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 5,
+                        height: 60,
+                      }}>
+                      {/* <Thumbnail source={{ uri: item.imageName }} /> */}
+                      <Image
+                        source={{
+                          uri: 'https://randomuser.me/api/portraits/men/94.jpg',
+                        }}
+                        style={{width: 60, height: 60, borderRadius: 60}}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        marginLeft: 10,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                        }}>
+                        {item.user_name}
+                      </Text>
+                      <Text style={{fontSize: 20}}>{item.comments}</Text>
+                      <Text>{item.time}</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
+        </Modal>
 
         <Text style={styles.welcome}>Good News</Text>
         <Ionicon
@@ -317,7 +473,17 @@ export default class GoodNews extends Component {
                           alignItems: 'flex-end',
                         }}>
                         <TouchableOpacity>
-                          <EIcon name="like" size={25} color="white" />
+                          <EIcon
+                            name="like"
+                            size={25}
+                            color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
+                            onPress={() => {
+                              this.likePost(item.post_id);
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              });
+                            }}
+                          />
                         </TouchableOpacity>
                         <Text
                           style={{
@@ -398,7 +564,10 @@ export default class GoodNews extends Component {
                         }}>
                         {/* <Thumbnail source={{ uri: item.imageName }} /> */}
                         <Image
-                          source={{uri: item.imageName}}
+                          source={{
+                            uri:
+                              'https://randomuser.me/api/portraits/men/94.jpg',
+                          }}
                           style={{width: 60, height: 60, borderRadius: 60}}
                         />
                       </View>
@@ -483,6 +652,10 @@ export default class GoodNews extends Component {
                             name="comment-o"
                             size={20}
                             color="#7e7a7a"
+                            onPress={() => {
+                              this.setModalVisible();
+                              this.CommentPost(item.post_id);
+                            }}
                           />
                         </TouchableOpacity>
                         <Text
@@ -492,7 +665,7 @@ export default class GoodNews extends Component {
                             color: '#7e7a7a',
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {item.comments.length}
+                          0{/* {item.comments.length} */}
                         </Text>
                       </View>
                       <View
@@ -504,7 +677,16 @@ export default class GoodNews extends Component {
                           alignItems: 'flex-end',
                         }}>
                         <TouchableOpacity>
-                          <EIcon name="like" size={25} color="#7e7a7a" />
+                          <EIcon
+                            name="like"
+                            size={25}
+                            color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
+                            onPress={() =>
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              })
+                            }
+                          />
                         </TouchableOpacity>
                         <Text
                           style={{
@@ -513,7 +695,7 @@ export default class GoodNews extends Component {
                             color: '#7e7a7a',
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {item.like.length}
+                          {/* {item.like.length} */}
                         </Text>
                       </View>
                       <View
@@ -531,10 +713,20 @@ export default class GoodNews extends Component {
                             color: '#7e7a7a',
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {item.favorite.length}
+                          {/* {item.favorite.length} */}
                         </Text>
                         <TouchableOpacity>
-                          <Ionicon name="ios-heart" size={20} color="#32cd32" />
+                          <Ionicon
+                            name="ios-heart"
+                            size={20}
+                            color={this.state.hit_favorite ? '#32cd32' : null}
+                            onPress={() => {
+                              this.favoritePost(item.post_id);
+                              this.setState({
+                                hit_favorite: !this.state.hit_favorite,
+                              });
+                            }}
+                          />
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -559,7 +751,12 @@ export default class GoodNews extends Component {
                           borderRadius: 50,
                           flexDirection: 'row',
                         }}>
-                        <TextInput placeholder="Type something">
+                        <TextInput
+                          value={this.state.comments_words}
+                          onChangeText={values =>
+                            this.setState({comments_words: values})
+                          }
+                          placeholder="Type something">
                           {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
                         </TextInput>
                         <Ionicon
@@ -581,7 +778,7 @@ export default class GoodNews extends Component {
                           size={30}
                           color="#7e7a7a"
                           onPress={() => {
-                            alert('message');
+                            this.CommentsPost(item.post_id);
                           }}
                         />
                       </View>

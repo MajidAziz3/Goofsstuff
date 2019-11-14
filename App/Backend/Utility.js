@@ -32,7 +32,6 @@ var firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-
 export async function getAllOfCollection(collection) {
   let data = [];
   let querySnapshot = await firebase
@@ -143,15 +142,46 @@ export async function saveData(collection, doc, jsonObject) {
   //console.log("Document successfully written!");
 }
 
+// export async function saveDataWithoutDocId(collection, jsonObject) {
+//   let docRef = await firebase
+//     .firestore()
+//     .collection(collection)
+//     .doc();
+//   docRef.set(jsonObject);
+//   return docRef;
+// }
 export async function saveDataWithoutDocId(collection, jsonObject) {
-  let docRef = await firebase
+  let obj = jsonObject;
+  let reff = firebase
     .firestore()
     .collection(collection)
-    .doc();
-  docRef.set(jsonObject);
-  return docRef;
+    .add(jsonObject)
+    .then(async function(docRef) {
+      console.log('Document written with ID: ', docRef.id);
+      if (docRef.id) {
+        console.log('rrrrrrrrrrrrrrr', docRef.id)
+       let doc_Id=docRef.id
+        obj.post_id = docRef.id;
+        await firebase
+        .firestore()
+        .collection(collection)
+        .doc(doc_Id)
+        .set(obj, {merge: true})
+        .then(result => {
+          console.log('res', result);
+          return result;
+        })
+        .catch(function(error) {
+          alert('Error writing document: ', error);
+        });
+      }
+    })
+    
+    reff.set(obj);
+    return reff;
+  // docRef.set(jsonObject);
+  // return docRef;
 }
-
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firebase
     .firestore()

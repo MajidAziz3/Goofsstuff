@@ -129,6 +129,7 @@ export default class Forms extends Component {
       img: null,
       ending_timing_event: '',
       company_atteeched: false,
+      ImageUrl: null,
 
       job_category: '',
       img: null,
@@ -138,8 +139,87 @@ export default class Forms extends Component {
       job_compensation: '',
       about_job: '',
       phone_job: '',
+      imageType: null,
+      photo: null,
+      ImageName: null,
     };
   }
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      // console.log('Response = ', response);
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            70,
+          ).then(resizedImage => {
+            console.log(resizedImage);
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+
+  upload_Image = async () => {
+    let iteratorNum = 0;
+    let _id = 'pFvp670zlObHqXgfqp4YbbCYAl23';
+    await uploadImage(
+      this.state.ImageUrl,
+      this.state.imageType,
+      'event_pic',
+      this.state.ImageName,
+      'Coummunity_Event',
+      _id,
+    );
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (data == '100') {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  };
 
   componentDidMount() {
     const {addListener} = this.props.navigation;
@@ -184,36 +264,6 @@ export default class Forms extends Component {
   toggleModal(visible) {
     this.setState({modalVisible: visible});
   }
-  handleChoosePhoto = () => {
-    var options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-
-    ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        //let source = response;
-        // You can also display the image using data:
-        let source = response;
-        //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          photo: source,
-        });
-      }
-    });
-  };
 
   showDateTimePicker = () => {
     this.setState({isDateTimePickerVisible: true});
@@ -1600,7 +1650,8 @@ export default class Forms extends Component {
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={() =>
+                  onPress={async () => {
+                    await this.upload_Image();
                     Community_Event(
                       Event_Category,
                       event_sub_category,
@@ -1616,8 +1667,8 @@ export default class Forms extends Component {
                       img,
                       ending_timing_event,
                       company_atteeched,
-                    )
-                  }>
+                    );
+                  }}>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
               </View>
@@ -2978,7 +3029,7 @@ export default class Forms extends Component {
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={() =>
+                  onPress={() => {
                     News(
                       news_descriptions,
                       file,
@@ -2989,8 +3040,9 @@ export default class Forms extends Component {
                       like,
                       favorite,
                       comments,
-                    )
-                  }>
+                    );
+                    this.props.navigation.navigate('Home');
+                  }}>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
               </View>

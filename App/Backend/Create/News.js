@@ -14,24 +14,23 @@ export async function News(
   comments,
 ) {
   _retrieveData('user').then(result =>
-    getData('users',result).then(user=>{
-      saveDataWithoutDocId('News', {
-        user_id:result,
-        user_name:user.name,
-        profile_image:user.profile_picture,
-        description:news_descriptions,
-        file:file,
-        onlyme:onlyme,
-        friends:friends,
-        Public:Public,
-        uploading_time:uploading_time,
-        like:like,
-        favorite:favorite,
-        comments:comments
+    getData('users', result)
+      .then(user => {
+        saveDataWithoutDocId('News', {
+          user_id: result,
+          user_name: user.name,
+          profile_image: user.profile_picture,
+          description: news_descriptions,
+          file: file,
+          onlyme: onlyme,
+          friends: friends,
+          Public: Public,
+          uploading_time: uploading_time,
+          like: like,
+          favorite: favorite,
+          comments: comments,
+        });
       })
-    }
-      )
-    
   );
 
   //   _retrieveData('user').then(result =>
