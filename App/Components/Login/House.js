@@ -39,14 +39,14 @@ class House extends Component {
             <View
               style={{
                 backgroundColor: 'white',
-                height: responsiveHeight(60),
+                height: responsiveHeight(30),
                 width: responsiveWidth(100),
                 alignSelf: 'center',
                 justifyContent: 'space-around',
               }}>
               <View
                 style={{
-                  height: '50%',
+                  height: '45%',
                   width: '100%',
                   backgroundColor: 'white',
                   alignSelf: 'center',

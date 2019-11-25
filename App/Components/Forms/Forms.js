@@ -28,6 +28,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import ImagePicker from 'react-native-image-picker';
 import SwitchToggle from 'react-native-switch-toggle';
 import Entypo from 'react-native-vector-icons/Entypo';
+import ImageResizer from 'react-native-image-resizer';
 
 import {
   responsiveHeight,
@@ -38,6 +39,9 @@ import {News} from '../../Backend/Create/News';
 import {Watch} from '../../Backend/Create/Watch';
 import {Community_Event} from '../../Backend/Create/Community_Event';
 import {Create_Job} from '../../Backend/Create/Job';
+import {uploadImage, uploadVideo} from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Forms extends Component {
   constructor(props) {
@@ -141,63 +145,57 @@ export default class Forms extends Component {
       phone_job: '',
       imageType: null,
       photo: null,
-      ImageName: null,
+      ImageName: 'null',
+      videoPath: null,
+      videoType: null,
+      videoName: null,
     };
   }
-  handleChoosePhoto = () => {
-    var options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+
+  handlechooseVideo = () => {
+    const options = {
+      title: 'Select video',
+      mediaType: 'video',
+
+      quality: 1,
     };
+
     ImagePicker.showImagePicker(options, response => {
-      // console.log('Response = ', response);
-      let source = response;
-      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-      this.setState(
-        {
-          photo: source.uri,
-          imageType: source.type,
-        },
-        async () => {
-          await ImageResizer.createResizedImage(
-            this.state.photo,
-            Dimensions.get('window').width,
-            Dimensions.get('window').height / 3,
-            'JPEG',
-            70,
-          ).then(resizedImage => {
-            console.log(resizedImage);
-            this.setState({
-              ImageName: resizedImage.name,
-              ImageUrl: resizedImage.uri,
-            });
-          });
-        },
-      );
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        this.setState({
+          videoPath: response.uri,
+          videoType: 'mp4',
+          videoName: response.path,
+        });
+      }
     });
   };
 
-  upload_Image = async () => {
+  upload_Video = async () => {
+    var parts = this.state.videoName.split('/');
+    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     let iteratorNum = 0;
-    let _id = 'pFvp670zlObHqXgfqp4YbbCYAl23';
-    await uploadImage(
-      this.state.ImageUrl,
-      this.state.imageType,
-      'event_pic',
-      this.state.ImageName,
-      'Coummunity_Event',
-      _id,
-    );
+    await _retrieveData('ref').then(async item => {
+      await uploadVideo(
+        this.state.videoPath,
+        this.state.videoType,
+        lastSegment,
+        'video',
+        'News',
+        item,
+      );
+      console.log('i m here');
+    });
     let that = this;
 
     let refreshId = setInterval(function() {
       iteratorNum += 1;
       _retrieveData('imageUploadProgress').then(data => {
         that.setState({uploadProgress: data});
-        if (data == '100') {
+        if (Number(data) >= 100) {
           clearInterval(refreshId);
           alert('Uploaded', 'Profile is updated', [
             {text: 'OK', onPress: () => that.props.navigation.goBack()},
@@ -219,7 +217,85 @@ export default class Forms extends Component {
         }
       });
     }, 1000);
+    AsyncStorage.removeItem('doc_id');
   };
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      console.log('refffffffff', item);
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'News',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
 
   componentDidMount() {
     const {addListener} = this.props.navigation;
@@ -287,7 +363,6 @@ export default class Forms extends Component {
     this.setState({isDateTimePickerVisible2: false});
   };
   handleDatePicked = date => {
-    console.log('A date has been picked: ', date);
     this.hideDateTimePicker();
   };
 
@@ -2401,9 +2476,7 @@ export default class Forms extends Component {
                 transparent={false}
                 transparent={true}
                 visible={this.state.modalVisible}
-                onRequestClose={() => {
-                  console.log('Modal has been closed.');
-                }}>
+                onRequestClose={() => {}}>
                 <View
                   style={{
                     top: responsiveHeight(30),
@@ -2705,9 +2778,7 @@ export default class Forms extends Component {
                   alignItems: 'center',
                   elevation: 1,
                 }}
-                onPress={() => {
-                  alert('Posted');
-                }}>
+                onPress={this.handleChoosePhoto}>
                 <FA name="camera" size={18} color="#32cd32" style={{}} />
 
                 <Text
@@ -2730,9 +2801,7 @@ export default class Forms extends Component {
                   alignItems: 'center',
                   elevation: 1,
                 }}
-                onPress={() => {
-                  alert('Posted');
-                }}>
+                onPress={this.handlechooseVideo}>
                 <FA name="video-camera" size={18} color="#32cd32" style={{}} />
 
                 <Text
@@ -3029,8 +3098,8 @@ export default class Forms extends Component {
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={() => {
-                    News(
+                  onPress={async () => {
+                    await News(
                       news_descriptions,
                       file,
                       onlyme,
@@ -3040,8 +3109,17 @@ export default class Forms extends Component {
                       like,
                       favorite,
                       comments,
-                    );
-                    this.props.navigation.navigate('Home');
+                    ).then(() => {
+                      setTimeout(async () => {
+                        if (this.state.videoPath !== null) {
+                          await this.upload_Video();
+                        } else {
+                          await this.Upload_Image();
+                        }
+                      }, 10000);
+                      //   // await this.Upload_Image();
+                      this.props.navigation.navigate('Home');
+                    });
                   }}>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
@@ -3054,7 +3132,6 @@ export default class Forms extends Component {
   }
 
   render() {
-    console.log('category', GlobalConst.STORAGE_KEYS.ScreenType);
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>{this.hello()}</View>
     );

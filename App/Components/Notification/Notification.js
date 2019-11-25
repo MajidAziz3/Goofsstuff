@@ -86,7 +86,6 @@ export default class Notifications extends Component {
   };
 
   renderItem = ({item}) => {
-    console.log(this.state.data, 'rrrrrrrrrr');
     return (
       <View style={styles.row}>
         <View style={styles.imageContainer}>

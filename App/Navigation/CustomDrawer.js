@@ -47,7 +47,6 @@ export default class CustomDrawer extends Component {
     });
   };
   render() {
-    console.log('datatttt', this.state.data);
     return (
       <View style={styles.container}>
         <LinearGradient

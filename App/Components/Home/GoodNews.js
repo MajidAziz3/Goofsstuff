@@ -37,8 +37,12 @@ import {
   getDocRefByKeyValue,
   getData,
   addToArray,
+  uploadImage,
+  uploadImageComment,
 } from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import VideoPlayer from 'react-native-video-controls';
+import ImageResizer from 'react-native-image-resizer';
 
 const height = Dimensions.get('screen').height / 3.2;
 const width = Dimensions.get('screen').width;
@@ -55,6 +59,9 @@ export default class GoodNews extends Component {
       loading: true,
       modalVisible: false,
       comment_data: [],
+      photo: null,
+      ImageName: null,
+      imageType: null,
       datasource: [
         {
           name: 'Woody Allen',
@@ -84,9 +91,9 @@ export default class GoodNews extends Component {
           imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
         },
       ],
-      photo: null,
       uploading_time: '',
       comments_data: [],
+      ImageUrl: null,
     };
   }
 
@@ -140,8 +147,12 @@ export default class GoodNews extends Component {
               post_id: item,
               user_id: res.userId,
               user_name: res.name,
-              user_image: res.profile_picture,
               time: this.state.uploading_time,
+              imageUrl:''
+            }).then(() => {
+              setTimeout(async () => {
+                this.Upload_Image(item);
+              }, 1000);
             }),
         ),
     );
@@ -167,13 +178,25 @@ export default class GoodNews extends Component {
   };
 
   async CommentPost(item) {
-    let data = await getData('Comments', item);
-    this.setState({comment_data: data, loading: false});
-    console.log('comment data', this.state.comment_data);
+    firebase
+      .firestore()
+      .collection('Comments')
+      .onSnapshot(async () => {
+        let data = await getData('Comments', item);
+        this.setState({comment_data: data, loading: false});
+        console.log('checking', data);
+      });
   }
   async showPost() {
-    let data = await getAllOfCollection('News');
-    this.setState({post_data: data, loading: false});
+    firebase
+      .firestore()
+      .collection('News')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('News');
+        this.setState({post_data: data, loading: false});
+        console.log(data);
+        console.log('\n');
+      });
   }
 
   handleChoosePhoto = () => {
@@ -185,26 +208,71 @@ export default class GoodNews extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        //let source = response;
-        // You can also display the image using data:
-        let source = response;
-        //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          photo: source,
-        });
-      }
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
     });
   };
+
+  async Upload_Image(item) {
+    let iteratorNum = 0;
+    console.log('refffffffff', item);
+    await uploadImageComment(
+      this.state.ImageUrl,
+      this.state.imageType,
+      this.state.ImageName,
+      this.state.ImageName,
+      'Comments',
+      item,
+    );
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
 
   render() {
     const uri =
@@ -288,6 +356,14 @@ export default class GoodNews extends Component {
                         {item.user_name}
                       </Text>
                       <Text style={{fontSize: 20}}>{item.comments}</Text>
+                      {/* {item.imageUrl ? (
+                        <Image
+                          style={{height: 100, width: 200, marginTop: 10}}
+                          source={{uri: item.imageUrl}}
+                          resizeMode="center"
+                        />
+                      ) : null} */}
+
                       <Text>{item.time}</Text>
                     </View>
                   </View>
@@ -478,10 +554,10 @@ export default class GoodNews extends Component {
                             size={25}
                             color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
                             onPress={() => {
-                              this.likePost(item.post_id);
-                              this.setState({
-                                hit_like: !this.state.hit_like,
-                              });
+                              // this.likePost(item.post_id);
+                              // this.setState({
+                              //   hit_like: !this.state.hit_like,
+                              // });
                             }}
                           />
                         </TouchableOpacity>
@@ -619,16 +695,29 @@ export default class GoodNews extends Component {
                           flexWrap: 'wrap',
                         }}
                         numberOfLines={4}>
-                        Once I was drawing a perfect chair for myself in my head
-                        but I could not finish her design.. And so I found her!
-                        was drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her! Once I
-                        was drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her! was
-                        drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her!
+                        {item.description}
                       </Text>
-                      {/* </ScrollView> */}
+                      <View style={styles.backgroundVideo}>
+                        {item.imageUrl ? (
+                          <Image
+                            style={{
+                              height: responsiveHeight(10),
+                              width: responsiveWidth(80),
+                            }}
+                            source={{uri: item.imageUrl}}
+                            resizeMode={'cover'}
+                          />
+                        ) : item.videoUrl ? (
+                          <VideoPlayer
+                            source={{uri: item.videoUrl}}
+                            navigator={this.props.navigator}
+                            disableBack={true}
+                            disableVolume={true}
+                            disableFullscreen={true}
+                            paused={true}
+                          />
+                        ) : null}
+                      </View>
                     </View>
 
                     <View
@@ -681,11 +770,12 @@ export default class GoodNews extends Component {
                             name="like"
                             size={25}
                             color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                            onPress={() =>
+                            onPress={() => {
+                              this.likePost(item.post_id);
                               this.setState({
                                 hit_like: !this.state.hit_like,
-                              })
-                            }
+                              });
+                            }}
                           />
                         </TouchableOpacity>
                         <Text
@@ -798,6 +888,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+  },
+  backgroundVideo: {
+    width: '95%',
+    height: '80%',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 5,
   },
   welcome: {
     fontSize: responsiveFontSize(3.8),
