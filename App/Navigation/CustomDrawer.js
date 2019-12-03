@@ -23,6 +23,7 @@ import {DrawerActions} from 'react-navigation-drawer';
 import {_retrieveData} from '../Backend/AsyncStore/AsyncFunc';
 import {getData} from '../Backend/Utility';
 import AsyncStorage from '@react-native-community/async-storage';
+import Entypo from 'react-native-vector-icons/Entypo';
 import firebase from 'firebase';
 
 export default class CustomDrawer extends Component {
@@ -34,7 +35,7 @@ export default class CustomDrawer extends Component {
   }
 
   componentDidMount() {
-      this.userData()
+    this.userData();
   }
 
   userData = async () => {
@@ -55,21 +56,46 @@ export default class CustomDrawer extends Component {
           <ScrollView>
             <View>
               <TouchableOpacity style={{width: '50%'}}>
-                <Image
-                  source={{
-                    uri: 'https://randomuser.me/api/portraits/men/85.jpg',
-                  }}
-                  style={{
-                    height: 70,
-                    width: 70,
-                    borderRadius: 70,
-                    marginTop: responsiveHeight(3.5),
-                    marginLeft: 25,
-                    backgroundColor: '#dddddd',
-                    borderWidth: 2,
-                    borderColor: 'white',
-                  }}
-                />
+                {this.state.data.profile_picture == null ? (
+                  <View
+                    style={{
+                      height: 70,
+                      width: 70,
+                      borderRadius: 70,
+                      marginTop: responsiveHeight(3.5),
+                      marginLeft: 25,
+                      backgroundColor: '#dddddd',
+                      borderWidth: 2,
+                      borderColor: 'white',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Entypo
+                      name="user"
+                      size={50}
+                      color="#d0d0d0dd"
+                      style={{
+                        marginBottom: 10,
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <Image
+                    source={{
+                      uri: 'https://randomuser.me/api/portraits/men/85.jpg',
+                    }}
+                    style={{
+                      height: 70,
+                      width: 70,
+                      borderRadius: 70,
+                      marginTop: responsiveHeight(3.5),
+                      marginLeft: 25,
+                      backgroundColor: '#dddddd',
+                      borderWidth: 2,
+                      borderColor: 'white',
+                    }}
+                  />
+                )}
               </TouchableOpacity>
               <Text
                 style={{

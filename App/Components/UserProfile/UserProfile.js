@@ -9,6 +9,7 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  Dimensions,
   ActivityIndicator,
   BackHandler,
   RecyclerViewBackedScrollView,
@@ -20,14 +21,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FA from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import {getData} from '../../Backend/Utility';
+import {getData, uploadImage, uploadUserImage} from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import ImageResizer from 'react-native-image-resizer';
+import {signUp} from '../../Backend/Auths';
 ///ProfileScreen 2 5th Screen
 const images = [
   {
@@ -79,6 +84,10 @@ class UserProfile extends Component {
       datasource2: [1, 2],
       loading: true,
       displayIMG: false,
+      imageType: null,
+      photo: null,
+      ImageName: null,
+      ImageUrl: null,
       datasource: [
         {
           name: 'Woody Allen',
@@ -111,6 +120,49 @@ class UserProfile extends Component {
     };
   }
 
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('user').then(async item => {
+      console.log('refffffffff', item);
+      await uploadUserImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'users',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
+
   componentDidMount = async () => {
     await _retrieveData('user').then(async result => {
       await getData('users', result).then(res =>
@@ -131,25 +183,40 @@ class UserProfile extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        //let source = response;
-        // You can also display the image using data:
-        let source = response;
-        //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          photo: source,
-        });
-      }
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState(
+              {
+                ImageName: resizedImage.name,
+                ImageUrl: resizedImage.uri,
+              },
+              () => {
+                this.Upload_Image();
+              },
+            );
+          });
+        },
+      );
     });
+    // if (this.state.ImageUrl !== null) {
+    //   // console.log('hhhhhh,', this.state.ImageUrl);
+    //   // setTimeout(async () => {
+    //      this.Upload_Image();
+    // //   }, 300);
+    // }
   };
 
   render() {
@@ -172,10 +239,21 @@ class UserProfile extends Component {
                 onPress={() => this.props.navigation.openDrawer()}
                 style={styles.menu}
               />
-              <Image
-                source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
-                style={styles.menu1}
-              />
+              {this.state.data_user.profile_picuture == null ? (
+                <Entypo
+                  name="user"
+                  size={30}
+                  color="#d0d0d0dd"
+                  style={styles.menu1}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: 'https://randomuser.me/api/portraits/men/85.jpg',
+                  }}
+                  style={styles.menu1}
+                />
+              )}
             </View>
             <ScrollView style={styles.container}>
               <View style={styles.profileContainer}>
@@ -188,19 +266,23 @@ class UserProfile extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Thumbnail
-                    large
-                    source={{uri: uri}}
-                    style={{
-                      backgroundColor: 'white',
-                      borderWidth: StyleSheet.hairlineWidth,
-                      borderColor: '#d1dcff',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.5,
-                      shadowRadius: 2,
-                      elevation: 5,
-                    }}
-                  />
+                  {this.state.data_user.profile_picuture == null ? (
+                    <Entypo name="user" size={40} color="#d0d0d0dd" />
+                  ) : (
+                    <Thumbnail
+                      large
+                      source={{uri: uri}}
+                      style={{
+                        backgroundColor: 'white',
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: '#d1dcff',
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 5,
+                      }}
+                    />
+                  )}
                 </View>
                 <View
                   style={{
@@ -303,7 +385,7 @@ class UserProfile extends Component {
                       top: 0,
                       fontWeight: 'bold',
                     }}>
-                    {this.state.data_user.name} members
+                    {this.state.data_user.name} Family members
                   </Text>
                 </TouchableOpacity>
 
@@ -312,62 +394,82 @@ class UserProfile extends Component {
                     backgroundColor: 'white',
                     height: '70%',
                     top: 0,
+                    justifyContent:
+                      this.state.data_user.family_member.length == 0
+                        ? 'center'
+                        : 'flex-start',
                     flexDirection: 'row',
                   }}>
-                  <FlatList
-                    data={this.state.datasource}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    keyExtractor={item => item.id}
-                    renderItem={({item, index}) => (
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          width: 65,
-                        }}>
+                  {this.state.data_user.family_member.length == 0 ? (
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                      }}>
+                      <Text>You Have No Family Members Yet</Text>
+                    </View>
+                  ) : (
+                    <FlatList
+                      data={this.state.data_user.family_member}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => (
                         <View
                           style={{
                             backgroundColor: 'white',
-                            height: 50,
-                            width: 50,
-                            borderRadius: 50,
-                            shadowOffset: {width: 0, height: 2},
-                            shadowOpacity: 0.5,
-                            shadowRadius: 2,
-                            elevation: 5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            width: 65,
                           }}>
-                          <Image
-                            source={{
-                              uri:
-                                'https://randomuser.me/api/portraits/men/51.jpg',
-                            }}
+                          <View
                             style={{
-                              width: '100%',
-                              height: '100%',
+                              backgroundColor: 'white',
+                              height: 50,
+                              width: 50,
                               borderRadius: 50,
-                            }}
-                          />
+                              shadowOffset: {width: 0, height: 2},
+                              shadowOpacity: 0.5,
+                              shadowRadius: 2,
+                              elevation: 5,
+                            }}>
+                            <Image
+                              source={{
+                                uri:
+                                  'https://randomuser.me/api/portraits/men/51.jpg',
+                              }}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: 50,
+                              }}
+                            />
+                            }
+                          </View>
+                          <View
+                            style={{
+                              paddingHorizontal: 5,
+                              backgroundColor: 'white',
+                              width: '100%',
+                              height: '30%',
+                              flex: 1,
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.2),
+                                flex: 1,
+                              }}
+                              numberOfLines={1}>
+                              Jhon Louis
+                            </Text>
+                          </View>
                         </View>
-                        <View
-                          style={{
-                            paddingHorizontal: 5,
-                            backgroundColor: 'white',
-                            width: '100%',
-                            height: '30%',
-                            flex: 1,
-                          }}>
-                          <Text
-                            style={{fontSize: responsiveFontSize(1.2), flex: 1}}
-                            numberOfLines={1}>
-                            Jhon Louis
-                          </Text>
-                        </View>
-                      </View>
-                    )}
-                  />
+                      )}
+                    />
+                  )}
                 </View>
               </View>
 
@@ -401,65 +503,82 @@ class UserProfile extends Component {
                     backgroundColor: 'white',
                     height: '70%',
                     top: 0,
+                    justifyContent:
+                      this.state.data_user.groups.length == 0
+                        ? 'center'
+                        : 'flex-start',
                     flexDirection: 'row',
                   }}>
-                  <FlatList
-                    data={this.state.datasource}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    keyExtractor={item => item.id}
-                    renderItem={({item, index}) => (
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%',
-                          width: 65,
-                        }}>
+                  {this.state.data_user.groups.length == 0 ? (
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%',
+                      }}>
+                      <Text>You Are Not A Member Of Any Group</Text>
+                    </View>
+                  ) : (
+                    <FlatList
+                      data={this.state.data_user.groups}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => (
                         <View
                           style={{
                             backgroundColor: 'white',
-                            height: 50,
-                            width: 50,
-                            borderRadius: 50,
-                            shadowOffset: {width: 0, height: 2},
-                            shadowOpacity: 0.5,
-                            shadowRadius: 2,
-                            elevation: 5,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',
+                            width: 65,
                           }}>
-                          <Image
-                            source={{
-                              uri:
-                                'https://picsum.photos/id/1084/536/354?grayscale',
-                            }}
+                          <View
                             style={{
-                              width: '100%',
-                              height: '100%',
+                              backgroundColor: 'white',
+                              height: 50,
+                              width: 50,
                               borderRadius: 50,
-                            }}
-                          />
-                        </View>
-                        <View
-                          style={{
-                            paddingHorizontal: 5,
-                            backgroundColor: 'white',
-                            width: '100%',
-                            height: '30%',
-                            flex: 1,
-                          }}>
-                          <Text
+                              shadowOffset: {width: 0, height: 2},
+                              shadowOpacity: 0.5,
+                              shadowRadius: 2,
+                              elevation: 5,
+                            }}>
+                            <Image
+                              source={{
+                                uri:
+                                  'https://picsum.photos/id/1084/536/354?grayscale',
+                              }}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: 50,
+                              }}
+                            />
+                          </View>
+                          <View
                             style={{
-                              fontSize: responsiveFontSize(1.2),
+                              paddingHorizontal: 5,
+                              backgroundColor: 'white',
+                              width: '100%',
+                              height: '30%',
                               flex: 1,
-                              textAlign: 'center',
-                            }}
-                            numberOfLines={1}>
-                            Group1
-                          </Text>
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.2),
+                                flex: 1,
+                                textAlign: 'center',
+                              }}
+                              numberOfLines={1}>
+                              Group1
+                            </Text>
+                          </View>
                         </View>
-                      </View>
-                    )}></FlatList>
+                      )}
+                    />
+                  )}
                 </View>
               </View>
 
@@ -591,7 +710,12 @@ class UserProfile extends Component {
                     Vision Board
                   </Text>
                 </View>
-
+                <AntDesign
+                  name="pluscircle"
+                  color={'#32cd32'}
+                  size={20}
+                  style={{top: 4, right: 10, position: 'absolute'}}
+                />
                 <View style={{top: 5, height: '90%'}}>
                   <View
                     style={{

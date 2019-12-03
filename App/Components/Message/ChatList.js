@@ -22,7 +22,7 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { getAllOfCollection } from '../../Backend/Utility';
+import {getAllOfCollection} from '../../Backend/Utility';
 
 // import { formatResultsErrors } from 'jest-message-util';
 ///Inbox swiplist
@@ -39,12 +39,13 @@ class ChatList extends Component {
     };
   }
   componentDidMount = async () => {
-    const {diff, pending_request, data} = this.state;
     await getAllOfCollection('users').then(result => {
+      console.log('data', result);
       this.setState({data: result, loading: false});
     });
   };
   render() {
+    console.log('data', this.state.data);
     const swipeoutBtns = () => [
       {
         //   text: 'Add', Message
@@ -204,11 +205,12 @@ class ChatList extends Component {
             horizontal={true}
             keyExtractor={item => item.id}
             renderItem={({item, index}) => (
-              <TouchableOpacity style={{paddingHorizontal: 5,
-               width: 70, height: '100%'}}
-               key={index}
-               onPress={()=>this.props.navigation.navigate('Chat',{id:item.userId})}
-               >
+              <TouchableOpacity
+                style={{paddingHorizontal: 5, width: 70, height: '100%'}}
+                key={index}
+                onPress={() =>
+                  this.props.navigation.navigate('Chat', {id: item.userId})
+                }>
                 <View style={{backgroundColor: 'white', height: '70%'}}>
                   <Thumbnail
                     source={{

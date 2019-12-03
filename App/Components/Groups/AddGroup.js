@@ -20,7 +20,8 @@ import EIcon from 'react-native-vector-icons/Entypo';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import {CheckBox} from 'react-native-elements';
-
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -29,6 +30,8 @@ import {
 import {placeholder, nullLiteralTypeAnnotation} from '@babel/types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Create_Group} from '../../Backend/Create/Group';
+import {uploadImage} from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 
 export default class AddGroup extends Component {
   static navigationOptions = {
@@ -50,14 +53,99 @@ export default class AddGroup extends Component {
       group_name: '',
       group_location: '',
       group_description: '',
-      category: '',
+      category: 'Sports',
       file: null,
       gruop_member: [],
       group_admins: [],
+      photo: null,
+      imageType: null,
+      ImageName: null,
+      ImageUrl: null,
     };
   }
   toggleModal(visible) {
     this.setState({modalVisible: visible});
+  }
+
+  updateCategory = category => {
+    this.setState({category: category});
+  };
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      console.log('refffffffff', item);
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'Create_Group',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
   }
 
   render() {
@@ -213,7 +301,7 @@ export default class AddGroup extends Component {
                       fontSize: responsiveFontSize(1.8),
                       color: '#000000',
                     }}>
-                    Description
+                    Purpose
                   </Text>
                 </View>
 
@@ -242,7 +330,7 @@ export default class AddGroup extends Component {
                 />
               </View>
 
-              <View
+              {/* <View
                 style={{
                   backgroundColor: 'white',
                   height: '20%',
@@ -279,16 +367,20 @@ export default class AddGroup extends Component {
                     borderRadius: 5,
                   }}>
                   <Picker
-                    selectedValue={this.state.language}
+                    selectedValue={this.state.category}
+                    onValueChange={this.updateCategory}
+                    selectedValue={this.state.category}
                     style={{height: '100%', width: '100%', color: '#7e7a7a'}}
                     // onValueChange={(itemValue, itemIndex) =>
                     //     this.setState({ language: itemValue })}
                   >
                     <Picker.Item label="Sport" value="Sport" />
-                    <Picker.Item label="Sport" value="Sport" />
+                    <Picker.Item label="Education" value="Education" />
+                    <Picker.Item label="Social" value="Social" />
+                    <Picker.Item label="Work" value="Work" />
                   </Picker>
                 </View>
-              </View>
+              </View> */}
             </View>
 
             <View
@@ -312,7 +404,7 @@ export default class AddGroup extends Component {
                   borderRadius: 10,
                 }}>
                 <Text style={{left: 20, fontSize: 14, color: '#7e7a7a'}}>
-                  Upload Video
+                  Upload Cover Photo
                 </Text>
               </View>
               <View
@@ -322,7 +414,9 @@ export default class AddGroup extends Component {
                   width: '20%',
                   height: '100%',
                   alignItems: 'center',
+                  justifyContent:'flex-end',
                   borderRadius: 10,
+                  right:20
                 }}>
                 <TouchableOpacity
                   style={{
@@ -330,12 +424,17 @@ export default class AddGroup extends Component {
                     width: '26%',
                     height: '60%',
                     justifyContent: 'center',
-                    alignItems: 'center',
+                    alignItems: 'flex-end',
                     borderRadius: 10,
                   }}>
-                  <EIcon name="camera" size={20} color="#7e7a7a" />
+                  <EIcon
+                    name="camera"
+                    size={20}
+                    color="#7e7a7a"
+                    onPress={() => this.handleChoosePhoto()}
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     left: 8,
                     backgroundColor: 'white',
@@ -346,7 +445,7 @@ export default class AddGroup extends Component {
                     borderRadius: 10,
                   }}>
                   <EIcon name="attachment" size={20} color="#7e7a7a" />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
 
@@ -544,8 +643,11 @@ export default class AddGroup extends Component {
                   category,
                   file,
                   gruop_member,
-                  group_admins,
-                );
+                ).then(() => {
+                  setTimeout(async () => {
+                    await this.Upload_Image();
+                  }, 3000);
+                });
               }}>
               <Text style={{fontSize: responsiveFontSize(2), color: '#ff0000'}}>
                 Create

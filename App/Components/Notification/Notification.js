@@ -78,7 +78,7 @@ export default class Notifications extends Component {
     await _retrieveData('user').then(async result => {
       await getData('users', result).then(res =>
         this.setState({
-          data: res,
+          data: res.pending_friends,
           loading: false,
         }),
       );
@@ -113,6 +113,7 @@ export default class Notifications extends Component {
   };
 
   render() {
+    console.log('gggggggg', this.state.data);
     return (
       <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
         <View style={{marginBottom: 10}}>
@@ -133,15 +134,37 @@ export default class Notifications extends Component {
         <FlatList
           data={this.state.data}
           keyExtractor={item => item.id}
-          renderItem={(item, index) => {
+          renderItem={({item, index}) => (
             <View
+              key={index}
               style={{
-                flex: 1,
                 justifyContent: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop:10
               }}>
-              <Text>{item.name}</Text>
-            </View>;
-          }}
+              <Text style={{alignSelf: 'center'}}>{item.name}</Text>
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  width: 90,
+                  backgroundColor: '#32cd32',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>Accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  width: 90,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         />
       </View>
     );

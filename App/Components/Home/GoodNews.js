@@ -20,6 +20,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Thumbnail, Item} from 'native-base';
+import Entypo from 'react-native-vector-icons/Entypo';
 import FA from 'react-native-vector-icons/Entypo';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import {jsxAttribute} from '@babel/types';
@@ -148,7 +149,7 @@ export default class GoodNews extends Component {
               user_id: res.userId,
               user_name: res.name,
               time: this.state.uploading_time,
-              imageUrl:''
+              imageUrl: '',
             }).then(() => {
               setTimeout(async () => {
                 this.Upload_Image(item);
@@ -372,7 +373,6 @@ export default class GoodNews extends Component {
             />
           </View>
         </Modal>
-
         <Text style={styles.welcome}>Good News</Text>
         <Ionicon
           name="ios-menu"
@@ -381,11 +381,21 @@ export default class GoodNews extends Component {
           onPress={() => this.props.navigation.openDrawer()}
           style={styles.menu}
         />
-        <Image
-          source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
-          style={styles.menu1}
-        />
-
+        {this.state.post_data.profile_picuture == null ? (
+          <Entypo
+            name="user"
+            size={30}
+            color="#d0d0d0dd"
+            style={[styles.menu1, {marginTop: 15}]}
+          />
+        ) : (
+          <Image
+            source={{
+              uri: 'https://randomuser.me/api/portraits/men/85.jpg',
+            }}
+            style={styles.menu1}
+          />
+        )}
         <ScrollView style={styles.container1}>
           {this.state.loading ? (
             <ActivityIndicator
@@ -604,7 +614,8 @@ export default class GoodNews extends Component {
                   <View
                     key={index}
                     style={{
-                      justifyContent: 'space-evenly',
+                      justifyContent:
+                        item.imageUrl || item.videoUrl ? null : 'space-evenly',
                       shadowColor: '#000',
                       shadowOffset: {width: 0, height: 2},
                       shadowOpacity: 0.5,
@@ -612,12 +623,16 @@ export default class GoodNews extends Component {
                       elevation: 2,
                       backgroundColor: '#eee',
                       width: '100%',
-                      height: responsiveHeight(35),
+                      height:
+                        item.imageUrl || item.videoUrl
+                          ? responsiveHeight(70)
+                          : responsiveHeight(35),
                       borderRadius: 25,
                       paddingVertical: 0,
-                      paddingHorizontal: 10,
+                      paddingHorizontal:
+                        item.imageUrl || item.videoUrl ? 10 : 10,
                       backgroundColor: 'white',
-                      marginBottom: 5,
+                      marginBottom: item.imageUrl || item.videoUrl ? 4 : 5,
                     }}>
                     <View
                       style={{
@@ -639,13 +654,22 @@ export default class GoodNews extends Component {
                           height: 60,
                         }}>
                         {/* <Thumbnail source={{ uri: item.imageName }} /> */}
-                        <Image
-                          source={{
-                            uri:
-                              'https://randomuser.me/api/portraits/men/94.jpg',
-                          }}
-                          style={{width: 60, height: 60, borderRadius: 60}}
-                        />
+                        {item.profile_picuture == null ? (
+                          <Entypo
+                            name="user"
+                            size={40}
+                            color="#d0d0d0dd"
+                            style={{width: 60, height: 60, borderRadius: 60}}
+                          />
+                        ) : (
+                          <Image
+                            source={{
+                              uri:
+                                'https://randomuser.me/api/portraits/men/94.jpg',
+                            }}
+                            style={{width: 60, height: 60, borderRadius: 60}}
+                          />
+                        )}
                       </View>
 
                       <View
@@ -697,25 +721,45 @@ export default class GoodNews extends Component {
                         numberOfLines={4}>
                         {item.description}
                       </Text>
-                      <View style={styles.backgroundVideo}>
+                      <View >
                         {item.imageUrl ? (
-                          <Image
+                          <View
                             style={{
-                              height: responsiveHeight(10),
-                              width: responsiveWidth(80),
-                            }}
-                            source={{uri: item.imageUrl}}
-                            resizeMode={'cover'}
-                          />
+                              height: responsiveHeight(42),
+                            }}>
+                            <Image
+                              style={{
+                                height: responsiveHeight(40),
+                                width: responsiveWidth(80),
+                                position: 'relative',
+                              }}
+                              source={{uri: item.imageUrl}}
+                              resizeMode={'cover'}
+                            />
+                          </View>
                         ) : item.videoUrl ? (
-                          <VideoPlayer
-                            source={{uri: item.videoUrl}}
-                            navigator={this.props.navigator}
-                            disableBack={true}
-                            disableVolume={true}
-                            disableFullscreen={true}
-                            paused={true}
-                          />
+                          <View
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: 'white',
+                              width: '99%',
+                              height: '100%',
+                              flexDirection: 'row',
+                              marginBottom: 1,
+                            }}>
+                            <VideoPlayer
+                              source={{
+                                uri:
+                                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                              }}
+                              navigator={this.props.navigator}
+                              disableBack={true}
+                              disableVolume={true}
+                              disableFullscreen={true}
+                              paused={true}
+                            />
+                          </View>
                         ) : null}
                       </View>
                     </View>
@@ -725,9 +769,11 @@ export default class GoodNews extends Component {
                         flexDirection: 'row',
                         paddingHorizontal: 0,
                         backgroundColor: 'white',
-                        height: '15%',
-                        alignItems: 'center',
-                        alignSelf: 'center',
+                        height: item.imageUrl || item.videoUrl ? '8%' : '15%',
+                        // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
+                        // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
+                        marginHorizontal: 10,
+                        marginVertical: 10,
                       }}>
                       <View
                         style={{
@@ -823,12 +869,12 @@ export default class GoodNews extends Component {
 
                     <View
                       style={{
-                        height: '18%',
+                        height: item.imageUrl || item.videoUrl ? '10%' : '18%',
                         backgroundColor: 'white',
                         flexDirection: 'row',
                         padding: 1,
                         marginHorizontal: 20,
-                        alignItems: 'center',
+                        // alignItems:'center',
                       }}>
                       <View
                         style={{
