@@ -39,7 +39,11 @@ import {News} from '../../Backend/Create/News';
 import {Watch} from '../../Backend/Create/Watch';
 import {Community_Event} from '../../Backend/Create/Community_Event';
 import {Create_Job} from '../../Backend/Create/Job';
-import {uploadImage, uploadVideo} from '../../Backend/Utility';
+import {
+  uploadImage,
+  uploadVideo,
+  uploadCommunityImage,
+} from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -119,8 +123,8 @@ export default class Forms extends Component {
           description: 'User 9',
         },
       ],
-      Event_Category: '',
-      event_sub_category: '',
+      Event_Category: 'Sport',
+      event_sub_category: 'football',
       location_event: '',
       event_date: '',
       event_description: '',
@@ -300,6 +304,50 @@ export default class Forms extends Component {
     });
   };
 
+  async Upload_Sport_Image() {
+    let iteratorNum = 0;
+    _retrieveData('user').then(async result => {
+      await uploadCommunityImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'Sport',
+        result,
+        this.state.event_sub_category,
+      );
+    });
+
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
+
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('ref').then(async item => {
@@ -460,7 +508,11 @@ export default class Forms extends Component {
   };
 
   hello() {
-    console.log('picker value', this.state.Event_Category);
+    console.log(
+      'picker value',
+      this.state.Event_Category,
+      this.state.event_sub_category,
+    );
     if (GlobalConst.STORAGE_KEYS.ScreenType == '2') {
       const {
         firstNameFlage,
@@ -1269,35 +1321,54 @@ export default class Forms extends Component {
                     backgroundColor: 'white',
                     borderRadius: 5,
                   }}>
-                  {this.state.category == 'Sport' ? (
+                  {this.state.Event_Category == 'Sport' ? (
                     <Picker
-                      selectedValue={this.state.subcategory}
-                      onValueChange={this.updateSubCategory}
+                      selectedValue={this.state.event_sub_category}
+                      // onValueChange={this.updateSubCategory}
                       style={{
                         height: '100%',
                         width: '100%',
                         color: '#7e7a7a',
                       }}
+                      onValueChange={(value, itemIndex) =>
+                        this.setState({event_sub_category: value})
+                      }
                       // onValueChange={(itemValue, itemIndex) =>
                       //     this.setState({ language: itemValue })}
                     >
-                      <Picker.Item label="Foot Ball" value="Foot Ball" />
+                      <Picker.Item
+                        label="Foot Ball"
+                        value={
+                          this.state.event_sub_category == 'birthday' ||
+                          this.state.event_sub_category == 'Party' ||
+                          this.state.event_sub_category == 'Other'
+                            ? this.setState({event_sub_category: 'football'})
+                            : 'football'
+                        }
+                      />
                       <Picker.Item label="Cricket" value="Cricket" />
-                      <Picker.Item label="Volley Ball" value="Volley Ball" />
+                      <Picker.Item label="Base Ball" value="baseball" />
                     </Picker>
                   ) : (
                     <Picker
-                      selectedValue={this.state.subcategory}
-                      onValueChange={this.updateSubCategory}
+                      selectedValue={this.state.event_sub_category}
+                      // onValueChange={this.updateSubCategory}
                       style={{
                         height: '100%',
                         width: '100%',
                         color: '#7e7a7a',
                       }}
-                      // onValueChange={(itemValue, itemIndex) =>
-                      //     this.setState({ language: itemValue })}
-                    >
-                      <Picker.Item label="Birth Day" value="Birth Day" />
+                      onValueChange={(value, itemIndex) =>
+                        this.setState({event_sub_category: value})
+                      }>
+                      <Picker.Item
+                        label="Birth Day"
+                        value={
+                          this.state.event_sub_category === 'football'
+                            ? this.setState({event_sub_category: 'birthday'})
+                            : 'birthday'
+                        }
+                      />
                       <Picker.Item label="Party" value="Party" />
                       <Picker.Item label="Other" value="Other" />
                     </Picker>
@@ -1779,7 +1850,7 @@ export default class Forms extends Component {
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={async () => {
+                  onPress={() => {
                     // await this.upload_Image();
                     Community_Event(
                       Event_Category,
@@ -1796,7 +1867,12 @@ export default class Forms extends Component {
                       img,
                       ending_timing_event,
                       company_atteeched,
-                    );
+                    )
+                    // .then(async () => {
+                    //   await setTimeout(async () => {
+                    //     await this.Upload_Sport_Image();
+                    //   }, 300);
+                    // });
                   }}>
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
                 </TouchableOpacity>
