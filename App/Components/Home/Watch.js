@@ -392,26 +392,27 @@ export default class Watch extends Component {
                 marginTop: 5,
               }}>
               <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: 'white',
-                  width: '99%',
-                  height: '80%',
-                  flexDirection: 'row',
-                  marginBottom: 1,
-                }}>
-                <Image
-                  source={require('../../Assets/watch.jpg')}
-                  style={{
-                    width: '95%',
-                    height: '95%',
-                    borderRadius: 20,
-                  }}></Image>
-                <TouchableOpacity style={{position: 'absolute'}}>
-                  <AIcon name="play" size={50} color="#24ec28" />
-                </TouchableOpacity>
-              </View>
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                width: '99%',
+                height: '70%',
+                flexDirection: 'row',
+                marginBottom: 1,
+              }}>
+              <VideoPlayer
+                source={{
+                  uri:
+                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                }}
+                navigator={this.props.navigator}
+                disableBack={true}
+                disableVolume={true}
+                disableFullscreen={true}
+                paused={true}
+              />
+            </View>
 
               <View
                 style={{
@@ -634,26 +635,27 @@ export default class Watch extends Component {
                     </View>
                   </View>
                   <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: 'white',
-                      width: '99%',
-                      height: '70%',
-                      flexDirection: 'row',
-                      marginBottom: 1,
-                    }}>
-                    <Image
-                      source={require('../../Assets/watch.jpg')}
-                      style={{
-                        width: '95%',
-                        height: '95%',
-                        borderRadius: 20,
-                      }}></Image>
-                    <TouchableOpacity style={{position: 'absolute'}}>
-                      <AIcon name="play" size={50} color="#32cd32" />
-                    </TouchableOpacity>
-                  </View>
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                width: '99%',
+                height: '70%',
+                flexDirection: 'row',
+                marginBottom: 1,
+              }}>
+              <VideoPlayer
+                source={{
+                  uri:
+                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                }}
+                navigator={this.props.navigator}
+                disableBack={true}
+                disableVolume={true}
+                disableFullscreen={true}
+                paused={true}
+              />
+            </View>
 
                   <View
                     style={{

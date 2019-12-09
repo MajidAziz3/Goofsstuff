@@ -77,6 +77,7 @@ import CommunityEvent from '../Components/Home/CommunityEvent';
 import JobInfo from '../Components/Home/JobInfo';
 import AppWorking from '../Components/Login/AppWorking';
 import CommunityGuide from '../Components/Login/CommunityGuide';
+import VisionBoard from '../Components/UserProfile/VisionBoard'
 
 var width = Dimensions.get('window').width;
 
@@ -95,6 +96,7 @@ const UserProfileStack = createStackNavigator({
   UserProfile: UserProfile,
   UserGallery: UserGallery,
   Family: Family,
+  VisionBoard: VisionBoard,
 });
 const CompanyStack = createStackNavigator({
   Feed: Feed,
