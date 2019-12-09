@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight, SafeAreaView } from 'react-native';
 import { Thumbnail, Button } from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -68,7 +68,7 @@ export default class Settings extends Component {
         // const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
         const uri = <Icon name="location" size={40} color="#900" />;
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style={styles.welcome}>Account Settings</Text>
                 <Ionicon name="ios-menu" size={35} color={'#32cd32'} onPress={() => this.props.navigation.openDrawer()} style={styles.menu} />
                 <Image source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }} style={styles.menu1} />
@@ -467,7 +467,7 @@ export default class Settings extends Component {
                     </Modal>
 
 
-            </View>
+            </SafeAreaView>
         );
     }
 }

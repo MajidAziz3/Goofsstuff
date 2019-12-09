@@ -1,259 +1,129 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
-  Alert,
-  ScrollView,
   FlatList,
+  SafeAreaView
 } from 'react-native';
-import {Left} from 'native-base';
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import {getData} from '../../Backend/Utility';
-import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 
-//Notification Screen
-const uri = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
-export default class Notifications extends Component {
+export default class Notification extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      calls: [
-        {
-          id: 1,
-          name: 'Mark Doe',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar7.png',
-        },
-        {
-          id: 2,
-          name: 'Clark Man',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-        },
-        {
-          id: 3,
-          name: 'Jaden Boor',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar5.png',
-        },
-        {
-          id: 4,
-          name: 'Srick Tree',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar4.png',
-        },
-        {
-          id: 5,
-          name: 'Erick Doe',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar3.png',
-        },
-        {
-          id: 6,
-          name: 'Erick Doe',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar4.png',
-        },
-        {
-          id: 7,
-          name: 'Erick Doe',
-          status: 'Sana Francisco',
-          image: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-        },
-      ],
-      data: [],
-      loading: true,
-    };
+      data:[
+        {id:3, image: "https://bootdey.com/img/Content/avatar/avatar7.png", name:"March SoulLaComa", text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/6/"},
+        {id:2, image: "https://bootdey.com/img/Content/avatar/avatar6.png", name:"John DoeLink",     text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/5/"},
+        {id:4, image: "https://bootdey.com/img/Content/avatar/avatar2.png", name:"Finn DoRemiFaso",  text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
+        {id:5, image: "https://bootdey.com/img/Content/avatar/avatar3.png", name:"Maria More More",  text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
+        {id:1, image: "https://bootdey.com/img/Content/avatar/avatar1.png", name:"Frank Odalthh",    text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/4/"},
+        {id:6, image: "https://bootdey.com/img/Content/avatar/avatar4.png", name:"Clark June Boom!", text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
+        {id:7, image: "https://bootdey.com/img/Content/avatar/avatar5.png", name:"The googler",      text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
+      ]
+    }
   }
 
-  componentDidMount = async () => {
-    await _retrieveData('user').then(async result => {
-      await getData('users', result).then(res =>
-        this.setState({
-          data: res.pending_friends,
-          loading: false,
-        }),
-      );
-    });
-  };
-
-  renderItem = ({item}) => {
-    return (
-      <View style={styles.row}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}
-            style={styles.pic}
-          />
-        </View>
-
-        <View style={styles.nameContainer}>
-          <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">
-            {item.name}
-          </Text>
-          <TouchableOpacity>
-            <Text style={styles.posttxt}>Conform request</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.hoursContainer}>
-          <TouchableOpacity>
-            <Text style={styles.msgTxt}>cancle request</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
   render() {
-    console.log('gggggggg', this.state.data);
     return (
-      <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
-        <View style={{marginBottom: 10}}>
-          <Text style={styles.welcome}>Notifications</Text>
-          <Ionicon
-            name="ios-menu"
-            size={35}
-            color={'#32cd32'}
-            onPress={() => this.props.navigation.openDrawer()}
-            style={styles.menu}
-          />
-          <Image
-            source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
-            style={styles.menu1}
-          />
-        </View>
+      <SafeAreaView style={{flex: 1}}>
+        
+      <FlatList
+        style={styles.root}
+        data={this.state.data}
+        extraData={this.state}
+        ItemSeparatorComponent={() => {
+          return (
+            <View style={styles.separator}/>
+          )
+        }}
+        keyExtractor={(item)=>{
+          return item.id;
+        }}
+        renderItem={(item) => {
+          const Notification = item.item;
+          let attachment = <View/>;
 
-        <FlatList
-          data={this.state.data}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <View
-              key={index}
-              style={{
-                justifyContent: 'center',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-                marginTop:10
-              }}>
-              <Text style={{alignSelf: 'center'}}>{item.name}</Text>
-              <TouchableOpacity
-                style={{
-                  height: 50,
-                  width: 90,
-                  backgroundColor: '#32cd32',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text>Accept</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  height: 50,
-                  width: 90,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text>Remove</Text>
-              </TouchableOpacity>
+          let mainContentStyle;
+          if(Notification.attachment) {
+            mainContentStyle = styles.mainContent;
+            attachment = <Image style={styles.attachment} source={{uri:Notification.attachment}}/>
+          }
+          return(
+            <View style={styles.container}>
+              <Image source={{uri:Notification.image}} style={styles.avatar}/>
+              <View style={styles.content}>
+                <View style={mainContentStyle}>
+                  <View style={styles.text}>
+                    <Text style={styles.name}>{Notification.name}</Text>
+                    <Text>{Notification.text}</Text>
+                  </View>
+                  <Text style={styles.timeAgo}>
+                    2 hours ago
+                  </Text>
+                </View>
+                {attachment}
+              </View>
             </View>
-          )}
-        />
-      </View>
+          );
+        }}/>
+        </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  row: {
+  root: {
+    backgroundColor: "#FFFFFF"
+  },
+  container: {
+    padding: 16,
     flexDirection: 'row',
-    backgroundColor: 'white',
-    height: responsiveHeight(15),
-    marginTop: 1,
-    width: responsiveWidth(100),
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 1.41,
-    // elevation: 1,
-    paddingBottom: 2,
+    borderBottomWidth: 1,
+    borderColor: "#FFFFFF",
+    alignItems: 'flex-start'
   },
-  imageContainer: {
-    width: '20%',
-    justifyContent: 'center',
-    alignItems: 'center',
+  avatar: {
+    width:50,
+    height:50,
+    borderRadius:25,
   },
-  hoursContainer: {
-    height: '100%',
-    width: '20%',
-    justifyContent: 'center',
-    // borderBottomWidth:.3
-  },
-  pic: {
-    borderRadius: 10,
-    width: '70%',
-    height: '60%',
-  },
-  nameContainer: {
-    width: '60%',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    // borderBottomWidth: 1,
-    // borderBottomWidth:.2
-  },
-  nameTxt: {
-    // marginLeft: 15,
-    fontWeight: '600',
-    color: '#222',
-    fontSize: responsiveFontSize(2.4),
-    width: 170,
-  },
-
-  msgContainer: {
+  text: {
+    marginBottom: 5,
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap:'wrap'
   },
-  msgTxt: {
-    fontWeight: '400',
-    color: '#727171',
-    fontSize: responsiveFontSize(1.7),
-    // marginLeft: 15,
-    fontWeight: '900',
-    // alignSelf:'flex-end',
+  content: {
+    flex: 1,
+    marginLeft: 16,
+    marginRight: 0
   },
-  posttxt: {
-    fontWeight: '400',
-    color: '#9aa69f',
-    fontSize: responsiveFontSize(1.9),
-    // marginLeft: 15,
-    fontWeight: '900',
-    // alignSelf:'flex-end',
+  mainContent: {
+    marginRight: 60
   },
-  menu: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
-    marginLeft: '4%',
-    position: 'absolute',
-  },
-  menu1: {
-    width: 10,
+  img: {
     height: 50,
-    borderRadius: 42,
-    marginTop: responsiveHeight(1.2),
-    marginLeft: '85%',
+    width: 50,
+    margin: 0
+  },
+  attachment: {
     position: 'absolute',
+    right: 0,
+    height: 50,
+    width: 50
   },
-  welcome: {
-    fontSize: responsiveFontSize(3.8),
-    fontWeight: 'bold',
-    textAlign: 'center',
-    margin: 7,
+  separator: {
+    height: 1,
+    backgroundColor: "#CCCCCC"
   },
-});
+  timeAgo:{
+    fontSize:12,
+    color:"#696969"
+  },
+  name:{
+    fontSize:16,
+    color:"#1E90FF"
+  }
+});  
