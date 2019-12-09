@@ -72,8 +72,9 @@ class House extends Component {
               <Text
                 style={{
                   color: '#000',
-                  fontWeight: 'bold',
+                  fontWeight: '500',
                   marginBottom: 15,
+                  fontSize: 15
                 }}>
                 One night, after putting our children to bed, we sat on the
                 couch and without even realizing, got on our phones and started
