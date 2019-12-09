@@ -644,6 +644,7 @@ export default class GoodNews extends Component {
                       <View
                         style={{
                           backgroundColor: 'white',
+                          borderRadius: 25,
                           width: 60,
                           justifyContent: 'center',
                           alignItems: 'center',
