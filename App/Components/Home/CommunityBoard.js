@@ -755,7 +755,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(6),
+    marginTop: responsiveHeight(1.8),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -763,7 +763,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 50,
     borderRadius: 42,
-    marginTop: responsiveHeight(5.5),
+    marginTop: responsiveHeight(1.2),
     marginLeft: '85%',
     position: 'absolute',
   },
