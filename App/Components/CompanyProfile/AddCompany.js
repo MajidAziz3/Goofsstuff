@@ -12,6 +12,7 @@ import {
   ScrollView,
   Modal,
   TouchableHighlight,
+  SafeAreaView
 } from 'react-native';
 import {Thumbnail, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -81,7 +82,7 @@ export default class AddCompany extends Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Add Company</Text>
         <FIcon
           name="chevron-left"
@@ -652,7 +653,7 @@ export default class AddCompany extends Component {
                         </TouchableOpacity>
                     </View> */}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

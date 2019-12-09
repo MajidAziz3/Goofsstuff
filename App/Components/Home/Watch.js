@@ -273,7 +273,7 @@ export default class Watch extends Component {
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     const myIcon = <Icon name="account" size={30} color="#900" />;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Modal
           animationType="slide"
           transparent={false}
@@ -1103,19 +1103,6 @@ export default class Watch extends Component {
                   History
                 </Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: responsiveHeight(5),
-                  width: responsiveHeight(5),
-                  backgroundColor: '#32cd32',
-                  flexDirection: 'row',
-                  borderRadius: responsiveHeight(5),
-                }}>
-                <EIcon name="search" size={25} color="white" />
-              </TouchableOpacity>
             </View>
           </View>
 
@@ -1291,20 +1278,6 @@ export default class Watch extends Component {
                   }}>
                   History
                 </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  right: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: responsiveHeight(5),
-                  width: responsiveHeight(5),
-                  backgroundColor: '#32cd32',
-                  flexDirection: 'row',
-                  borderRadius: responsiveHeight(5),
-                }}>
-                <EIcon name="search" size={25} color="white" />
               </TouchableOpacity>
             </View>
           </View>
@@ -1516,7 +1489,7 @@ export default class Watch extends Component {
             )}
           />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -1536,7 +1509,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(6),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -1559,7 +1532,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 50,
     borderRadius: 42,
-    marginTop: responsiveHeight(1.2),
+    marginTop: responsiveHeight(5),
     marginLeft: '85%',
     position: 'absolute',
   },

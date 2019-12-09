@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,9 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
+  SafeAreaView
 } from 'react-native';
-import {Left, Thumbnail} from 'native-base';
+import { Left, Thumbnail } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ETIcon from 'react-native-vector-icons/Entypo';
 import EIcon from 'react-native-vector-icons/EvilIcons';
@@ -25,14 +26,14 @@ import {
 } from 'react-native-responsive-dimensions';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {
   ScrollableTabView,
   DefaultTabBar,
   ScrollableTabBar,
 } from '@valdio/react-native-scrollable-tabview';
 import ImageView from 'react-native-image-view';
-import {CompanyPost} from '../../Backend/Create/CompanyPost';
+import { CompanyPost } from '../../Backend/Create/CompanyPost';
 
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
@@ -93,668 +94,627 @@ class Feed extends Component {
       file,
     } = this.state;
     return (
-      <ScrollView style={{flex: 1}}>
-        <View style={{marginBottom: 10}}>
-          <Text style={styles.welcome}>Company Profile</Text>
-          <Ionicon
-            name="ios-menu"
-            size={35}
-            color={'#32cd32'}
-            onPress={() => this.props.navigation.openDrawer()}
-            style={styles.menu}
-          />
-          <TouchableOpacity style={styles.menu1}>
-            <ETIcon
-              name="dots-three-vertical"
-              size={25}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <View style={{ marginBottom: 10 }}>
+            <Text style={styles.welcome}>Company Profile</Text>
+            <Ionicon
+              name="ios-menu"
+              size={35}
               color={'#32cd32'}
-              onPress={() => this.props.navigation.navigate('EditCompany')}
+              onPress={() => this.props.navigation.openDrawer()}
+              style={styles.menu}
             />
-          </TouchableOpacity>
-        </View>
-
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              height: responsiveHeight(30),
-              width: responsiveWidth(100),
-            }}>
-            <Image
-              source={require('../../Assets/watch.jpg')}
-              style={{width: '100%', height: '100%', borderRadius: 0}}
-            />
+            <TouchableOpacity style={styles.menu1}>
+              <ETIcon
+                name="dots-three-vertical"
+                size={25}
+                color={'#32cd32'}
+                onPress={() => this.props.navigation.navigate('EditCompany')}
+              />
+            </TouchableOpacity>
           </View>
 
-          <View
-            style={{
-              backgroundColor: 'white',
-              height: responsiveHeight(32),
-              width: responsiveWidth(100),
-              borderRadius: 20,
-              shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.5,
-              shadowRadius: 2,
-              elevation: 1,
-            }}>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <View
               style={{
-                alignSelf: 'center',
-                top: 10,
                 backgroundColor: 'white',
-                justifyContent: 'flex-start',
-                width: '90%',
-                height: '20%',
+                height: responsiveHeight(30),
+                width: responsiveWidth(100),
               }}>
-              <Text
-                style={{
-                  left: 5,
-                  fontSize: responsiveFontSize(3),
-                  color: '#32cd32',
-                  fontWeight: 'bold',
-                }}>
-                ABC Company
-              </Text>
+              <Image
+                source={require('../../Assets/watch.jpg')}
+                style={{ width: '100%', height: '100%', borderRadius: 0 }}
+              />
             </View>
 
             <View
               style={{
-                paddingHorizontal: 5,
-                alignSelf: 'center',
-                top: 0,
                 backgroundColor: 'white',
-                justifyContent: 'space-around',
-                alignItems: 'flex-start',
-                width: '90%',
-                height: '35%',
-              }}>
-              {/* <Text style={{letterSpacing:1, left:2,fontSize: responsiveFontSize(2), color: '#7e7474' }}>
-                            Company Info
-                        </Text> */}
-              <Text
-                style={{
-                  left: 1,
-                  fontSize: responsiveFontSize(1.8),
-                  fontWeight: 'bold',
-                  color: '#7e7474',
-                }}>
-                Address:
-                <Text
-                  style={{
-                    letterSpacing: 1,
-                    fontSize: responsiveFontSize(1.6),
-                    fontWeight: '800',
-                  }}>
-                  Plot 14 Street 12
-                </Text>
-              </Text>
-              <Text
-                style={{
-                  left: 1,
-                  fontSize: responsiveFontSize(1.8),
-                  fontWeight: 'bold',
-                  color: '#7e7474',
-                }}>
-                Email:
-                <Text
-                  style={{
-                    letterSpacing: 1,
-                    fontSize: responsiveFontSize(1.6),
-                    fontWeight: '800',
-                  }}>
-                  user123@gmail.com
-                </Text>
-              </Text>
-              <Text
-                style={{
-                  left: 1,
-                  fontSize: responsiveFontSize(1.8),
-                  fontWeight: 'bold',
-                  color: '#7e7474',
-                }}>
-                Phone#:
-                <Text
-                  style={{
-                    letterSpacing: 1,
-                    fontSize: responsiveFontSize(1.6),
-                    fontWeight: '800',
-                  }}>
-                  05133449
-                </Text>
-              </Text>
-            </View>
-            <View
-              style={{
-                alignSelf: 'center',
-                top: 5,
-                backgroundColor: 'white',
-                width: '90%',
-                height: '10%',
-                flexDirection: 'row',
+                height: responsiveHeight(32),
+                width: responsiveWidth(100),
+                borderRadius: 20,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.5,
+                shadowRadius: 2,
+                elevation: 1,
               }}>
               <View
                 style={{
-                  paddingHorizontal: 7,
-                  width: '80%',
-                  height: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  top: 10,
+                  backgroundColor: 'white',
+                  justifyContent: 'flex-start',
+                  width: '90%',
+                  height: '20%',
                 }}>
+                <Text
+                  style={{
+                    left: 5,
+                    fontSize: responsiveFontSize(3),
+                    color: '#32cd32',
+                    fontWeight: 'bold',
+                  }}>
+                  ABC Company
+              </Text>
+              </View>
+
+              <View
+                style={{
+                  paddingHorizontal: 5,
+                  alignSelf: 'center',
+                  top: 0,
+                  backgroundColor: 'white',
+                  justifyContent: 'space-around',
+                  alignItems: 'flex-start',
+                  width: '90%',
+                  height: '35%',
+                }}>
+                {/* <Text style={{letterSpacing:1, left:2,fontSize: responsiveFontSize(2), color: '#7e7474' }}>
+                            Company Info
+                        </Text> */}
                 <Text
                   style={{
                     left: 1,
                     fontSize: responsiveFontSize(1.8),
+                    fontWeight: 'bold',
                     color: '#7e7474',
                   }}>
-                  9:00 AM - 5:00 PM
+                  Address:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    Plot 14 Street 12
                 </Text>
-
+                </Text>
                 <Text
                   style={{
-                    letterSpacing: 1,
-                    fontSize: responsiveFontSize(1.6),
+                    left: 1,
+                    fontSize: responsiveFontSize(1.8),
                     fontWeight: 'bold',
+                    color: '#7e7474',
                   }}>
-                  Sat-Sun off
+                  Email:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    user123@gmail.com
+                </Text>
+                </Text>
+                <Text
+                  style={{
+                    left: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    fontWeight: 'bold',
+                    color: '#7e7474',
+                  }}>
+                  Phone#:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    05133449
+                </Text>
                 </Text>
               </View>
-
-              <TouchableOpacity
+              <View
                 style={{
-                  top: -18,
+                  alignSelf: 'center',
+                  top: 5,
                   backgroundColor: 'white',
-                  width: '20%',
-                  height: '100%',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  position: 'absolute',
-                  left: responsiveWidth(75),
+                  width: '90%',
+                  height: '10%',
+                  flexDirection: 'row',
                 }}>
                 <View
                   style={{
-                    flexDirection: 'column',
+                    paddingHorizontal: 7,
+                    width: '80%',
                     height: '100%',
-                    width: '50%',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                    left: 0,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#40d240',
+                      left: 1,
+                      fontSize: responsiveFontSize(1.8),
+                      color: '#7e7474',
+                    }}>
+                    9:00 AM - 5:00 PM
+                </Text>
+
+                  <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
                       fontWeight: 'bold',
-                      marginBottom: 10,
                     }}>
-                    45
-                  </Text>
-                  <TouchableOpacity>
-                    <ETIcon name="star" size={40} color="#32cd32" style={{}} />
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                marginTop: 2,
-                padding: 0,
-                paddingVertical: 8,
-                alignSelf: 'center',
-                top: 0,
-                backgroundColor: 'white',
-                width: '90%',
-                height: '34%',
-              }}>
-              <Text
-                numberOfLines={3}
-                style={{
-                  flex: 1,
-                  flexGrow: 1,
-                  fontSize: responsiveFontSize(1.8),
-                  color: '#7e7474',
-                }}>
-                SimpleText is the native text editor for the Apple classic Mac
-                OS. SimpleText allows editing including text formatting, fonts,
-                and sizes. It was developed to integrate the features included
-                in the different versions of TeachText that were created by
-                various software development groups within Appl
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <ScrollableTabView
-          tabBarUnderlineStyle={{height: 2, backgroundColor: '#32cd32'}}
-          tabBarInactiveTextColor="gray"
-          tabBarActiveTextColor="#32cd32"
-          renderTabBar={() => <DefaultTabBar />}>
-          <View tabLabel="Feed">
-            {/* #ebeeeb */}
-            <View
-              style={{
-                borderRadius: 10,
-                width: '96%',
-                backgroundColor: '',
-                height: '12%',
-                justifyContent: 'space-between',
-                elevation: 1,
-                alignSelf: 'center',
-              }}>
-              <TextInput
-                value={this.state.description}
-                onChangeText={values =>
-                  this.setState({
-                    description: values,
-                  })
-                }
-                multiline={true}
-                numberOfLines={6}
-                style={{
-                  textAlignVertical: 'top',
-                  fontSize: responsiveFontSize(2),
-                  height: '100%',
-                  width: '100%',
-                  paddingHorizontal: 10,
-                }}
-                placeholder={'Post Something'}
-              />
-            </View>
-            <View
-              style={{
-                top: 3,
-                height: '5%',
-                width: '96%',
-                flexDirection: 'row',
-                alignSelf: 'center',
-                borderRadius: 10,
-                elevation: 2,
-                justifyContent: 'space-evenly',
-              }}>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: '#ffffff',
-                  width: '33%',
-                  height: '100%',
-                  borderRadius: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  elevation: 1,
-                }}
-                onPress={() => {
-                  alert('Posted');
-                }}>
-                <FA name="camera" size={18} color="#32cd32" style={{}} />
-
-                <Text
-                  style={{
-                    marginLeft: 5,
-                    fontSize: responsiveFontSize(1.8),
-                    color: '#32cd32',
-                  }}>
-                  Image
+                    Sat-Sun off
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: '#ffffff',
-                  width: '33%',
-                  height: '100%',
-                  borderRadius: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  elevation: 1,
-                }}
-                onPress={() => {
-                  alert('Posted');
-                }}>
-                <FA name="video-camera" size={18} color="#32cd32" style={{}} />
+                
 
-                <Text
+                <TouchableOpacity
                   style={{
-                    marginLeft: 5,
-                    fontSize: responsiveFontSize(1.8),
-                    color: '#32cd32',
-                  }}>
-                  Video
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: '#32cd32',
-                  width: '33%',
-                  height: '100%',
-                  borderRadius: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  elevation: 1,
-                }}
-                onPress={() => {
-                  CompanyPost(
-                    description,
-                    uploading_time,
-                    comment,
-                    like,
-                    favorite,
-                    file,
-                  );
-                }}>
-                <FA name="upload" size={18} color="white" style={{}} />
-
-                <Text
-                  style={{
-                    marginLeft: 5,
-                    fontSize: responsiveFontSize(1.8),
-                    color: 'white',
-                  }}>
-                  Post
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <FlatList
-              data={[1, 2]}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
-                <View
-                  key={index}
-                  style={{
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 2,
-                    backgroundColor: '#eee',
-                    width: '100%',
-                    height: height,
-                    borderRadius: 25,
-                    paddingVertical: 20,
-                    paddingHorizontal: 10,
+                    top: -18,
                     backgroundColor: 'white',
-                    marginBottom: 5,
+                    width: '20%',
+                    height: '100%',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    left: responsiveWidth(75),
                   }}>
                   <View
                     style={{
-                      backgroundColor: 'white',
-                      width: '99%',
-                      height: '35%',
-                      flexDirection: 'row',
-                      marginBottom: 1,
+                      flexDirection: 'column',
+                      height: '100%',
+                      width: '50%',
+                      alignItems: 'center',
+                      justifyContent: 'space-evenly',
+                      left: 0,
                     }}>
-                    <View
-                      style={{
-                        width: '25%',
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                        padding: 10,
-                      }}>
-                      <Thumbnail source={{uri: uri}} />
-                    </View>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '60%',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(3),
-                          fontWeight: 'bold',
-                        }}>
-                        David Jhon
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        width: '15%',
-                        justifyContent: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(1.5),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        8h ago
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View
-                    style={{
-                      width: '99%',
-                      backgroundColor: '',
-                      paddingHorizontal: 20,
-                      height: '35%',
-                    }}>
-                    {/* <ScrollView> */}
                     <Text
                       style={{
-                        fontSize: responsiveFontSize(2.2),
-                        fontWeight: '600',
-                        color: '#7e7a7a',
-                        flexWrap: 'wrap',
-                      }}
-                      numberOfLines={2}>
-                      Once I was drawing a perfect chair for myself in my head
-                      but I could not finish her design.. And so I found her!
-                      was drawing a perfect chair for myself in my head but I
-                      could not finish her design.. And so I found her! Once I
-                      was drawing a perfect chair for myself in my head but I
-                      could not finish her design.. And so I found her! was
-                      drawing a perfect chair for myself in my head but I could
-                      not finish her design.. And so I found her!
-                    </Text>
-                    {/* </ScrollView> */}
+                        fontSize: responsiveFontSize(2),
+                        color: '#40d240',
+                        fontWeight: 'bold',
+                        marginBottom: 10,
+                      }}>
+                      45
+                  </Text>
+                    <TouchableOpacity>
+                      <ETIcon name="star" size={30} color="#32cd32" style={{}} />
+                    </TouchableOpacity>
                   </View>
-
-                  <View
-                    style={{
-                      height: '15%',
-                      flexDirection: 'row',
-                      paddingHorizontal: 20,
-                      backgroundColor: 'white',
-                    }}>
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        flexWrap: 'wrap',
-                        width: '33%',
-                        justifyContent: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <Icon name="account" size={20} color="#7e7a7a" />
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginHorizontal: 10,
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                          fontSize: responsiveFontSize(1.8),
-                        }}>
-                        878
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        flexWrap: 'wrap',
-                        width: '33%',
-                        justifyContent: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <EIcon name="like" size={25} color="#7e7a7a" />
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginHorizontal: 10,
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                          fontSize: responsiveFontSize(1.8),
-                        }}>
-                        91
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        flexWrap: 'wrap-reverse',
-                        width: '33%',
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                      }}>
-                      <Text
-                        style={{
-                          marginHorizontal: 10,
-                          fontWeight: '400',
-                          color: '#32cd32',
-                          fontSize: responsiveFontSize(1.8),
-                        }}>
-                        878
-                      </Text>
-                      <TouchableOpacity>
-                        <Ionicon name="ios-heart" size={20} color="#32cd32" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  <View
-                    style={{
-                      height: '20%',
-                      backgroundColor: 'white',
-                      flexDirection: 'row',
-                      padding: 1,
-                      marginHorizontal: 20,
-                      marginTop: 5,
-                      alignItems: 'center',
-                    }}>
-                    <TextInput
-                      style={{
-                        fontSize: responsiveFontSize(1.8),
-                        paddingLeft: 20,
-                        padding: 5,
-                        height: '100%',
-                        backgroundColor: '#dee3e1',
-                        width: '80%',
-                        borderRadius: 50,
-                      }}
-                      placeholder="Type something"
-                      placeholderStyle={{
-                        marginLeft: 20,
-                        fontSize: responsiveFontSize(1.8),
-                      }}>
-                      {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-                    </TextInput>
-                    {/* </View> */}
-                    <View
-                      style={{
-                        width: '20%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <Icon
-                          name="message"
-                          size={20}
-                          color="#7e7a7a"
-                          onPress={() => {
-                            alert('message');
-                          }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                </TouchableOpacity>
                 </View>
-              )}
-            />
-          </View>
-          <View tabLabel="Gallery">
-            <FlatList
-              data={[1, 2, 3, 1]}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
-                <View
+              </View>
+
+              <View
+                style={{
+                  marginTop: 2,
+                  padding: 0,
+                  paddingVertical: 8,
+                  alignSelf: 'center',
+                  top: 0,
+                  backgroundColor: 'white',
+                  width: '90%',
+                  height: '34%',
+                }}>
+                <Text
+                  numberOfLines={3}
                   style={{
-                    paddingVertical: 5,
-                    flexDirection: 'row',
-                    backgroundColor: 'white',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-evenly',
+                    flex: 1,
+                    flexGrow: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    color: '#7e7474',
                   }}>
-                  <ImageView
-                    images={images}
-                    imageIndex={0}
-                    isVisible={this.state.displayIMG}
-                    onClose={() => {
-                      this.setState({displayIMG: false});
-                    }}
-                  />
+                  SimpleText is the native text editor for the Apple classic Mac
+                  OS. SimpleText allows editing including text formatting, fonts,
+                  and sizes. It was developed to integrate the features included
+                  in the different versions of TeachText that were created by
+                  various software development groups within Appl
+              </Text>
+              </View>
+            </View>
+          </View>
 
-                  <TouchableOpacity
+          <ScrollableTabView
+            tabBarUnderlineStyle={{ height: 2, backgroundColor: '#32cd32' }}
+            tabBarInactiveTextColor="gray"
+            tabBarActiveTextColor="#32cd32"
+            renderTabBar={() => <DefaultTabBar />}>
+            <View tabLabel="Feed">
+              {/* #ebeeeb */}
+              <View
+                style={{
+                  borderRadius: 10,
+                  width: '96%',
+                  backgroundColor: '',
+                  height: '12%',
+                  justifyContent: 'space-between',
+                  elevation: 1,
+                  alignSelf: 'center',
+                }}>
+                <TextInput
+                  value={this.state.description}
+                  onChangeText={values =>
+                    this.setState({
+                      description: values,
+                    })
+                  }
+                  multiline={true}
+                  numberOfLines={6}
+                  style={{
+                    textAlignVertical: 'top',
+                    fontSize: responsiveFontSize(2),
+                    height: '100%',
+                    width: '100%',
+                    paddingHorizontal: 10,
+                  }}
+                  placeholder={'Post Something'}
+                />
+              </View>
+              <View
+                style={{
+                  top: 3,
+                  height: '5%',
+                  width: '96%',
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  borderRadius: 10,
+                  elevation: 2,
+                  justifyContent: 'space-evenly',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    backgroundColor: '#ffffff',
+                    width: '33%',
+                    height: '100%',
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 1,
+                  }}
+                  onPress={() => {
+                    alert('Posted');
+                  }}>
+                  <FA name="camera" size={18} color="#32cd32" style={{}} />
+
+                  <Text
                     style={{
-                      height: responsiveHeight(16),
-                      width: responsiveHeight(16.5),
-                    }}
-                    onPress={() => {
-                      this.setState({displayIMG: true});
+                      marginLeft: 5,
+                      fontSize: responsiveFontSize(1.8),
+                      color: '#32cd32',
                     }}>
-                    <Image
-                      source={{
-                        uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                    Image
+                </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    backgroundColor: '#ffffff',
+                    width: '33%',
+                    height: '100%',
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 1,
+                  }}
+                  onPress={() => {
+                    alert('Posted');
+                  }}>
+                  <FA name="video-camera" size={18} color="#32cd32" style={{}} />
+
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      fontSize: responsiveFontSize(1.8),
+                      color: '#32cd32',
+                    }}>
+                    Video
+                </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    backgroundColor: '#32cd32',
+                    width: '33%',
+                    height: '100%',
+                    borderRadius: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 1,
+                  }}
+                  onPress={() => {
+                    CompanyPost(
+                      description,
+                      uploading_time,
+                      comment,
+                      like,
+                      favorite,
+                      file,
+                    );
+                  }}>
+                  <FA name="upload" size={18} color="white" style={{}} />
+
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      fontSize: responsiveFontSize(1.8),
+                      color: 'white',
+                    }}>
+                    Post
+                </Text>
+                </TouchableOpacity>
+              </View>
+
+              <FlatList
+                data={[1, 2]}
+                keyExtractor={item => item.id}
+                renderItem={({ item, index }) => (
+                  <View
+                    key={index}
+                    style={{
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 2,
+                      elevation: 2,
+                      backgroundColor: '#eee',
+                      width: '100%',
+                      height: responsiveHeight(23),
+                      borderRadius: 25,
+                      paddingVertical: 20,
+                      paddingHorizontal: 10,
+                      backgroundColor: 'white',
+                      marginBottom: responsiveHeight(1),
+                      marginTop: responsiveHeight(3)
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: 'white',
+                        width: '99%',
+                        height: '35%',
+                        flexDirection: 'row',
+                        marginBottom: 1,
+                      }}>
+                      <View
+                        style={{
+                          width: '25%',
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                          padding: 10,
+                        }}>
+                        <Thumbnail source={{ uri: uri }} />
+                      </View>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          width: '60%',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: responsiveFontSize(3),
+                            fontWeight: 'bold',
+                          }}>
+                          David Jhon
+                      </Text>
+                      </View>
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          width: '15%',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: responsiveFontSize(1.5),
+                            fontWeight: '400',
+                            color: '#7e7a7a',
+                          }}>
+                          8h ago
+                      </Text>
+                      </View>
+                    </View>
+
+                    <View
+                      style={{
+                        width: '99%',
+                        backgroundColor: '',
+                        paddingHorizontal: 20,
+                        height: '35%',
+                      }}>
+                      {/* <ScrollView> */}
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(2.2),
+                          fontWeight: '600',
+                          color: '#7e7a7a',
+                          flexWrap: 'wrap',
+                        }}
+                        numberOfLines={2}>
+                        Once I was drawing a perfect chair for myself in my head
+                        but I could not finish her design.. And so I found her!
+                        was drawing a perfect chair for myself in my head but I
+                        could not finish her design.. And so I found her! Once I
+                        was drawing a perfect chair for myself in my head but I
+                        could not finish her design.. And so I found her! was
+                        drawing a perfect chair for myself in my head but I could
+                        not finish her design.. And so I found her!
+                    </Text>
+                      {/* </ScrollView> */}
+                    </View>
+
+                    <View
+                      style={{
+                        height: '15%',
+                        flexDirection: 'row',
+                        paddingHorizontal: 20,
+                        backgroundColor: 'white',
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          flexWrap: 'wrap',
+                          width: '33%',
+                          justifyContent: 'center',
+                        }}>
+                        <TouchableOpacity>
+                          <Icon name="account" size={20} color="#7e7a7a" />
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            color: '#7e7a7a',
+                            fontSize: responsiveFontSize(1.8),
+                          }}>
+                          878
+                      </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          flexWrap: 'wrap',
+                          width: '33%',
+                          justifyContent: 'center',
+                        }}>
+                        <TouchableOpacity>
+                          <EIcon name="like" size={25} color="#7e7a7a" />
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            color: '#7e7a7a',
+                            fontSize: responsiveFontSize(1.8),
+                          }}>
+                          91
+                      </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          flexWrap: 'wrap-reverse',
+                          width: '33%',
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            color: '#32cd32',
+                            fontSize: responsiveFontSize(1.8),
+                          }}>
+                          878
+                      </Text>
+                        <TouchableOpacity>
+                          <Ionicon name="ios-heart" size={20} color="#32cd32" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    
+                  </View>
+                )}
+              />
+            </View>
+            <View tabLabel="Gallery">
+              <FlatList
+                data={[1, 2, 3, 1]}
+                keyExtractor={item => item.id}
+                renderItem={({ item, index }) => (
+                  <View
+                    style={{
+                      paddingVertical: 5,
+                      flexDirection: 'row',
+                      backgroundColor: 'white',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <ImageView
+                      images={images}
+                      imageIndex={0}
+                      isVisible={this.state.displayIMG}
+                      onClose={() => {
+                        this.setState({ displayIMG: false });
                       }}
-                      style={{height: '100%', width: '100%'}}
                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      height: responsiveHeight(16),
-                      width: responsiveHeight(16.5),
-                    }}
-                    onPress={() => {
-                      this.setState({displayIMG: true});
-                    }}>
-                    <Image
-                      source={{
-                        uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+
+                    <TouchableOpacity
+                      style={{
+                        height: responsiveHeight(16),
+                        width: responsiveHeight(16.5),
                       }}
-                      style={{height: '100%', width: '100%'}}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      height: responsiveHeight(16),
-                      width: responsiveHeight(16.5),
-                    }}>
-                    <Image
-                      source={{
-                        uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                      }}
-                      style={{height: '100%', width: '100%'}}
                       onPress={() => {
-                        this.setState({displayIMG: true});
+                        this.setState({ displayIMG: true });
+                      }}>
+                      <Image
+                        source={{
+                          uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                        }}
+                        style={{ height: '100%', width: '100%' }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        height: responsiveHeight(16),
+                        width: responsiveHeight(16.5),
                       }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-          </View>
-          <View tabLabel="Client of Week">
-            <Image
-              source={require('../../Assets/cow.png')}
-              style={{
-                width: responsiveWidth(100),
-                height: responsiveHeight(73),
-              }}
-            />
-          </View>
-        </ScrollableTabView>
-      </ScrollView>
+                      onPress={() => {
+                        this.setState({ displayIMG: true });
+                      }}>
+                      <Image
+                        source={{
+                          uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                        }}
+                        style={{ height: '100%', width: '100%' }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        height: responsiveHeight(16),
+                        width: responsiveHeight(16.5),
+                      }}>
+                      <Image
+                        source={{
+                          uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                        }}
+                        style={{ height: '100%', width: '100%' }}
+                        onPress={() => {
+                          this.setState({ displayIMG: true });
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </View>
+            <View tabLabel="Client of Week">
+              <Image
+                source={require('../../Assets/cow.png')}
+                style={{
+                  width: responsiveWidth(100),
+                  height: responsiveHeight(73),
+                }}
+              />
+            </View>
+          </ScrollableTabView>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }

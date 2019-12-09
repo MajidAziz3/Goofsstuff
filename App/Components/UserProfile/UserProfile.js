@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   BackHandler,
   RecyclerViewBackedScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail} from 'native-base';
 import ImageView from 'react-native-image-view';
@@ -221,7 +222,7 @@ class UserProfile extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1}}>
         {this.state.loading ? (
           <ActivityIndicator
             size={'large'}
@@ -1273,7 +1274,7 @@ class UserProfile extends Component {
             </ScrollView>
           </View>
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 }

@@ -7,7 +7,8 @@ import {
     Image,
     Alert,
     ScrollView,
-    FlatList, TextInput
+    FlatList, TextInput,
+    SafeAreaView
 } from 'react-native';
 import { Left } from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -75,7 +76,7 @@ export default class FriendsList extends Component {
     render() {
 
         return (
-            <View style={{ flex: 1 ,backgroundColor:'#F5F5F5'}} >
+            <SafeAreaView style={{ flex: 1 ,backgroundColor:'#F5F5F5'}} >
               <View style={{marginBottom:10}}>
               <Text style={styles.welcome}> Friends</Text>
         <Ionicon name="ios-menu" size={35} color={'#32cd32'} onPress={() => this.props.navigation.openDrawer()} style={styles.menu} />
@@ -121,7 +122,7 @@ export default class FriendsList extends Component {
                         return item.id;
                     }}
                     renderItem={this.renderItem} />
-            </View>
+            </SafeAreaView>
         );
     }
 }

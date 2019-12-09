@@ -11,6 +11,7 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -230,7 +231,7 @@ class GroupDetails extends Component {
       item,
     } = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View>
           <Text style={styles.welcome}>Group Details</Text>
           <FIcon
@@ -781,7 +782,7 @@ class GroupDetails extends Component {
             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
