@@ -78,6 +78,8 @@ import JobInfo from '../Components/Home/JobInfo';
 import AppWorking from '../Components/Login/AppWorking';
 import CommunityGuide from '../Components/Login/CommunityGuide';
 import VisionBoard from '../Components/UserProfile/VisionBoard'
+import AppWorking1 from '../Components/Login/AppWorking1';
+import House1 from '../Components/Login/House1';
 
 var width = Dimensions.get('window').width;
 
@@ -335,8 +337,8 @@ const AppDrawerNavigator = createDrawerNavigator(
     },
 
     TermsandCondition: {screen: TermsandCondition},
-    House: {screen: House},
-    AppWorking: {screen: AppWorking},
+    House: {screen: House1},
+    AppWorking: {screen: AppWorking1},
     CommunityGuide: {screen: CommunityGuide},
     Chat:{
       screen:Chat
