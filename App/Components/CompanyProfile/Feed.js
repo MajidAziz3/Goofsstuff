@@ -652,6 +652,7 @@ class Feed extends Component {
                       onClose={() => {
                         this.setState({ displayIMG: false });
                       }}
+                      renderFooter={(currentImage) => (<View style={{marginBottom: responsiveHeight(4), alignItems:'center'}}><Text style={{fontSize: 20, color: 'white'}}>Hello! I'm Footer</Text></View>)}
                     />
 
                     <TouchableOpacity

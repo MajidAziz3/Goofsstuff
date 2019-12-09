@@ -382,7 +382,7 @@ export default class GoodNews extends Component {
             name="user"
             size={30}
             color="#d0d0d0dd"
-            style={[styles.menu1, {marginTop: responsiveHeight(6)}]}
+            style={[styles.menu1]}
           />
         ) : (
           <Image
@@ -640,6 +640,7 @@ export default class GoodNews extends Component {
                       <View
                         style={{
                           backgroundColor: 'white',
+                          borderRadius: 25,
                           width: 60,
                           justifyContent: 'center',
                           alignItems: 'center',
@@ -783,15 +784,14 @@ export default class GoodNews extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          flexWrap: 'wrap',
-                          
-                          alignItems: 'flex-end',
+                   justifyContent:'space-between',
+                          alignItems: 'center',
                         }}>
                         <TouchableOpacity>
                           <FontAwesome
                             name="comment-o"
-                            size={20}
-                            color="#7e7a7a"
+                            size={30}
+                            color="#32cd32"
                             onPress={() => {
                               this.setModalVisible();
                               this.CommentPost(item.post_id);
@@ -802,7 +802,8 @@ export default class GoodNews extends Component {
                           style={{
                             marginHorizontal: 10,
                             fontWeight: '400',
-                            color: '#7e7a7a',
+                            top:5,
+                            color: '#32cd32',
                             fontSize: responsiveFontSize(1.6),
                           }}>
                           0{/* {item.comments.length} */}
@@ -817,10 +818,10 @@ export default class GoodNews extends Component {
                           alignItems: 'flex-end',
                         }}>
                         <TouchableOpacity>
-                          <EIcon
-                            name="like"
-                            size={25}
-                            color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
+                          <AIcon
+                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            size={28}
+                            color={'#32cd32'}
                             onPress={() => {
                               this.likePost(item.post_id);
                               this.setState({
@@ -833,10 +834,12 @@ export default class GoodNews extends Component {
                           style={{
                             marginHorizontal: 10,
                             fontWeight: '400',
-                            color: '#7e7a7a',
+                            alignItems: 'center',
+                            color:'#32cd32',
+                            
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {/* {item.like.length} */}
+                          {/* {item.like.length} */}0
                         </Text>
                       </View>
                       <View
@@ -858,13 +861,15 @@ export default class GoodNews extends Component {
                         </Text>
                         <TouchableOpacity>
                           <Ionicon
-                            name="ios-heart"
-                            size={20}
-                            color={this.state.hit_favorite ? '#32cd32' : null}
+                            name={this.state.hit_favorite ? "md-heart" : "md-heart-empty"}
+                            size={30}
+                            color={'#32cd32'}
+                            style={{top:1}}
                             onPress={() => {
                               this.favoritePost(item.post_id);
                               this.setState({
                                 hit_favorite: !this.state.hit_favorite,
+                        
                               });
                             }}
                           />
@@ -903,7 +908,7 @@ export default class GoodNews extends Component {
                         <Ionicon
                           name="ios-camera"
                           size={30}
-                          style={{right: 15, position: 'absolute'}}
+                          style={{right: 15, position: 'absolute',top:5}}
                           onPress={this.handleChoosePhoto}
                         />
                       </View>
@@ -917,7 +922,7 @@ export default class GoodNews extends Component {
                         <Icon
                           name="send-circle-outline"
                           size={30}
-                          color="#7e7a7a"
+                          color="#32cd32"
                           onPress={() => {
                             this.CommentsPost(item.post_id);
                           }}
@@ -961,7 +966,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(6),
+    marginTop: responsiveHeight(1.8),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -969,7 +974,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 50,
     borderRadius: 42,
-    marginTop: responsiveHeight(1.2),
+    marginTop: responsiveHeight(1.8),
     marginLeft: '85%',
     position: 'absolute',
   },

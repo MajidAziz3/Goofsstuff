@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
   ScrollView,
   SafeAreaView
 } from 'react-native';
-import {Left, Thumbnail, Input} from 'native-base';
+import { Left, Thumbnail, Input } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 // import { Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,8 +31,8 @@ class MainAuth extends Component {
   };
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <ScrollView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
           <View
             style={{
               marginHorizontal: 10,
@@ -54,7 +54,7 @@ class MainAuth extends Component {
                 }}>
                 <Image
                   source={require('../../Assets/goodstuff.png')}
-                  style={{height: '80%', width: '100%'}}
+                  style={{ height: '80%', width: '100%' }}
                 />
               </View>
             </View>
@@ -109,16 +109,25 @@ class MainAuth extends Component {
                   style={{
                     right: 0,
                     position: 'absolute',
+                    marginBottom: responsiveHeight(5)
                   }}>
                   <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate('House');
-                    }}>
+                    style={{
+                      backgroundColor: 'rgb(53, 203, 53)',
+                      width: responsiveWidth(40),
+                      height: responsiveHeight(8),
+                      borderRadius: 30,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      
+                    }}
+                    onPress={() => this.props.navigation.navigate('House')}>
                     <Text
                       style={{
-                        color: 'rgb(53, 203, 53)',
-                        fontWeight: 'bold',
-                        marginBottom: 15,
+                        fontSize: responsiveFontSize(2.0),
+                        alignSelf: 'center',
+                        color: 'white',
+                        marginright: 10,
                       }}>
                       Bulid The House...
                     </Text>
@@ -134,6 +143,7 @@ class MainAuth extends Component {
                   borderBottomColor: 'rgb(53, 203, 53)',
                   marginBottom: 10,
                   fontWeight: 'bold',
+                  marginTop: responsiveHeight(8)
                 }}>
                 Community Guidelines
               </Text>
