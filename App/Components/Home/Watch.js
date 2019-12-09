@@ -278,7 +278,7 @@ export default class Watch extends Component {
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}>
-          <View style={{}}>
+          <ScrollView style={{}}>
             <TouchableOpacity
               onPress={() => {
                 this.setModalVisible(!this.state.modalVisible);
@@ -763,7 +763,7 @@ export default class Watch extends Component {
                 </View>
               )}
             />
-          </View>
+          </ScrollView>
         </Modal>
 
         <Text style={styles.welcome}>Watch</Text>
