@@ -29,6 +29,8 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import {GroupPost} from '../../Backend/Create/GroupPost';
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 
 // import { formatResultsErrors } from 'jest-message-util';
 ///Enterprneure Corner Gallary
@@ -47,6 +49,14 @@ class GroupDetails extends Component {
       like: [],
       favorite: [],
       file: null,
+      item: this.props.navigation.state.params.item,
+      photo: null,
+      imageType: null,
+      ImageName: null,
+      ImageUrl: null,
+      videoPath: null,
+      videoType: null,
+      videoName: null,
     };
   }
 
@@ -64,6 +74,152 @@ class GroupDetails extends Component {
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
   };
+
+  handlechooseVideo = () => {
+    const options = {
+      title: 'Select video',
+      mediaType: 'video',
+
+      quality: 1,
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        this.setState({
+          videoPath: response.uri,
+          videoType: 'mp4',
+          videoName: response.path,
+        });
+      }
+    });
+  };
+
+  upload_Video = async () => {
+    var parts = this.state.videoName.split('/');
+    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      await uploadVideo(
+        this.state.videoPath,
+        this.state.videoType,
+        lastSegment,
+        'video',
+        'News',
+        item,
+      );
+      console.log('i m here');
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+    AsyncStorage.removeItem('doc_id');
+  };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('user').then(async item => {
+      console.log('refffffffff', item);
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'Create_Group',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+
   render() {
     const {
       description,
@@ -72,6 +228,7 @@ class GroupDetails extends Component {
       like,
       favorite,
       file,
+      item,
     } = this.state;
     return (
       <SafeAreaView style={styles.container}>
@@ -124,14 +281,14 @@ class GroupDetails extends Component {
                 fontWeight: '600',
                 color: '#000000',
               }}>
-              Enterpreneur Corner
+              {this.state.item.group_name}
             </Text>
           </View>
 
           <View
             style={{backgroundColor: 'white', height: '55%', width: '100%'}}>
             <Image
-              source={require('../../Assets/watch.jpg')}
+              source={{uri: item.imageUrl}}
               style={{width: '100%', height: '100%'}}
             />
           </View>
@@ -171,7 +328,7 @@ class GroupDetails extends Component {
                     fontWeight: '600',
                     color: 'black',
                   }}>
-                  Annapolis Rock
+                  {item.group_location}
                 </Text>
               </View>
 
@@ -231,7 +388,7 @@ class GroupDetails extends Component {
                       color: 'black',
                       alignItems: 'center',
                     }}>
-                    459
+                    {item.group_member.length}
                   </Text>
                   <AIcon name="plus" size={8} color="#000" />
                 </View>
@@ -257,9 +414,7 @@ class GroupDetails extends Component {
                     color: '#8f8f8f',
                   }}
                   numberOfLines={2}>
-                  SimpleText is the native text editor for the Apple classic Mac
-                  OS. SimpleText allows editing including text formatting,
-                  fonts, and sizes
+                  {item.group_description}
                 </Text>
               </View>
             </View>
@@ -314,7 +469,7 @@ class GroupDetails extends Component {
               elevation: 1,
             }}
             onPress={() => {
-              alert('Posted');
+              this.handleChoosePhoto();
             }}>
             <FontAwesome name="camera" size={18} color="#32cd32" style={{}} />
 
@@ -339,7 +494,7 @@ class GroupDetails extends Component {
               elevation: 1,
             }}
             onPress={() => {
-              alert('Posted');
+              this.handlechooseVideo();
             }}>
             <FontAwesome
               name="video-camera"
@@ -489,15 +644,15 @@ class GroupDetails extends Component {
             </Text>
             {/* </ScrollView> */}
           </View>
- 
+
           <View
             style={{
               flexDirection: 'row',
-            //   paddingHorizontal: 15,
+              //   paddingHorizontal: 15,
               backgroundColor: 'white',
               height: '15%',
               alignItems: 'center',
-              justifyContent:'space-evenly'
+              justifyContent: 'space-evenly',
             }}>
             {/*}
             <View

@@ -54,9 +54,7 @@ export default class AddGroup extends Component {
       group_name: '',
       group_location: '',
       group_description: '',
-      category: 'Sports',
-      file: null,
-      gruop_member: [],
+      group_member:[],
       group_admins: [],
       photo: null,
       imageType: null,
@@ -108,7 +106,7 @@ export default class AddGroup extends Component {
 
   async Upload_Image() {
     let iteratorNum = 0;
-    await _retrieveData('ref').then(async item => {
+    await _retrieveData('user').then(async item => {
       console.log('refffffffff', item);
       await uploadImage(
         this.state.ImageUrl,
@@ -156,7 +154,7 @@ export default class AddGroup extends Component {
       group_description,
       category,
       file,
-      gruop_member,
+      group_member,
       group_admins,
     } = this.state;
 
@@ -415,9 +413,9 @@ export default class AddGroup extends Component {
                   width: '20%',
                   height: '100%',
                   alignItems: 'center',
-                  justifyContent:'flex-end',
+                  justifyContent: 'flex-end',
                   borderRadius: 10,
-                  right:20
+                  right: 20,
                 }}>
                 <TouchableOpacity
                   style={{
@@ -637,17 +635,21 @@ export default class AddGroup extends Component {
             }}>
             <TouchableOpacity
               onPress={() => {
-                Create_Group(
-                  group_name,
-                  group_location,
-                  group_description,
-                  category,
-                  file,
-                  gruop_member,
-                ).then(() => {
-                  setTimeout(async () => {
-                    await this.Upload_Image();
-                  }, 3000);
+                _retrieveData('user').then(result => {
+                  let data = group_admins;
+                  data.push(result);
+                  this.setState({group_admins: data,group_member:data});
+                  Create_Group(
+                    group_name,
+                    group_location,
+                    group_description,
+                    group_member,
+                    group_admins,
+                  ).then(() => {
+                    setTimeout(async () => {
+                      await this.Upload_Image();
+                    }, 3000);
+                  });
                 });
               }}>
               <Text style={{fontSize: responsiveFontSize(2), color: '#ff0000'}}>
