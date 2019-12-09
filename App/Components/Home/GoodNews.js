@@ -723,7 +723,7 @@ export default class GoodNews extends Component {
                       </View>
                       <View style={{
                         width:'100%',
-                        height:responsiveHeight(30),
+                        height:item.imageUrl || item.videoUrl ? responsiveHeight(30):null,
                         
                       }}>
                         {item.imageUrl ? (
