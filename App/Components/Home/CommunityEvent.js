@@ -11,7 +11,6 @@ import {
   ScrollView,
 } from 'react-native';
 import {Thumbnail} from 'native-base';
-
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,8 +21,9 @@ import {
 } from 'react-native-responsive-dimensions';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
-
 import FA from 'react-native-vector-icons/FontAwesome';
+import firebase from 'firebase';
+import {getAllOfCollection} from '../../Backend/Utility';
 
 class CommunityEvent extends Component {
   static navigationOptions = {
@@ -62,8 +62,18 @@ class CommunityEvent extends Component {
           imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
         },
       ],
+      sport_data: [],
+      event_data: [],
+      loading: true,
     };
   }
+
+  // componentDidMount() {
+  //   this.sportPost();
+  //   this.EventPost();
+  // }
+
+ 
   handleChoosePhoto = () => {
     var options = {
       title: 'Select Image',
@@ -72,30 +82,30 @@ class CommunityEvent extends Component {
         path: 'images',
       },
     };
-  ImagePicker.showImagePicker(options, response => {
-    console.log('Response = ', response);
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
 
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else if (response.customButton) {
-      console.log('User tapped custom button: ', response.customButton);
-      alert(response.customButton);
-    } else {
-      //let source = response;
-      // You can also display the image using data:
-      let source = response;
-      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-      this.setState({
-        photo: source,
-      });
-    }
-  });
-};
-
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        //let source = response;
+        // You can also display the image using data:
+        let source = response;
+        //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          photo: source,
+        });
+      }
+    });
+  };
 
   render() {
+    console.log("dssssssssssssss",this.state.event_data,this.state.sport_data)
     return (
       <View
         style={{

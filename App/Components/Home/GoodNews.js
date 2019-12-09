@@ -614,8 +614,7 @@ export default class GoodNews extends Component {
                   <View
                     key={index}
                     style={{
-                      justifyContent:
-                        item.imageUrl || item.videoUrl ? null : 'space-evenly',
+                     
                       shadowColor: '#000',
                       shadowOffset: {width: 0, height: 2},
                       shadowOpacity: 0.5,
@@ -623,16 +622,14 @@ export default class GoodNews extends Component {
                       elevation: 2,
                       backgroundColor: '#eee',
                       width: '100%',
-                      height:
-                        item.imageUrl || item.videoUrl
-                          ? responsiveHeight(70)
-                          : responsiveHeight(35),
+                     
                       borderRadius: 25,
                       paddingVertical: 0,
                       paddingHorizontal:
                         item.imageUrl || item.videoUrl ? 10 : 10,
                       backgroundColor: 'white',
-                      marginBottom: item.imageUrl || item.videoUrl ? 4 : 5,
+                      marginBottom:responsiveHeight(2)
+                      
                     }}>
                     <View
                       style={{
@@ -706,14 +703,15 @@ export default class GoodNews extends Component {
                     <View
                       style={{
                         width: '99%',
-                        backgroundColor: 'white',
                         paddingHorizontal: 20,
-                        height: '35%',
+                       marginBottom:responsiveHeight(2),
+                        backgroundColor:'white',
+                        marginBottom:3
                       }}>
                       {/* <ScrollView> */}
                       <Text
                         style={{
-                          fontSize: responsiveFontSize(2),
+                          fontSize: responsiveFontSize(2.1),
                           fontWeight: '600',
                           color: '#7e7a7a',
                           flexWrap: 'wrap',
@@ -721,17 +719,28 @@ export default class GoodNews extends Component {
                         numberOfLines={4}>
                         {item.description}
                       </Text>
-                      <View >
+                      </View>
+                      <View style={{
+                        width:'100%',
+                        height:responsiveHeight(30),
+                        
+                      }}>
                         {item.imageUrl ? (
                           <View
                             style={{
-                              height: responsiveHeight(42),
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: 'white',
+                              width: '99%',
+                              height: '100%',
+                              flexDirection: 'row',
+                              marginBottom: 1,
+                              
                             }}>
                             <Image
                               style={{
-                                height: responsiveHeight(40),
-                                width: responsiveWidth(80),
-                                position: 'relative',
+                                width: '100%',
+                              height: '100%',
                               }}
                               source={{uri: item.imageUrl}}
                               resizeMode={'cover'}
@@ -762,24 +771,24 @@ export default class GoodNews extends Component {
                           </View>
                         ) : null}
                       </View>
-                    </View>
-
-                    <View
+                      <View
                       style={{
                         flexDirection: 'row',
                         paddingHorizontal: 0,
                         backgroundColor: 'white',
-                        height: item.imageUrl || item.videoUrl ? '8%' : '15%',
+                        
                         // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
                         // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
                         marginHorizontal: 10,
                         marginVertical: 10,
+                        alignItems:'center',
+                        justifyContent:"space-evenly"
                       }}>
                       <View
                         style={{
                           flexDirection: 'row',
                           flexWrap: 'wrap',
-                          width: '30%',
+                          
                           alignItems: 'flex-end',
                         }}>
                         <TouchableOpacity>
@@ -807,7 +816,7 @@ export default class GoodNews extends Component {
                         style={{
                           flexDirection: 'row',
                           flexWrap: 'wrap',
-                          width: '30%',
+                         
                           justifyContent: 'center',
                           alignItems: 'flex-end',
                         }}>
@@ -838,7 +847,7 @@ export default class GoodNews extends Component {
                         style={{
                           flexDirection: 'row',
                           flexWrap: 'wrap',
-                          width: '30%',
+                         
                           justifyContent: 'center',
                           alignItems: 'flex-end',
                         }}>
@@ -866,10 +875,10 @@ export default class GoodNews extends Component {
                         </TouchableOpacity>
                       </View>
                     </View>
-
+                  
                     <View
                       style={{
-                        height: item.imageUrl || item.videoUrl ? '10%' : '18%',
+                        marginBottom:responsiveHeight(2),
                         backgroundColor: 'white',
                         flexDirection: 'row',
                         padding: 1,
@@ -919,6 +928,11 @@ export default class GoodNews extends Component {
                         />
                       </View>
                     </View>
+
+
+                    
+
+                    
                   </View>
                 )}
               />

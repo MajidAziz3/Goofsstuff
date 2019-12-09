@@ -26,6 +26,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import firebase from 'firebase';
 import {getAllOfCollection, getData} from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import Contacts from 'react-native-contacts';
+import { PermissionsAndroid } from 'react-native';
+import SendSMS from 'react-native-sms'
+import SmsAndroid from 'react-native-sms-android'
 
 //frineds Screen
 const uri = 'https://randomuser.me/api/portraits/men/8.jpg';
@@ -38,11 +42,73 @@ export default class InviteFriends extends Component {
       loading: true,
       pending_request: [],
       diff: [],
+      Contacts_data:[],
       send: false,
     };
   }
 
+  sendMSg(item){
+   
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.SEND_SMS,
+      {
+        'title': 'Contacts',
+        'message': 'This app would like to view your contacts.'
+      }
+    ).then(() => {
+      item.map((itm)=>
+      SendSMS.send({
+        //Message body
+        body: 'Please follow me on Good_Stuff',
+        //Recipients Number
+        recipients: ['03348522057'],
+        //An array of types that would trigger a "completed" response when using android
+        successTypes: ['sent', 'queued'],
+        allowAndroidSendWithoutReadPermission: true
+    }, (completed, cancelled, error) => {
+        if(completed){
+          console.log('SMS Sent Completed');
+        }else if(cancelled){
+          console.log('SMS Sent Cancelled');
+        }else if(error){
+          console.log('Some error occured');
+        }
+    })
+
+      )
+    }
+    )
+  }
+
   componentDidMount = async () => {
+   
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+      {
+        'title': 'Contacts',
+        'message': 'This app would like to view your contacts.'
+      }
+    ).then(() => {
+      Contacts.getAll((err, contacts) => {
+        if (err === 'denied'){
+          // error
+        } else {
+          // contacts returned in Array
+          contacts.map((item)=>console.log("hhhhhh",item.familyName,item.givenName))
+          this.setState({
+            Contacts_data:contacts
+          })
+        }
+      })
+    })
+    // Contacts.getAll((err, contacts) => {
+    //   if (err && err.type === 'permissionDenied') {
+    //     // x.x
+    //   } else {
+    //     console.log(contacts);
+    //   }
+    // });
+
     const {diff, pending_request, data} = this.state;
     await getAllOfCollection('users').then(async result => {
       // console.log('ressssssssssssssss', result.userId);
@@ -130,6 +196,7 @@ export default class InviteFriends extends Component {
   };
 
   render() {
+    console.log("haha",this.state.Contacts_data)
     return (
       <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
         <View style={{marginBottom: 10}}>
@@ -203,40 +270,38 @@ export default class InviteFriends extends Component {
             color="blue"
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
           />
-        ) : 
+        ) : (
           <FlatList
             extraData={this.state}
-            data={this.state.data}
+            data={this.state.Contacts_data}
             ItemSeparatorComponent={this.renderSeparator}
             keyExtractor={item => {
               return item.id;
             }}
             renderItem={({item, index}) => {
+              console.log('khananan',item.familyName)
               return (
                 <View style={styles.row}>
-                  {this.state.diff.map(itm =>
-                    itm.userId == item.userId ? (
-                      null
-                    ) : (
                       <View style={styles.row}>
                         <View style={styles.imageContainer}>
-                          <Image source={{uri: uri}} style={styles.pic} />
+                          <Image source={{uri: item.thumbnailPath}} style={styles.pic} />
                         </View>
                         {/* <Text>{itm.userId}</Text> */}
                         <View style={styles.nameContainer}>
                           <Text style={styles.nameTxt} numberOfLines={1}>
-                            {item.name}
+                            {item.givenName} {item.familyName}
                           </Text>
                         </View>
                         <TouchableOpacity
                           style={styles.InviteFriendsContainer}
                           onPress={() => {
-                            this.setState({send: true});
-                            this.pending_Request_check(
-                              item.userId,
-                              item.name,
-                              item.profile_picture,
-                            );
+                            this.sendMSg(item.phoneNumbers)
+                            // this.setState({send: true});
+                            // this.pending_Request_check(
+                            //   item.userId,
+                            //   item.name,
+                            //   item.profile_picture,
+                            // );
                           }}>
                           <Ionicon
                             name="md-person-add"
@@ -259,13 +324,11 @@ export default class InviteFriends extends Component {
                           />
                         </TouchableOpacity>
                       </View>
-                    ),
-                  )}
                 </View>
               );
             }}
           />
-        }
+        )}
       </View>
     );
   }
