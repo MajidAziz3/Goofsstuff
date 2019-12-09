@@ -137,7 +137,7 @@ class GroupList extends Component {
         ) : (
           <ScrollView style={styles.container1}>
             <FlatList
-              data={this.state.datasource}
+              data={this.state.post_data}
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
                 <TouchableOpacity
@@ -155,7 +155,7 @@ class GroupList extends Component {
                     marginBottom: 0,
                   }}
                   onPress={() =>
-                    this.props.navigation.navigate('GroupDetails')
+                    this.props.navigation.navigate('GroupDetails',{item:item})
                   }>
                   <View
                     style={{
@@ -174,7 +174,7 @@ class GroupList extends Component {
                         fontWeight: '600',
                         color: '#000000',
                       }}>
-                      Enterpreneur Corner
+                      {item.group_name}
                     </Text>
                   </View>
 
@@ -185,7 +185,7 @@ class GroupList extends Component {
                       width: '100%',
                     }}>
                     <Image
-                      source={require('../../Assets/watch.jpg')}
+                      source={{uri: item.imageUrl}}
                       style={{width: '100%', height: '100%'}}
                     />
                   </View>
@@ -225,7 +225,7 @@ class GroupList extends Component {
                             fontWeight: '600',
                             color: 'black',
                           }}>
-                          Annapolis Rock
+                          {item.location}
                         </Text>
                       </View>
 
@@ -285,7 +285,7 @@ class GroupList extends Component {
                               color: 'black',
                               alignItems: 'center',
                             }}>
-                            459
+                            {item.group_member.length}
                           </Text>
                           <AIcon name="plus" size={8} color="#000" />
                         </View>
@@ -311,9 +311,7 @@ class GroupList extends Component {
                             color: '#8f8f8f',
                           }}
                           numberOfLines={2}>
-                          SimpleText is the native text editor for the Apple
-                          classic Mac OS. SimpleText allows editing including
-                          text formatting, fonts, and sizes
+                          {item.group_description}
                         </Text>
                       </View>
                     </View>
