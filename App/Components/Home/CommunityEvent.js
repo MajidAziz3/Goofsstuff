@@ -9,15 +9,18 @@ import {
   FlatList,
   StatusBar,
   ScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Thumbnail} from 'native-base';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import ETIcon from 'react-native-vector-icons/Entypo';
 import {
-  responsiveFontSize,
   responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
@@ -107,185 +110,193 @@ class CommunityEvent extends Component {
   render() {
     console.log("dssssssssssssss",this.state.event_data,this.state.sport_data)
     return (
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
         }}>
         <ScrollView>
           <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-          <Text style={styles.welcome}>Trainng Hike</Text>
-          <Ionicon
-            name="ios-menu"
-            size={35}
-            color={'#32cd32'}
-            onPress={() => this.props.navigation.navigate('CommunityBoard')}
-            style={styles.menu}
-          />
-          <Text style={styles.menu1}>Category</Text>
-          <Image
-            source={{
-              uri: 'https://randomuser.me/api/portraits/men/28.jpg',
-            }}
-            style={{
-              height: 250,
-              width: '100%',
-            }}
-          />
-
-          <View
-            style={{
-              left: 60,
-            }}>
-            <Text>Event Host</Text>
-          </View>
-          <View style={{right: 10, top: 305, position: 'absolute'}}>
-            <Text>Attending</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              backgroundColor: 'white',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            }}>
-            <Thumbnail
-              small
-              source={{
-                uri: 'https://randomuser.me/api/portraits/men/45.jpg',
-              }}
-              style={{
-                left: 20,
-                borderRadius: 30,
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 5,
-              }}
+          <View style={{ marginBottom: 10 }}>
+            <Text style={styles.welcome}>Event Details</Text>
+            <Ionicon
+              name="ios-menu"
+              size={35}
+              color={'#32cd32'}
+              onPress={() => this.props.navigation.openDrawer()}
+              style={styles.menu}
             />
-            <Text
-              style={{
-                left: 30,
-                fontSize: responsiveFontSize(1.8),
-                fontWeight: '600',
-                color: '#5e5d5d',
-              }}>
-              Jena louis
-            </Text>
+
           </View>
-          <View>
+
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <View
               style={{
-                flexDirection: 'row',
-                right: 50,
-                bottom: 5,
-                position: 'absolute',
+                backgroundColor: 'white',
+                height: responsiveHeight(30),
+                width: responsiveWidth(100),
+              }}>
+              <Image
+                source={require('../../Assets/watch.jpg')}
+                style={{ width: '100%', height: '100%', borderRadius: 0 }}
+              />
+            </View>
+
+            <View
+              style={{
+                backgroundColor: 'white',
+                height: responsiveHeight(32),
+                width: responsiveWidth(100),
+                borderRadius: 20,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.5,
+                shadowRadius: 2,
+                elevation: 1,
               }}>
               <View
                 style={{
-                  left: 10,
-                  flexDirection: 'row',
-                  backgroundColor: 'white',
-                  alignItems: 'center',
-                }}>
-                <Thumbnail
-                  small
-                  source={{
-                    uri: 'https://randomuser.me/api/portraits/women/43.jpg',
-                  }}
-                  style={{
-                    marginLeft: 0,
-                    borderRadius: 30,
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 5,
-                    height: 30,
-                    width: 30,
-                  }}
-                />
-                <Thumbnail
-                  small
-                  source={{
-                    uri: 'https://randomuser.me/api/portraits/men/51.jpg',
-                  }}
-                  style={{
-                    marginLeft: -10,
-                    borderRadius: 30,
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 5,
-                    height: 30,
-                    width: 30,
-                  }}
-                />
-                <Thumbnail
-                  small
-                  source={{
-                    uri: 'https://randomuser.me/api/portraits/men/28.jpg',
-                  }}
-                  style={{
-                    marginLeft: -10,
-                    borderRadius: 30,
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 5,
-                    height: 30,
-                    width: 30,
-                  }}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  top: 10,
                   backgroundColor: 'white',
                   justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  left: 20,
+                  width: '90%',
+                  height: '20%',
                 }}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.4),
-                    fontWeight: '600',
-                    color: 'black',
+                    left: 5,
+                    fontSize: responsiveFontSize(3),
+                    color: '#32cd32',
+                    fontWeight: 'bold',
                   }}>
-                  459
+                  Event Name
+              </Text>
+              </View>
+
+              <View
+                style={{
+                  paddingHorizontal: 5,
+                  alignSelf: 'center',
+                  top: 0,
+                  backgroundColor: 'white',
+                  justifyContent: 'space-around',
+                  alignItems: 'flex-start',
+                  width: '90%',
+                  height: '35%',
+                }}>
+                {/* <Text style={{letterSpacing:1, left:2,fontSize: responsiveFontSize(2), color: '#7e7474' }}>
+                            Company Info
+                        </Text> */}
+                <Text
+                  style={{
+                    left: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    fontWeight: 'bold',
+                    color: '#7e7474',
+                  }}>
+                  Address:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    Plot 14 Street 12
                 </Text>
-                <AIcon name="plus" size={10} color="#000" />
+                </Text>
+                <Text
+                  style={{
+                    left: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    fontWeight: 'bold',
+                    color: '#7e7474',
+                  }}>
+                  Email:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    user123@gmail.com
+                </Text>
+                </Text>
+                <Text
+                  style={{
+                    left: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    fontWeight: 'bold',
+                    color: '#7e7474',
+                  }}>
+                  Phone#:
+                <Text
+                    style={{
+                      letterSpacing: 1,
+                      fontSize: responsiveFontSize(1.6),
+                      fontWeight: '800',
+                    }}>
+                    05133449
+                </Text>
+                </Text>
+              </View>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  top: 5,
+                  backgroundColor: 'white',
+                  width: '90%',
+                  height: '10%',
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 7,
+                    width: '80%',
+                    height: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text
+                    style={{
+                      left: 1,
+                      fontSize: responsiveFontSize(1.8),
+                      color: '#7e7474',
+                    }}>
+                    9:00 AM - 5:00 PM
+                </Text>
+              
+                </View>
+              </View>
+
+              <View
+                style={{
+                  marginTop: 2,
+                  padding: 0,
+                  paddingVertical: 8,
+                  alignSelf: 'center',
+                  top: 0,
+                  backgroundColor: 'white',
+                  width: '90%',
+                  height: '34%',
+                }}>
+                <Text
+                  numberOfLines={3}
+                  style={{
+                    flex: 1,
+                    flexGrow: 1,
+                    fontSize: responsiveFontSize(1.8),
+                    color: '#7e7474',
+                  }}>
+                  SimpleText is the native text editor for the Apple classic Mac
+                  OS. SimpleText allows editing including text formatting, fonts,
+                  and sizes. It was developed to integrate the features included
+                  in the different versions of TeachText that were created by
+                  various software development groups within Appl
+              </Text>
               </View>
             </View>
-            <View style={{}}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#24ec28',
-                  width: 140,
-                  height: 50,
-                  top: responsiveHeight(1),
-                  right: 20,
-                  position: 'absolute',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  bottom: 20,
-                }}
-                onPress={() => {}}>
-                <Text> Invite Friends</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-          <View
-            style={{
-              marginTop: 60,
-              marginHorizontal: 20,
-            }}>
-            <Text>Description Of Event:</Text>
-            <Text>Event Date:</Text>
-            <Text>Event Time:</Text>
-            <View
-              style={{
-                top: 10,
-              }}>
-              <Text>Phone Number:</Text>
-              <Text>E-mail Address:</Text>
-            </View>
-          </View>
+
           <View
             style={{
               borderRadius: 10,
@@ -626,7 +637,7 @@ class CommunityEvent extends Component {
             )}
           />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -645,7 +656,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(1.5),
     marginLeft: '4%',
     position: 'absolute',
   },

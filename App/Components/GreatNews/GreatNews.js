@@ -16,6 +16,7 @@ import {
   Dimensions,
   TextInput,
   FlatList,
+  
 } from 'react-native';
 import {Thumbnail, Item, Textarea} from 'native-base';
 import {jsxAttribute} from '@babel/types';
@@ -94,7 +95,7 @@ class GreatNews extends Component {
       file,
     } = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={{marginBottom: 10}}>
           <Text style={styles.welcome}>Great Stuff</Text>
           <Ionicon
@@ -120,7 +121,7 @@ class GreatNews extends Component {
               fontWeight: 'bold',
               color: '#000',
             }}>
-            What Are You celebirating?
+            What Are You celebrating?
           </Text>
           <Text
             style={{
@@ -470,7 +471,7 @@ class GreatNews extends Component {
             )}
           />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
