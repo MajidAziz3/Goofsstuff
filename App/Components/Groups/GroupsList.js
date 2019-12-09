@@ -227,7 +227,7 @@ class GroupList extends Component {
                             fontWeight: '600',
                             color: 'black',
                           }}>
-                          {item.location}
+                          {item.group_location}
                         </Text>
                       </View>
 
