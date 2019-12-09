@@ -185,7 +185,6 @@ export default class GoodNews extends Component {
       .onSnapshot(async () => {
         let data = await getData('Comments', item);
         this.setState({comment_data: data, loading: false});
-        console.log('checking', data);
       });
   }
   async showPost() {
@@ -195,8 +194,6 @@ export default class GoodNews extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('News');
         this.setState({post_data: data, loading: false});
-        console.log(data);
-        console.log('\n');
       });
   }
 
@@ -236,7 +233,6 @@ export default class GoodNews extends Component {
 
   async Upload_Image(item) {
     let iteratorNum = 0;
-    console.log('refffffffff', item);
     await uploadImageComment(
       this.state.ImageUrl,
       this.state.imageType,
