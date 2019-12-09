@@ -12,6 +12,7 @@ import {
   ScrollView,
   Modal,
   TouchableHighlight,
+  SafeAreaView
 } from 'react-native';
 import {Thumbnail, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -163,7 +164,7 @@ export default class AddGroup extends Component {
     const uri = <Icon name="location" size={40} color="#900" />;
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Add New Group</Text>
         <FIcon
           name="chevron-left"
@@ -664,7 +665,7 @@ export default class AddGroup extends Component {
                         </TouchableOpacity>
                     </View> */}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -684,7 +685,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(6),
     marginLeft: '4%',
     position: 'absolute',
   },

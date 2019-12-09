@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight, SafeAreaView } from 'react-native';
 import { Thumbnail, Button } from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -46,7 +46,7 @@ export default class EditGroup extends Component {
         const uri = <Icon name="location" size={40} color="#900" />;
 
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style={styles.welcome}>Edit Group</Text>
                 <FIcon name="chevron-left" size={25} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
 
@@ -238,7 +238,7 @@ export default class EditGroup extends Component {
                 </ScrollView>
 
 
-            </View>
+            </SafeAreaView>
         );
     }
 }

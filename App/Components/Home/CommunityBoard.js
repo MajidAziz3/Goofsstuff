@@ -289,7 +289,7 @@ export default class CommunityBoard extends Component {
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     const myIcon = <Icon name="account" size={30} color="#900" />;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Community Board</Text>
         <Ionicon
           name="ios-menu"
@@ -309,6 +309,7 @@ export default class CommunityBoard extends Component {
               height: responsiveHeight(6),
               backgroundColor: 'white',
               justifyContent: 'center',
+              width: '100%'
             }}>
             <View
               style={{
@@ -316,6 +317,7 @@ export default class CommunityBoard extends Component {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                
               }}>
               <TouchableOpacity
                 style={{
@@ -409,21 +411,6 @@ export default class CommunityBoard extends Component {
                   }}>
                   Outdoor
                 </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  right: 8,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: responsiveHeight(5),
-                  width: responsiveHeight(5),
-                  backgroundColor: '#24ec28',
-                  flexDirection: 'row',
-                  borderRadius: responsiveHeight(5),
-                }}>
-                <EIcon name="search" size={25} color="white" />
               </TouchableOpacity>
             </View>
           </View>
@@ -699,7 +686,7 @@ export default class CommunityBoard extends Component {
               )}></FlatList>
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -718,7 +705,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(6),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -726,11 +713,11 @@ const styles = StyleSheet.create({
     width: 10,
     height: 50,
     borderRadius: 42,
-    marginTop: responsiveHeight(1.2),
+    marginTop: responsiveHeight(5.5),
     marginLeft: '85%',
     position: 'absolute',
   },
   container1: {
-    marginTop: responsiveHeight(8.5),
+    marginTop: responsiveHeight(6.7),
   },
 });

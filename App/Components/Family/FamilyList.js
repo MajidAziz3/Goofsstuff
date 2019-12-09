@@ -8,7 +8,7 @@ import {
     Alert,
     ScrollView,
     Dimensions,
-    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView
+    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView, SafeAreaView
 } from 'react-native';
 import { Left, Thumbnail } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -118,6 +118,7 @@ class FamilyList extends Component {
 
     render() {
         return (
+          <SafeAreaView style={{flex: 1}}>
             <ScrollView style={{flex:1}}>
                  <View style={{marginBottom:10}}>
               <Text style={styles.welcome}>My Family</Text>
@@ -130,7 +131,7 @@ class FamilyList extends Component {
                     <Image source={require('../../Assets/watch.jpg')} style={{ width: '100%', height: '100%', borderRadius: 0 }} />
                 </View>
 
-                <View style={{ backgroundColor: 'white', height: responsiveHeight(30), width: responsiveWidth(100), borderRadius: 20, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2, elevation: 1, }}>
+                <View style={{ backgroundColor: 'white', height: responsiveHeight(20), width: responsiveWidth(100), shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 2, elevation: 1, }}>
                    
                     <View style={{flexDirection:'row',width:'100%',height:'15%',marginTop:10,backgroundColor:'white',justifyContent:'space-between'}}>
                       <View style={{width: '60%', height: '100%',}}>
@@ -191,6 +192,7 @@ class FamilyList extends Component {
               tabBarInactiveTextColor='gray'
               tabBarActiveTextColor='#32cd32'
               
+              
         
         renderTabBar={() => <DefaultTabBar/>}
       >
@@ -236,7 +238,7 @@ class FamilyList extends Component {
         keyExtractor={item => item.id}
         renderItem={({ item ,index}) =>  
         
-        <View key={index}  style={{  shadowColor: '#000',shadowOffset: { width: 0, height: 2 },shadowOpacity: 0.5,shadowRadius: 2, elevation: 2, backgroundColor: '#eee', width: '100%', height: height, borderRadius: 25, paddingVertical: 20, paddingHorizontal: 10, backgroundColor: 'white',marginBottom:5 }}>
+        <View key={index}  style={{  shadowColor: '#000',shadowOffset: { width: 0, height: 2 },shadowOpacity: 0.5,shadowRadius: 2, elevation: 2, backgroundColor: '#eee', width: '100%', height: responsiveHeight(25), borderRadius: 25, paddingVertical: 20, paddingHorizontal: 10, backgroundColor: 'white',marginBottom: responsiveHeight(0.2), marginTop: responsiveHeight(3) }}>
 
           <View style={{ backgroundColor: 'white', width: '99%', height: '35%', flexDirection: 'row', marginBottom: 1, }}>
             <View style={{ width: '25%', justifyContent: 'center', alignItems: 'flex-end', padding: 10, }}>
@@ -285,16 +287,6 @@ class FamilyList extends Component {
             </View>
           </View>
 
-          <View style={{ height: '18%',backgroundColor:'white' ,flexDirection: 'row', padding: 1, marginHorizontal: 20,marginTop:5 }}>
-            <TextInput style={{ fontSize:12,paddingLeft:20, height:'100%',backgroundColor: '#dee3e1', width: '80%', borderRadius: 50, }} placeholder='Type something'>
-              {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-
-              </TextInput>
-            {/* </View> */}
-            <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
-              <Icon name="message" size={20} color='#7e7a7a' onPress={()=>{alert('message')}} />
-            </View>
-          </View>
 
 
 
@@ -388,6 +380,7 @@ class FamilyList extends Component {
 
            
           </ScrollView>
+          </SafeAreaView>
         );
     }
 }

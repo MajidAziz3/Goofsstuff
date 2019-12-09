@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,7 +31,7 @@ class MainAuth extends Component {
   };
   render() {
     return (
-      <View style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView style={{flex: 1}}>
           <View
             style={{
@@ -53,7 +54,7 @@ class MainAuth extends Component {
                 }}>
                 <Image
                   source={require('../../Assets/goodstuff.png')}
-                  style={{height: '100%', width: '100%'}}
+                  style={{height: '80%', width: '100%'}}
                 />
               </View>
             </View>
@@ -225,7 +226,7 @@ class MainAuth extends Component {
             </View>
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

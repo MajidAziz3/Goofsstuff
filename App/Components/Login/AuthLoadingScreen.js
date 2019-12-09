@@ -19,11 +19,13 @@ export default class AuthLoadingScreen extends Component {
     );
 
     connectFirebase();
-    SplashScreen.close({
-      animationType: SplashScreen.animationType.scale,
-      duration: 850,
-      delay: 500,
-    });
+    if (Platform.OS === 'android'){
+      SplashScreen.close({
+        animationType: SplashScreen.animationType.scale,
+        duration: 850,
+        delay: 500,
+      });
+    }
     if (this.state.value == ''||this.state.value==undefined) {
        this.props.navigation.navigate('MainAuth');
     } else {

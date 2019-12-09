@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
@@ -49,10 +50,11 @@ export default class CustomDrawer extends Component {
   };
   render() {
     return (
-      <View style={styles.container}>
+      
         <LinearGradient
           colors={['rgb(53, 203, 53)', 'rgb(64, 200, 64)', 'rgb(78,198,78)']}
           style={{height: '100%', width: '100%'}}>
+            <SafeAreaView style={styles.container}>
           <ScrollView>
             <View>
               <TouchableOpacity style={{width: '50%'}}>
@@ -305,8 +307,9 @@ export default class CustomDrawer extends Component {
               </View>
             </TouchableOpacity>
           </ScrollView>
+          </SafeAreaView>
         </LinearGradient>
-      </View>
+      
     );
   }
 }
@@ -314,7 +317,7 @@ export default class CustomDrawer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderTopRightRadius: 15,
+    backgroundColor: '#32cd32'
   },
   cardTittle: {
     color: 'white',

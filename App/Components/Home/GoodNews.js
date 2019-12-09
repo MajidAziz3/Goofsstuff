@@ -279,7 +279,7 @@ export default class GoodNews extends Component {
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
         <Modal
           animationType="slide"
@@ -386,7 +386,7 @@ export default class GoodNews extends Component {
             name="user"
             size={30}
             color="#d0d0d0dd"
-            style={[styles.menu1, {marginTop: 15}]}
+            style={[styles.menu1, {marginTop: responsiveHeight(6)}]}
           />
         ) : (
           <Image
@@ -925,7 +925,7 @@ export default class GoodNews extends Component {
             </View>
           )}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -951,7 +951,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(6),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -964,6 +964,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   container1: {
-    marginTop: responsiveHeight(9.5),
+    marginTop: responsiveHeight(7.5),
   },
 });

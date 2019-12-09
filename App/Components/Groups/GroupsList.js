@@ -11,6 +11,7 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail} from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -57,7 +58,7 @@ class GroupList extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View>
           <Text style={styles.welcome}>Groups</Text>
           <Ionicon
@@ -99,8 +100,9 @@ class GroupList extends Component {
             lightTheme
             leftIconContainerStyle={{
               backgroundColor: '#3fee4a',
-              borderRadius: 20,
+              borderRadius: 30,
               height: 30,
+              width: 30,
               left: -12,
             }}
             inputContainerStyle={{
@@ -131,7 +133,7 @@ class GroupList extends Component {
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text
               style={{alignSelf: 'center', fontSize: 18, fontFamily: 'Cochin'}}>
-              You Are not a member of any group Yet
+              You haven't joined any group yet!
             </Text>
           </View>
         ) : (
@@ -323,7 +325,7 @@ class GroupList extends Component {
             />
           </ScrollView>
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -345,7 +347,7 @@ const styles = StyleSheet.create({
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginTop: responsiveHeight(1.8),
+    marginTop: responsiveHeight(1),
     marginLeft: '4%',
     position: 'absolute',
   },
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 50,
     borderRadius: 42,
-    marginTop: responsiveHeight(2.1),
+    marginTop: responsiveHeight(1),
     marginLeft: '90%',
     position: 'absolute',
   },

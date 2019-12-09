@@ -7,6 +7,7 @@ import {
   StatusBar,
   Image,
   TextInput,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -64,7 +65,7 @@ class Login extends Component {
   render() {
     const {email, password} = this.state;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#32cd32" barStyle="light-content" />
         <View
           style={{
@@ -84,7 +85,7 @@ class Login extends Component {
             }}>
             <Image
               source={require('../../Assets/goodstuff.png')}
-              style={{height: '100%', width: '100%'}}
+              style={{height: '80%', width: '100%'}}
             />
           </View>
           <View
@@ -175,6 +176,7 @@ class Login extends Component {
                     height: '100%',
                     padding: 5,
                     fontSize: responsiveFontSize(1.6),
+                    color: 'black'
                   }}
                   onChangeText={email => this.setState({email})}
                   require
@@ -317,7 +319,7 @@ class Login extends Component {
             </Text>
           </Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
