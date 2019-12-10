@@ -304,7 +304,7 @@ export default class GoodNews extends Component {
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}>
-          <SafeAreaView style={{ height: '90%' }}>
+          <SafeAreaView style={{ flex:1 }}>
             <FA
               name="cross"
               size={30}
@@ -315,7 +315,7 @@ export default class GoodNews extends Component {
               }}
             />
 
-
+{console.log(this.state.comment_data)}
             <FlatList
               style={styles.root}
               data={this.state.comment_data.comments}
@@ -326,9 +326,12 @@ export default class GoodNews extends Component {
               }}
               keyExtractor={item => item.user_id}
               renderItem={({ item, index }) => {
+                 {console.log(item.imageUrl)}
                 return (
-                  this.item.imageUrl ? (
+                  item.imageUrl ? (
+                   
                     <View style={styles.container2} key={index}>
+                      
                       <TouchableOpacity onPress={() => { }}>
                         <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
                       </TouchableOpacity>
@@ -365,80 +368,59 @@ export default class GoodNews extends Component {
                     )
                 );
               }} />
-
-
-            {/* <FlatList
-              data={this.state.comment_data.comments}
-              keyExtractor={item => item.user_id}
-              renderItem={({ item, index }) => (
-                <View
-                  key={index}
-                  style={{
-                    justifyContent: 'space-evenly',
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 2,
-                    backgroundColor: '#eee',
-                    height: responsiveHeight(20),
-                    borderRadius: 35,
-                    paddingVertical: 0,
-                    paddingHorizontal: 10,
-                    backgroundColor: 'white',
-                    marginHorizontal: 10,
-                    marginBottom: 5,
-                    alignItems: 'center',
-                  }}>
-                  <View
-                    style={{
-                      top: 2,
-                      borderRadius: 25,
-                      backgroundColor: 'white',
-                      width: '98%',
-                      height: 60,
-                      flexDirection: 'row',
-                      marginBottom: 1,
-                      alignItems: 'center',
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        width: 60,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        padding: 5,
-                        height: 60,
-                      }}>
-                      <Image
-                        source={{
-                          uri: 'https://randomuser.me/api/portraits/men/94.jpg',
-                        }}
-                        style={{ width: 60, height: 60, borderRadius: 60 }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '60%',
-                      }}>
-                      <Text
+<View
                         style={{
-                          fontSize: responsiveFontSize(1.5),
-                          fontWeight: 'bold',
-                          color:'green'
+                          marginBottom: responsiveHeight(2),
+                          backgroundColor: 'white',
+                          flexDirection: 'row',
+                          padding: 1,
+                          marginHorizontal: 20,
+                          // alignItems:'center',
                         }}>
-                        {item.user_name}
-                        {item.comments}
-                        {console.log(this.state.comment_data)}
-                        
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              )}
-            /> */}
+                        <View
+                          style={{
+                            fontSize: 12,
+                            paddingHorizontal: 20,
+                            padding: 0,
+                            height: '90%',
+                            backgroundColor: '#dee3e1',
+                            width: '80%',
+                            borderRadius: 50,
+                            flexDirection: 'row',
+                          }}>
+                          <TextInput
+                            value={this.state.comments_words}
+                            onChangeText={values =>
+                              this.setState({ comments_words: values })
+                            }
+                            placeholder="Type something">
+                            {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                          </TextInput>
+                          <Ionicon
+                            name="ios-camera"
+                            size={30}
+                            style={{ right: 15, position: 'absolute', top: 5 }}
+                            onPress={this.handleChoosePhoto}
+                          />
+                        </View>
+                        {/* </View> */}
+                        <View
+                          style={{
+                            width: '20%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Icon
+                            name="send-circle-outline"
+                            size={30}
+                            color="#32cd32"
+                            onPress={() => {
+                              this.CommentsPost(item.post_id);
+                            }}
+                          />
+                        </View>
+                      </View>
+
           </SafeAreaView>
         </Modal>
         <Text style={styles.welcome}>Good News</Text>
@@ -969,59 +951,7 @@ export default class GoodNews extends Component {
                         </View>
                       </View>
 
-                      <View
-                        style={{
-                          marginBottom: responsiveHeight(2),
-                          backgroundColor: 'white',
-                          flexDirection: 'row',
-                          padding: 1,
-                          marginHorizontal: 20,
-                          // alignItems:'center',
-                        }}>
-                        <View
-                          style={{
-                            fontSize: 12,
-                            paddingHorizontal: 20,
-                            padding: 0,
-                            height: '90%',
-                            backgroundColor: '#dee3e1',
-                            width: '80%',
-                            borderRadius: 50,
-                            flexDirection: 'row',
-                          }}>
-                          <TextInput
-                            value={this.state.comments_words}
-                            onChangeText={values =>
-                              this.setState({ comments_words: values })
-                            }
-                            placeholder="Type something">
-                            {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-                          </TextInput>
-                          <Ionicon
-                            name="ios-camera"
-                            size={30}
-                            style={{ right: 15, position: 'absolute', top: 5 }}
-                            onPress={this.handleChoosePhoto}
-                          />
-                        </View>
-                        {/* </View> */}
-                        <View
-                          style={{
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Icon
-                            name="send-circle-outline"
-                            size={30}
-                            color="#32cd32"
-                            onPress={() => {
-                              this.CommentsPost(item.post_id);
-                            }}
-                          />
-                        </View>
-                      </View>
-
+                      
 
 
 
