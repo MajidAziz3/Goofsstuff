@@ -131,6 +131,20 @@ const WatchStack = createStackNavigator({
   Watch: Watch,
   LearnMore: LearnMore,
 });
+WatchStack .navigationOptions = ({ navigation }) => {
+
+  let tabBarVisible = true;
+
+  let routeName = navigation.state.routes[navigation.state.index].routeName
+
+  if ( routeName == 'LearnMore' ) {
+      tabBarVisible = false
+  }
+
+  return {
+      tabBarVisible,
+  }
+}
 
 const HomeTabs = createMaterialTopTabNavigator(
   {
