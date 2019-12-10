@@ -412,7 +412,7 @@ export default class GoodNews extends Component {
           {this.state.loading ? (
             <ActivityIndicator
               size={'large'}
-              color="blue"
+              color="#32cd32"
               style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
             />
           ) : (

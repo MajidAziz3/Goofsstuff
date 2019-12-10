@@ -996,7 +996,7 @@ export default class Watch extends Component {
           <TouchableOpacity
             style={{height: responsiveHeight(5), backgroundColor: 'white'}}
             onPress={() => {
-              this.setModalVisible(true);
+              this.props.navigation.navigate('LearnMore')
             }}>
             <Text
               style={{

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,25 +13,27 @@ import {
   RecyclerViewBackedScrollView,
   SafeAreaView
 } from 'react-native';
-import {Left, Thumbnail} from 'native-base';
+import { Left, Thumbnail } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import EIcon from 'react-native-vector-icons/Entypo';
 import firebase from 'firebase';
-import {SearchBar} from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import {getAllOfCollection} from '../../Backend/Utility';
+import { getAllOfCollection } from '../../Backend/Utility';
+import SearchInput, { createFilter } from 'react-native-search-filter';
 
 // import { formatResultsErrors } from 'jest-message-util';
 ///Enterprneure Corner Gallary
 const uri = 'https://randomuser.me/api/portraits/men/85.jpg';
+const KEYS_TO_FILTERS = ['group_name'];
 class GroupList extends Component {
   static navigationOptions = {
     header: null,
@@ -41,6 +43,7 @@ class GroupList extends Component {
     this.state = {
       datasource: [1, 2, 3],
       post_data: [],
+      searchTerm: '',
     };
   }
 
@@ -50,11 +53,15 @@ class GroupList extends Component {
       .collection('Create_Group')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Create_Group');
-        this.setState({post_data: data, loading: false});
+        this.setState({ post_data: data, loading: false });
         console.log(data);
         console.log('\n');
       });
   };
+
+  searchUpdated(term) {
+    this.setState({ searchTerm: term })
+  }
 
   render() {
     return (
@@ -92,237 +99,585 @@ class GroupList extends Component {
                         containerStyle={{ backgroundColor:'white',width:'100%',paddingLeft:50}}
                     /> */}
 
-          <SearchBar
-            placeholder="Type something..."
-            onChangeText={this.updateSearch}
-            // value={search}
-            round
-            lightTheme
-            leftIconContainerStyle={{
-              backgroundColor: '#3fee4a',
-              borderRadius: 30,
-              height: 30,
-              width: 30,
-              left: -12,
-            }}
-            inputContainerStyle={{
-              backgroundColor: 'white',
-              width: '90%',
-              paddingLeft: 5,
-            }}
-            searchIcon={
-              <TouchableOpacity>
-                <MaterialCommunityIcons
-                  name="search"
-                  size={30}
-                  color="white"
-                  style={{marginLeft: 0}}
-                />
-              </TouchableOpacity>
-            }
-            containerStyle={{
-              backgroundColor: '#F5F5F5',
-              width: '100%',
-              padding: 5,
-              paddingLeft: 50,
-            }}
+          <SearchInput
+            onChangeText={(term) => { this.searchUpdated(term) }}
+            style={styles.searchInput}
+            placeholder="Type a message to search"
+            clearIcon={this.state.searchTerm !== '' && <EIcon name="cross" size={30} color={'#32cd32'} />}
+            clearIconViewStyles={{ position: 'absolute', top: 4, right: 22 }}
           />
         </View>
         {this.state.post_data.length == 0 ? (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{alignSelf: 'center', fontSize: 18, fontFamily: 'Cochin'}}>
-              You haven't joined any group yet!
+          this.state.searchTerm == '' ? (
+            <View
+              style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text
+                style={{ alignSelf: 'center', fontSize: 18, fontFamily: 'Cochin' }}>
+                You haven't joined any group yet!
             </Text>
-          </View>
-        ) : (
-          <ScrollView style={styles.container1}>
-            <FlatList
-              data={this.state.post_data}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  style={{
-                    marginTop: 10,
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 4,
-                    width: responsiveWidth(100),
-                    height: responsiveHeight(40),
-                    borderRadius: 20,
-                    backgroundColor: 'white',
-                    marginBottom: 0,
-                  }}
-                  onPress={() =>
-                    this.props.navigation.navigate('GroupDetails',{item:item})
-                  }>
-                  <View
-                    style={{
-                      marginRight: 5,
-                      marginTop: 5,
-                      backgroundColor: 'white',
-                      height: '15%',
-                      justifyContent: 'center',
-                      paddingHorizontal: 15,
-                      paddingBottom: 5,
-                      borderRadius: 20,
-                    }}>
-                    <Text
+            </View>
+          ) : (
+              <ScrollView>
+                {this.state.post_data.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS)).map(item => {
+                  return (
+                    <TouchableOpacity
                       style={{
-                        fontSize: responsiveFontSize(2.8),
-                        fontWeight: '600',
-                        color: '#000000',
-                      }}>
-                      {item.group_name}
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: '55%',
-                      width: '100%',
-                    }}>
-                    <Image
-                      source={{uri: item.imageUrl}}
-                      style={{width: '100%', height: '100%'}}
-                    />
-                  </View>
-
-                  <View
-                    style={{
-                      marginLeft: 2,
-                      marginRight: 2,
-                      flexDirection: 'row',
-                      backgroundColor: 'white',
-                      height: '25%',
-                      borderRadius: 20,
-                    }}>
-                    <View
-                      style={{
-                        padding: 1,
+                        marginTop: 10,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 4,
+                        width: responsiveWidth(100),
+                        height: responsiveHeight(40),
+                        borderRadius: 20,
                         backgroundColor: 'white',
-                        width: '40%',
-                        height: '100%',
-                      }}>
+                        marginBottom: 0,
+                      }}
+                      onPress={() =>
+                        this.props.navigation.navigate('GroupDetails', { item: item })
+                      }>
                       <View
                         style={{
-                          flexDirection: 'row',
+                          marginRight: 5,
+                          marginTop: 5,
                           backgroundColor: 'white',
-                          height: '30%',
-                          marginLeft: 15,
+                          height: '15%',
+                          justifyContent: 'center',
+                          paddingHorizontal: 15,
+                          paddingBottom: 5,
+                          borderRadius: 20,
                         }}>
-                        <EvilIcons
-                          name="location"
-                          size={20}
-                          color="green"
-                          style={{alignSelf: 'center'}}
-                        />
                         <Text
                           style={{
-                            fontSize: responsiveFontSize(1.5),
+                            fontSize: responsiveFontSize(2.8),
                             fontWeight: '600',
-                            color: 'black',
+                            color: '#000000',
                           }}>
-                          {item.group_location}
+                          {item.group_name}
                         </Text>
                       </View>
 
                       <View
                         style={{
                           backgroundColor: 'white',
+                          height: '55%',
                           width: '100%',
-                          height: '70%',
+                        }}>
+                        <Image
+                          source={{ uri: item.imageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          marginLeft: 2,
+                          marginRight: 2,
                           flexDirection: 'row',
+                          backgroundColor: 'white',
+                          height: '25%',
+                          borderRadius: 20,
                         }}>
                         <View
                           style={{
-                            flexDirection: 'row',
+                            padding: 1,
                             backgroundColor: 'white',
-                            width: '70%',
+                            width: '40%',
                             height: '100%',
-                            alignItems: 'center',
-                            marginLeft: 15,
                           }}>
-                          <Thumbnail
-                            small
-                            source={{uri: uri}}
+                          <View
                             style={{
-                              marginLeft: 0,
-                              borderRadius: 30,
-                              shadowOpacity: 0.5,
-                              shadowRadius: 2,
-                              elevation: 5,
-                            }}
-                          />
-                          <Thumbnail
-                            small
-                            source={{uri: uri}}
-                            style={{
-                              marginLeft: -12,
-                              borderRadius: 30,
-                              shadowOpacity: 0.5,
-                              shadowRadius: 2,
-                              elevation: 5,
-                            }}
-                          />
-                          <Thumbnail
-                            small
-                            source={{uri: uri}}
-                            style={{
-                              marginLeft: -10,
-                              borderRadius: 30,
-                              shadowOpacity: 0.5,
-                              shadowRadius: 2,
-                              elevation: 5,
-                            }}
-                          />
-                          <Text
-                            style={{
-                              fontSize: responsiveFontSize(1.4),
-                              fontWeight: '600',
-                              color: 'black',
-                              alignItems: 'center',
+                              flexDirection: 'row',
+                              backgroundColor: 'white',
+                              height: '30%',
+                              marginLeft: 15,
                             }}>
-                            {item.group_member.length}
-                          </Text>
-                          <AIcon name="plus" size={8} color="#000" />
+                            <EvilIcons
+                              name="location"
+                              size={20}
+                              color="green"
+                              style={{ alignSelf: 'center' }}
+                            />
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.5),
+                                fontWeight: '600',
+                                color: 'black',
+                              }}>
+                              {item.group_location}
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              backgroundColor: 'white',
+                              width: '100%',
+                              height: '70%',
+                              flexDirection: 'row',
+                            }}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                                width: '70%',
+                                height: '100%',
+                                alignItems: 'center',
+                                marginLeft: 15,
+                              }}>
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: 0,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -12,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -10,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: responsiveFontSize(1.4),
+                                  fontWeight: '600',
+                                  color: 'black',
+                                  alignItems: 'center',
+                                }}>
+                                {item.group_member.length}
+                              </Text>
+                              <AIcon name="plus" size={8} color="#000" />
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={{ backgroundColor: 'white', width: '60%' }}>
+                          <View style={{ backgroundColor: 'white', height: '30%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '900',
+                                color: 'black',
+                              }}>
+                              Purpose:
+                        </Text>
+                          </View>
+                          <View style={{ backgroundColor: 'white', height: '70%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '800',
+                                color: '#8f8f8f',
+                              }}
+                              numberOfLines={2}>
+                              {item.group_description}
+                            </Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={{backgroundColor: 'white', width: '60%'}}>
-                      <View style={{backgroundColor: 'white', height: '30%'}}>
+                  )
+                })}
+              </ScrollView>
+            )
+
+        ) : (
+            this.state.searchTerm == '' ? (
+              <ScrollView style={styles.container1}>
+                <FlatList
+                  data={this.state.post_data}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 10,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 4,
+                        width: responsiveWidth(100),
+                        height: responsiveHeight(40),
+                        borderRadius: 20,
+                        backgroundColor: 'white',
+                        marginBottom: 0,
+                      }}
+                      onPress={() =>
+                        this.props.navigation.navigate('GroupDetails', { item: item })
+                      }>
+                      <View
+                        style={{
+                          marginRight: 5,
+                          marginTop: 5,
+                          backgroundColor: 'white',
+                          height: '15%',
+                          justifyContent: 'center',
+                          paddingHorizontal: 15,
+                          paddingBottom: 5,
+                          borderRadius: 20,
+                        }}>
                         <Text
                           style={{
-                            fontSize: responsiveFontSize(1.8),
-                            fontWeight: '900',
-                            color: 'black',
+                            fontSize: responsiveFontSize(2.8),
+                            fontWeight: '600',
+                            color: '#000000',
                           }}>
-                          Purpose:
+                          {item.group_name}
                         </Text>
                       </View>
-                      <View style={{backgroundColor: 'white', height: '70%'}}>
+
+                      <View
+                        style={{
+                          backgroundColor: 'white',
+                          height: '55%',
+                          width: '100%',
+                        }}>
+                        <Image
+                          source={{ uri: item.imageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          marginLeft: 2,
+                          marginRight: 2,
+                          flexDirection: 'row',
+                          backgroundColor: 'white',
+                          height: '25%',
+                          borderRadius: 20,
+                        }}>
+                        <View
+                          style={{
+                            padding: 1,
+                            backgroundColor: 'white',
+                            width: '40%',
+                            height: '100%',
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              backgroundColor: 'white',
+                              height: '30%',
+                              marginLeft: 15,
+                            }}>
+                            <EvilIcons
+                              name="location"
+                              size={20}
+                              color="green"
+                              style={{ alignSelf: 'center' }}
+                            />
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.5),
+                                fontWeight: '600',
+                                color: 'black',
+                              }}>
+                              {item.group_location}
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              backgroundColor: 'white',
+                              width: '100%',
+                              height: '70%',
+                              flexDirection: 'row',
+                            }}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                                width: '70%',
+                                height: '100%',
+                                alignItems: 'center',
+                                marginLeft: 15,
+                              }}>
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: 0,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -12,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -10,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: responsiveFontSize(1.4),
+                                  fontWeight: '600',
+                                  color: 'black',
+                                  alignItems: 'center',
+                                }}>
+                                {item.group_member.length}
+                              </Text>
+                              <AIcon name="plus" size={8} color="#000" />
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={{ backgroundColor: 'white', width: '60%' }}>
+                          <View style={{ backgroundColor: 'white', height: '30%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '900',
+                                color: 'black',
+                              }}>
+                              Purpose:
+                        </Text>
+                          </View>
+                          <View style={{ backgroundColor: 'white', height: '70%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '800',
+                                color: '#8f8f8f',
+                              }}
+                              numberOfLines={2}>
+                              {item.group_description}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+              </ScrollView>
+            ) : (
+              <ScrollView>
+                {this.state.post_data.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS)).map(item => {
+                  return (
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 10,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 4,
+                        width: responsiveWidth(100),
+                        height: responsiveHeight(40),
+                        borderRadius: 20,
+                        backgroundColor: 'white',
+                        marginBottom: 0,
+                      }}
+                      onPress={() =>
+                        this.props.navigation.navigate('GroupDetails', { item: item })
+                      }>
+                      <View
+                        style={{
+                          marginRight: 5,
+                          marginTop: 5,
+                          backgroundColor: 'white',
+                          height: '15%',
+                          justifyContent: 'center',
+                          paddingHorizontal: 15,
+                          paddingBottom: 5,
+                          borderRadius: 20,
+                        }}>
                         <Text
                           style={{
-                            fontSize: responsiveFontSize(1.8),
-                            fontWeight: '800',
-                            color: '#8f8f8f',
-                          }}
-                          numberOfLines={2}>
-                          {item.group_description}
+                            fontSize: responsiveFontSize(2.8),
+                            fontWeight: '600',
+                            color: '#000000',
+                          }}>
+                          {item.group_name}
                         </Text>
                       </View>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
-          </ScrollView>
-        )}
+
+                      <View
+                        style={{
+                          backgroundColor: 'white',
+                          height: '55%',
+                          width: '100%',
+                        }}>
+                        <Image
+                          source={{ uri: item.imageUrl }}
+                          style={{ width: '100%', height: '100%' }}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          marginLeft: 2,
+                          marginRight: 2,
+                          flexDirection: 'row',
+                          backgroundColor: 'white',
+                          height: '25%',
+                          borderRadius: 20,
+                        }}>
+                        <View
+                          style={{
+                            padding: 1,
+                            backgroundColor: 'white',
+                            width: '40%',
+                            height: '100%',
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              backgroundColor: 'white',
+                              height: '30%',
+                              marginLeft: 15,
+                            }}>
+                            <EvilIcons
+                              name="location"
+                              size={20}
+                              color="green"
+                              style={{ alignSelf: 'center' }}
+                            />
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.5),
+                                fontWeight: '600',
+                                color: 'black',
+                              }}>
+                              {item.group_location}
+                            </Text>
+                          </View>
+
+                          <View
+                            style={{
+                              backgroundColor: 'white',
+                              width: '100%',
+                              height: '70%',
+                              flexDirection: 'row',
+                            }}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                backgroundColor: 'white',
+                                width: '70%',
+                                height: '100%',
+                                alignItems: 'center',
+                                marginLeft: 15,
+                              }}>
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: 0,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -12,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Thumbnail
+                                small
+                                source={{ uri: uri }}
+                                style={{
+                                  marginLeft: -10,
+                                  borderRadius: 30,
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 2,
+                                  elevation: 5,
+                                }}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: responsiveFontSize(1.4),
+                                  fontWeight: '600',
+                                  color: 'black',
+                                  alignItems: 'center',
+                                }}>
+                                {item.group_member.length}
+                              </Text>
+                              <AIcon name="plus" size={8} color="#000" />
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={{ backgroundColor: 'white', width: '60%' }}>
+                          <View style={{ backgroundColor: 'white', height: '30%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '900',
+                                color: 'black',
+                              }}>
+                              Purpose:
+                        </Text>
+                          </View>
+                          <View style={{ backgroundColor: 'white', height: '70%' }}>
+                            <Text
+                              style={{
+                                fontSize: responsiveFontSize(1.8),
+                                fontWeight: '800',
+                                color: '#8f8f8f',
+                              }}
+                              numberOfLines={2}>
+                              {item.group_description}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+
+                  )
+                })}
+              </ScrollView>
+          )
+
+          )}
       </SafeAreaView>
     );
   }
@@ -332,6 +687,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+  },
+  searchInput: {
+    padding: 10,
+    borderColor: '#CCC',
+    borderWidth: 1,
+    width: '100%',
+    backgroundColor: 'white',
+    width: responsiveWidth(80),
+    color: 'black'
   },
   container1: {
     marginBottom: 15,
@@ -356,6 +720,15 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
     marginLeft: '90%',
     position: 'absolute',
+  },
+  seacrhbarContainter: {
+    backgroundColor: '#F5F5F5',
+    height: responsiveHeight(8),
+    width: responsiveWidth(100),
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+
   },
 });
 

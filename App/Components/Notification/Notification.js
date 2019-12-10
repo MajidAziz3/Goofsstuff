@@ -14,62 +14,66 @@ export default class Notification extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data:[
-        {id:3, image: "https://bootdey.com/img/Content/avatar/avatar7.png", name:"March SoulLaComa", text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/6/"},
-        {id:2, image: "https://bootdey.com/img/Content/avatar/avatar6.png", name:"John DoeLink",     text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/5/"},
-        {id:4, image: "https://bootdey.com/img/Content/avatar/avatar2.png", name:"Finn DoRemiFaso",  text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
-        {id:5, image: "https://bootdey.com/img/Content/avatar/avatar3.png", name:"Maria More More",  text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
-        {id:1, image: "https://bootdey.com/img/Content/avatar/avatar1.png", name:"Frank Odalthh",    text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:"https://lorempixel.com/100/100/nature/4/"},
-        {id:6, image: "https://bootdey.com/img/Content/avatar/avatar4.png", name:"Clark June Boom!", text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
-        {id:7, image: "https://bootdey.com/img/Content/avatar/avatar5.png", name:"The googler",      text:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment:""},
+      data: [
+        { id: 3, image: "https://bootdey.com/img/Content/avatar/avatar7.png", name: "March SoulLaComa", text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment: "https://lorempixel.com/100/100/nature/6/" },
+        { id: 2, image: "https://bootdey.com/img/Content/avatar/avatar6.png", name: "John DoeLink", text: "Have requested to join group 'Cricket Match on 24-12-2019' ", attachment: "https://lorempixel.com/100/100/nature/5/" },
+        { id: 4, image: "https://bootdey.com/img/Content/avatar/avatar2.png", name: "Finn DoRemiFaso", text: "Wants to be your friend", attachment: "" },
+        { id: 5, image: "https://bootdey.com/img/Content/avatar/avatar3.png", name: "Maria More More", text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment: "" },
+        { id: 1, image: "https://bootdey.com/img/Content/avatar/avatar1.png", name: "Frank Odalthh", text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment: "https://lorempixel.com/100/100/nature/4/" },
+        { id: 6, image: "https://bootdey.com/img/Content/avatar/avatar4.png", name: "Clark June Boom!", text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment: "" },
+        { id: 7, image: "https://bootdey.com/img/Content/avatar/avatar5.png", name: "The googler", text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.", attachment: "" },
       ]
     }
   }
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        
-      <FlatList
-        style={styles.root}
-        data={this.state.data}
-        extraData={this.state}
-        ItemSeparatorComponent={() => {
-          return (
-            <View style={styles.separator}/>
-          )
-        }}
-        keyExtractor={(item)=>{
-          return item.id;
-        }}
-        renderItem={(item) => {
-          const Notification = item.item;
-          let attachment = <View/>;
+      <SafeAreaView style={{ flex: 1 }}>
 
-          let mainContentStyle;
-          if(Notification.attachment) {
-            mainContentStyle = styles.mainContent;
-            attachment = <Image style={styles.attachment} source={{uri:Notification.attachment}}/>
-          }
-          return(
-            <View style={styles.container}>
-              <Image source={{uri:Notification.image}} style={styles.avatar}/>
-              <View style={styles.content}>
-                <View style={mainContentStyle}>
-                  <View style={styles.text}>
-                    <Text style={styles.name}>{Notification.name}</Text>
-                    <Text>{Notification.text}</Text>
-                  </View>
-                  <Text style={styles.timeAgo}>
-                    2 hours ago
+        <FlatList
+          style={styles.root}
+          data={this.state.data}
+          extraData={this.state}
+          ItemSeparatorComponent={() => {
+            return (
+              <View style={styles.separator} />
+            )
+          }}
+          keyExtractor={(item) => {
+            return item.id;
+          }}
+          renderItem={(item) => {
+            const Notification = item.item;
+            let attachment = <View />;
+
+            let mainContentStyle;
+            if (Notification.attachment) {
+              mainContentStyle = styles.mainContent;
+              attachment = <Image style={styles.attachment} source={{ uri: Notification.attachment }} />
+            }
+            return (
+              <View style={styles.container}>
+                <TouchableOpacity>
+                  <Image source={{ uri: Notification.image }} style={styles.avatar} />
+                </TouchableOpacity>
+                <View style={styles.content}>
+                  <View style={mainContentStyle}>
+                    <TouchableOpacity style={styles.text}>
+                      <Text style={styles.name}>{Notification.name}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.text}>
+                      <Text>{Notification.text}</Text>
+                    </View>
+                    <Text style={styles.timeAgo}>
+                      2 hours ago
                   </Text>
+                  </View>
+                  {attachment}
                 </View>
-                {attachment}
               </View>
-            </View>
-          );
-        }}/>
-        </SafeAreaView>
+            );
+          }} />
+      </SafeAreaView>
     );
   }
 }
@@ -86,14 +90,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   avatar: {
-    width:50,
-    height:50,
-    borderRadius:25,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
   text: {
     marginBottom: 5,
     flexDirection: 'row',
-    flexWrap:'wrap'
+    flexWrap: 'wrap'
   },
   content: {
     flex: 1,
@@ -118,12 +122,12 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#CCCCCC"
   },
-  timeAgo:{
-    fontSize:12,
-    color:"#696969"
+  timeAgo: {
+    fontSize: 12,
+    color: "#696969"
   },
-  name:{
-    fontSize:16,
-    color:"#1E90FF"
+  name: {
+    fontSize: 16,
+    color: "#1E90FF"
   }
 });  

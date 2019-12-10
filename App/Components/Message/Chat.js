@@ -1,9 +1,21 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
-import {GiftedChat} from 'react-native-gifted-chat';
-import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
-import {addToArray, getData} from '../../Backend/Utility';
+import { GiftedChat } from 'react-native-gifted-chat';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
+import { addToArray, getData } from '../../Backend/Utility';
+import Icon from 'react-native-vector-icons/EvilIcons';
+import AIcon from 'react-native-vector-icons/AntDesign';
+import EIcon from 'react-native-vector-icons/Entypo';
+import FIcon from 'react-native-vector-icons/FontAwesome5';
+import MTIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SearchBar } from 'react-native-elements';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 export default class Chat extends Component {
   constructor(props) {
@@ -12,13 +24,14 @@ export default class Chat extends Component {
     this.state = {
       data: null,
       friendID: this.props.navigation.state.params.id,
+      friendName: this.props.navigation.state.params.name,
       current_user: '',
       messages: [],
     };
   }
   componentDidMount = async () => {
     await _retrieveData('user').then(result =>
-      this.setState({current_user: result}),
+      this.setState({ current_user: result }),
     );
   };
 
@@ -33,7 +46,7 @@ export default class Chat extends Component {
       this.state.current_user,
       this.state.friendID,
     );
-    if (messages) await this.setState({messages: messages});
+    if (messages) await this.setState({ messages: messages });
     else return 0;
     let that = this;
 
@@ -41,8 +54,8 @@ export default class Chat extends Component {
       .firestore()
       .collection('chats')
       .doc(this.state.current_user)
-      .onSnapshot(function(doc) {
-        that.setState({messages: doc.data()[this.state.friendID].reverse()});
+      .onSnapshot(function (doc) {
+        that.setState({ messages: doc.data()[this.state.friendID].reverse() });
       });
   }
   async onSend(messages = []) {
@@ -70,14 +83,28 @@ export default class Chat extends Component {
     // console.log("receiver",this.state.friendID);
     // console.log("sender",this.state.current_user);
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        isAnimated={true}
-        onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1,
-        }}
-      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text style={styles.welcome}>{this.state.friendName}</Text>
+        <Ionicon
+          name="ios-menu"
+          size={35}
+          color={'#32cd32'}
+          onPress={() => this.props.navigation.openDrawer()}
+          style={styles.menu}
+        />
+        <Image
+          source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }}
+          style={styles.menu1}
+        />
+        <GiftedChat
+          messages={this.state.messages}
+          isAnimated={true}
+          onSend={messages => this.onSend(messages)}
+          user={{
+            _id: 1,
+          }}
+        />
+      </SafeAreaView>
     );
   }
 }
@@ -90,13 +117,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(3.8),
+    fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
+    margin: 7,
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  menu1: {
+    width: 10,
+    height: 50,
+    borderRadius: 42,
+    marginTop: responsiveHeight(1.2),
+    marginLeft: '85%',
+    position: 'absolute',
   },
 });
