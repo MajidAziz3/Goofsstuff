@@ -327,20 +327,42 @@ export default class GoodNews extends Component {
               keyExtractor={item => item.user_id}
               renderItem={({ item, index }) => {
                 return (
-                  <View style={styles.container2} key={index}>
-                    <TouchableOpacity onPress={() => { }}>
-                      <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
-                    </TouchableOpacity>
-                    <View style={styles.content}>
-                      <View style={styles.contentHeader}>
-                        <Text style={styles.name}>{item.user_name}</Text>
-                        <Text style={styles.time}>
-                          {item.time}
-                        </Text>
+                  this.item.imageUrl ? (
+                    <View style={styles.container2} key={index}>
+                      <TouchableOpacity onPress={() => { }}>
+                        <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.contentHeader}>
+                          <Text style={styles.name}>{item.user_name}</Text>
+                          <Text style={styles.time}>
+                            {item.time}
+                          </Text>
+                        </View>
+                        <Text rkType='primary3 mediumLine'>{item.comments}</Text>
+                        <Image style={styles.image} source={{ uri: item.imageUrl }} />
+
                       </View>
-                      <Text rkType='primary3 mediumLine'>{item.comments}</Text>
                     </View>
-                  </View>
+
+                  ) : (
+                      <View style={styles.container2} key={index}>
+                        <TouchableOpacity onPress={() => { }}>
+                          <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
+                        </TouchableOpacity>
+                        <View style={styles.content}>
+                          <View style={styles.contentHeader}>
+                            <Text style={styles.name}>{item.user_name}</Text>
+                            <Text style={styles.time}>
+                              {item.time}
+                            </Text>
+                          </View>
+                          <Text rkType='primary3 mediumLine'>{item.comments}</Text>
+
+                        </View>
+                      </View>
+
+                    )
                 );
               }} />
 
