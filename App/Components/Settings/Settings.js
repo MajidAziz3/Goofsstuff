@@ -78,7 +78,7 @@ export default class Settings extends Component {
                 <ScrollView style={styles.container1}>
                     <View style={styles.bodyContainer}>
 
-                        <View style={{ padding: 5, marginBottom: 5, backgroundColor: 'white', width: '100%', height: '25%', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 3, borderRadius: 5 }}>
+                        <View style={{ padding: 5, marginBottom: 5, backgroundColor: 'white', width: '100%', height: '30%', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 3, borderRadius: 5 }}>
 
                             <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row', }}>
 
@@ -88,7 +88,7 @@ export default class Settings extends Component {
                                 </Text>
                                 </View>
 
-                                <TextInput placeholder='Salomon24' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '65%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <TextInput placeholder='Salomon24' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
 
                                 </TextInput>
 
@@ -101,7 +101,7 @@ export default class Settings extends Component {
                                 </Text>
                                 </View>
 
-                                <TextInput placeholder='Aurellen Salomon' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '65%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <TextInput placeholder='Aurellen Salomon' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
 
                                 </TextInput>
 
@@ -115,13 +115,13 @@ export default class Settings extends Component {
                                 </View>
 
 
-                                <TextInput placeholder='********' secureTextEntry={true} style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '65%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <TextInput placeholder='********' secureTextEntry={true} style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
 
                                 </TextInput>
 
                             </View>
                         </View>
-                        <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
+                        {/* <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
 
                             <View style={{ backgroundColor: 'white', width: '100%', height: '50%', flexDirection: 'row', shadowColor: 'green', justifyContent: 'space-evenly' }}>
 
@@ -253,8 +253,8 @@ export default class Settings extends Component {
 
                             </View>
 
-                        </View>
-                        <View style={{ backgroundColor: 'white', top: 0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        </View> */}
+                        <View style={{ backgroundColor: 'white', top: 0, width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Affirmation Push Notification'}
                             </Text>
@@ -349,7 +349,7 @@ export default class Settings extends Component {
 
                         <TouchableOpacity style={{ marginTop: 5, backgroundColor: "white", width: '100%', height: '8%', justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 4, borderRadius: 10 }}>
                             <TouchableOpacity>
-                                <Text style={{ fontSize: responsiveFontSize(2.2), color: '#000000', }}>
+                                <Text style={{ fontSize: responsiveFontSize(2.2), color: '#32cd32', }}>
                                     Help & Support
                             </Text>
 
@@ -401,12 +401,10 @@ export default class Settings extends Component {
 
                             </TouchableOpacity>
                         </View>
-                        <Text style={{ fontSize: responsiveFontSize(2), color: '#000000', alignSelf: 'center', marginTop: 10 }}>
+                        <Text style={{ fontSize: responsiveFontSize(2), color: '#32cd32', alignSelf: 'center', marginTop: 10 }}>
                             Version 1.0.0.1
                           </Text>
-
-                    </View>
-                    <TouchableOpacity style={{ marginTop: 1, marginBottom: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}>
+                          <TouchableOpacity style={{ marginTop: 20, marginBottom: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
                             <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
                                 Log Out
@@ -423,6 +421,9 @@ export default class Settings extends Component {
 
                         </TouchableOpacity>
                     </TouchableOpacity>
+
+                    </View>
+                   
 
 
 
@@ -511,7 +512,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 10,
-        marginBottom: 5,
+        marginBottom: 25,
         width: responsiveWidth(100),
     },
     modal: {

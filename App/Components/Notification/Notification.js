@@ -11,6 +11,12 @@ import {
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import {getData, addToArray} from '../../Backend/Utility';
 import firebase from 'firebase';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 export default class Notification extends Component {
   constructor(props) {
@@ -116,7 +122,19 @@ export default class Notification extends Component {
   render() {
     return (
       <SafeAreaView style={{flex: 1}}>
+        <View style={{marginBottom: responsiveHeight(1.5)}}>
+        <Text style={styles.welcome1}>Notifications</Text>
+        <Ionicon
+          name="ios-menu"
+          size={35}
+          color={'#32cd32'}
+          onPress={() => this.props.navigation.openDrawer()}
+          style={styles.menu}
+        />               
+         <Image source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }} style={styles.menu1} />
+        </View>
         <View style={styles.container}>
+
           <TouchableOpacity>
             <Image
               source={{
@@ -132,14 +150,24 @@ export default class Notification extends Component {
                   {this.state.friend_request && this.state.friend_request.name}
                 </Text>
               </TouchableOpacity>
+              <View style={{flexDirection:'row'}}>
               <TouchableOpacity
-                style={styles.text}
+                style={styles.text2}
                 onPress={() => {
                   this.state.friend_request &&
                     this.friends(this.state.friend_request);
                 }}>
-                <Text>{'Accept'}</Text>
+                <Text style={{textAlign:'center',color:'white',alignSelf:'center',marginTop:15}}>Accept</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.text3}
+                onPress={() => {
+                  this.state.friend_request &&
+                    this.friends(this.state.friend_request);
+                }}>
+                <Text style={{textAlign:'center',color:'white',alignSelf:'center',marginTop:15}}>Reject</Text>
+              </TouchableOpacity>
+              </View>
               <Text style={styles.timeAgo}>2 hours ago</Text>
             </View>
           </View>
@@ -157,18 +185,8 @@ export default class Notification extends Component {
           }}
           renderItem={item => {
             const Notification = item.item;
-            let attachment = <View />;
-
-            let mainContentStyle;
-            if (Notification.attachment) {
-              mainContentStyle = styles.mainContent;
-              attachment = (
-                <Image
-                  style={styles.attachment}
-                  source={{uri: Notification.attachment}}
-                />
-              );
-            }
+           
+            
             return (
               <View style={styles.container}>
                 <TouchableOpacity>
@@ -178,7 +196,7 @@ export default class Notification extends Component {
                   />
                 </TouchableOpacity>
                 <View style={styles.content}>
-                  <View style={mainContentStyle}>
+                  <View style={styles.mainContent}>
                     <TouchableOpacity style={styles.text}>
                       <Text style={styles.name}>{Notification.name}</Text>
                     </TouchableOpacity>
@@ -187,7 +205,7 @@ export default class Notification extends Component {
                     </View>
                     <Text style={styles.timeAgo}>2 hours ago</Text>
                   </View>
-                  {attachment}
+                
                 </View>
               </View>
             );
@@ -202,6 +220,27 @@ const styles = StyleSheet.create({
   root: {
     backgroundColor: '#FFFFFF',
   },
+  welcome1: {
+    fontSize: responsiveFontSize(3.8),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 7,
+},
+menu: {
+
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginTop: responsiveHeight(2.6),
+    marginLeft: '4%',
+    position: 'absolute'
+
+},
+menu1: {
+    width: 10, height: 50, borderRadius: 42,
+    marginTop: responsiveHeight(1.2),
+    marginLeft: '85%',
+    position: 'absolute'
+},
   container: {
     padding: 16,
     flexDirection: 'row',
@@ -218,6 +257,33 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  text2: {
+    marginBottom: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor:'#32cd32',
+    elevation:5,
+    width:'40%',
+    height:38,
+    borderRadius:5,
+    justifyContent:'center',
+    alignItems:'center'
+
+  },
+  text3: {
+    left:20,
+    marginBottom: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor:'red',
+    elevation:5,
+    width:'40%',
+    height:38,
+    borderRadius:5,
+    justifyContent:'center',
+    alignItems:'center'
+
   },
   content: {
     flex: 1,
@@ -248,6 +314,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    color: '#1E90FF',
+    color: '#32cd32',
   },
 });

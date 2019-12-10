@@ -30,6 +30,11 @@ export default class LearnMore extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <View style={{marginBottom: responsiveHeight(1.5)}}>
+        <Text style={styles.welcome1}>About Speaker</Text>
+                <FA name="chevron-left" size={26} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
+                <Image source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }} style={styles.menu1} />
+        </View>
                 <ScrollView>
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
 
@@ -666,6 +671,27 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
+    },
+    welcome1: {
+        fontSize: responsiveFontSize(3.8),
+        fontWeight: 'bold',
+        textAlign: 'center',
+        margin: 7,
+    },
+    menu: {
+    
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        marginTop: responsiveHeight(2.6),
+        marginLeft: '4%',
+        position: 'absolute'
+    
+    },
+    menu1: {
+        width: 10, height: 50, borderRadius: 42,
+        marginTop: responsiveHeight(1.2),
+        marginLeft: '85%',
+        position: 'absolute'
     },
     instructions: {
         textAlign: 'center',
