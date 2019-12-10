@@ -121,7 +121,7 @@ export default class Settings extends Component {
 
                             </View>
                         </View>
-
+{/* 
                         <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
 
                             <View style={{ backgroundColor: 'white', width: '100%', height: '50%', flexDirection: 'row', shadowColor: 'green', justifyContent: 'space-evenly' }}>
@@ -254,7 +254,7 @@ export default class Settings extends Component {
 
                             </View>
                             
-                        </View>
+                        </View> */}
                         <View style={{ backgroundColor: 'white',top:0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Affirmation Push Notification'}
@@ -407,22 +407,22 @@ export default class Settings extends Component {
                           </Text>
 
                     </View>
-                    <TouchableOpacity style={{ marginTop: 1,marginBottom:5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+                    <TouchableOpacity style={{ marginTop: 1,marginBottom:5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}
+                            onPress={() => this.props.navigation.navigate('Login')}>
                                 <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
                                     Log Out
                             </Text>
 
                             </TouchableOpacity>
-                        </TouchableOpacity>
+                        
 
                         <TouchableOpacity style={{ marginBottom:5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }} onPress={() => this.toggleModal(true)}>
-                            <TouchableOpacity>
+                            
                                 <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
                                     Delete Account
                             </Text>
 
-                            </TouchableOpacity>
+                          
                         </TouchableOpacity>
 
 
