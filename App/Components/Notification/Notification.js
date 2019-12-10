@@ -103,7 +103,6 @@ export default class Notification extends Component {
             name: check.name,
             profile_pic: check.profile_picture,
           }).then(async () => {
-            console.log(result,item)
             await addToArray('friends', result, 'request', {
               userId: item.userId,
               name: item.name,
@@ -115,7 +114,6 @@ export default class Notification extends Component {
   };
 
   render() {
-    console.log('dataaattt', this.state.friend_request);
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>

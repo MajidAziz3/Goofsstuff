@@ -77,7 +77,6 @@ export default class FriendsList extends Component {
   };
 
   sendRequest = item => {
-    console.log('hhhhhhhhhhhh', item);
     _retrieveData('user').then(async result => {
       await getData('users', result).then(
         async check =>
