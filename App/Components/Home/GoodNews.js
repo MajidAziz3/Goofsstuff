@@ -329,12 +329,12 @@ export default class GoodNews extends Component {
                 )
               }}
               keyExtractor={item => item.user_id}
-              renderItem={({ item, index }) => {
+              renderItem={({ item}) => {
                 { console.log(item.imageUrl) }
                 return (
                   item.imageUrl ? (
 
-                    <View style={styles.container2} key={index}>
+                    <View style={styles.container2}>
 
                       <TouchableOpacity onPress={() => { }}>
                         <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
@@ -353,7 +353,7 @@ export default class GoodNews extends Component {
                     </View>
 
                   ) : (
-                      <View style={styles.container2} key={index}>
+                      <View style={styles.container2}>
                         <TouchableOpacity onPress={() => { }}>
                           <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
                         </TouchableOpacity>
@@ -665,10 +665,10 @@ export default class GoodNews extends Component {
                   data={this.state.post_data}
                   keyExtractor={item => item.id}
 
-                  renderItem={({ item, index }) => (
+                  renderItem={({ item}) => (
 
                     <View
-                      key={index}
+                      
                       style={{
 
                         shadowColor: '#000',
@@ -823,9 +823,9 @@ export default class GoodNews extends Component {
                                     height: 800,
                                   },
                                 ]}
-                                imageIndex={index}
 
                                 isVisible={this.state.displayIMG}
+                                
                                 onClose={() => {
                                   this.setState({ displayIMG: false }, () => {
                                     this.setState({ showImage: null }, () => {
@@ -835,7 +835,6 @@ export default class GoodNews extends Component {
                                 }}
                                 renderFooter={(currentImage) => (<View style={{ marginBottom: responsiveHeight(4), alignItems: 'center' }}><Text style={{ fontSize: 20, color: 'white' }}>{this.state.imageFooter}</Text></View>)}
                               />}
-                            {console.log("Index::::", index)}
                             {console.log("Image URL::::", item.imageUrl)}
 
                             <TouchableOpacity
