@@ -20,6 +20,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ETIcon from 'react-native-vector-icons/Entypo';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FA from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AIcon from 'react-native-vector-icons/AntDesign';
 import {
   responsiveHeight,
   responsiveWidth,
@@ -27,7 +30,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import VideoPlayer from 'react-native-video-controls';
 import {
   ScrollableTabView,
   DefaultTabBar,
@@ -103,6 +107,27 @@ class Feed extends Component {
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
   };
+
+  renderViewMore(onPress) {
+    return (
+      <Text onPress={onPress} style={{
+        fontSize: responsiveFontSize(2.1),
+        fontWeight: 'bold',
+        color: '#7e7a7a',
+      }}>View more</Text>
+    )
+  }
+
+  renderViewLess(onPress) {
+    return (
+      <Text onPress={onPress} style={{
+        fontSize: responsiveFontSize(2.1),
+        fontWeight: 'bold',
+        color: '#7e7a7a',
+      }}>View less</Text>
+    )
+  }
+
   render() {
     const {
       description,
@@ -504,31 +529,54 @@ class Feed extends Component {
                       elevation: 2,
                       backgroundColor: '#eee',
                       width: '100%',
-                      height: responsiveHeight(23),
+
                       borderRadius: 25,
-                      paddingVertical: 20,
-                      paddingHorizontal: 10,
+                      paddingVertical: 0,
+                      paddingHorizontal:
+                        item.imageUrl || item.videoUrl ? 10 : 10,
                       backgroundColor: 'white',
-                      marginBottom: responsiveHeight(1),
-                      marginTop: responsiveHeight(3),
+                      marginBottom: responsiveHeight(2),
+                      marginTop: responsiveHeight(2)
                     }}>
                     <View
                       style={{
+                        top: 2,
+                        borderRadius: 25,
                         backgroundColor: 'white',
-                        width: '99%',
-                        height: '35%',
+                        width: '98%',
+                        height: 60,
                         flexDirection: 'row',
                         marginBottom: 1,
                       }}>
                       <View
                         style={{
-                          width: '25%',
+                          backgroundColor: 'white',
+                          borderRadius: 25,
+                          width: 60,
                           justifyContent: 'center',
-                          alignItems: 'flex-end',
-                          padding: 10,
+                          alignItems: 'center',
+                          padding: 5,
+                          height: 60,
                         }}>
-                        <Thumbnail source={{uri: uri}} />
+                        {/* <Thumbnail source={{ uri: item.imageName }} /> */}
+                        {item.profile_picuture == null ? (
+                          <Entypo
+                            name="user"
+                            size={40}
+                            color="#d0d0d0dd"
+                            style={{ width: 60, height: 60, borderRadius: 60 }}
+                          />
+                        ) : (
+                            <Image
+                              source={{
+                                uri:
+                                  'https://randomuser.me/api/portraits/men/94.jpg',
+                              }}
+                              style={{ width: 60, height: 60, borderRadius: 60 }}
+                            />
+                          )}
                       </View>
+
                       <View
                         style={{
                           justifyContent: 'center',
@@ -540,8 +588,8 @@ class Feed extends Component {
                             fontSize: responsiveFontSize(3),
                             fontWeight: 'bold',
                           }}>
-                          David Jhon
-                        </Text>
+                          Asad
+                          </Text>
                       </View>
                       <View
                         style={{
@@ -563,100 +611,257 @@ class Feed extends Component {
                     <View
                       style={{
                         width: '99%',
-                        backgroundColor: '',
                         paddingHorizontal: 20,
-                        height: '35%',
+                        marginBottom: responsiveHeight(2),
+                        backgroundColor: 'white',
+                        marginBottom: 3
                       }}>
                       {/* <ScrollView> */}
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(2.2),
+                      <ViewMoreText
+                        numberOfLines={3}
+                        renderViewMore={this.renderViewMore}
+                        renderViewLess={this.renderViewLess}
+                        textStyle={{
+                          fontSize: responsiveFontSize(2.1),
                           fontWeight: '600',
                           color: '#7e7a7a',
                           flexWrap: 'wrap',
                         }}
-                        numberOfLines={2}>
-                        Once I was drawing a perfect chair for myself in my head
-                        but I could not finish her design.. And so I found her!
-                        was drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her! Once I
-                        was drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her! was
-                        drawing a perfect chair for myself in my head but I
-                        could not finish her design.. And so I found her!
-                      </Text>
-                      {/* </ScrollView> */}
+                      >
+                        <Text>
+                          ckjdsnjcndjksnckjsdnjkcnksdjncjknsdjkcnjksd jdcdjks c sdc sdccjkndskjcds cds csd c sdc dks csd cds chjds csd chsdc sdhbckhjsdchjksdbckjsdsd cks dcsd ckjsd ckjsdcsdc ksd ckjsdcsdccksd
+                        </Text>
+                      </ViewMoreText>
+                      {/* <Text
+                          style={{
+                            fontSize: responsiveFontSize(2.1),
+                            fontWeight: '600',
+                            color: '#7e7a7a',
+                            flexWrap: 'wrap',
+                          }}
+                          numberOfLines={4}>
+                          {item.description}
+                        </Text> */}
+                    </View>
+
+                    <View style={{
+                      width: '100%',
+                      height: item.imageUrl || item.videoUrl ? responsiveHeight(30) : null,
+
+                    }}>
+                      {item.imageUrl ? (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            width: '99%',
+                            height: '100%',
+                            flexDirection: 'row',
+                            marginBottom: 1,
+
+                          }}>
+
+                          <Image
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                            }}
+                            source={{ uri: item.imageUrl }}
+                            resizeMode={'cover'}
+                          />
+                        </View>
+                      ) : item.videoUrl ? (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            width: '99%',
+                            height: '100%',
+                            flexDirection: 'row',
+                            marginBottom: 1,
+                          }}>
+                          <VideoPlayer
+                            source={{
+                              uri:
+                                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                            }}
+                            navigator={this.props.navigator}
+                            disableBack={true}
+                            disableVolume={true}
+                            disableFullscreen={true}
+                            paused={true}
+                          />
+                        </View>
+                      ) : null}
                     </View>
 
                     <View
-                      style={{
-                        height: '15%',
-                        flexDirection: 'row',
-                        paddingHorizontal: 20,
-                        backgroundColor: 'white',
-                      }}>
+                        style={{
+                          flexDirection: 'row',
+                          paddingHorizontal: 0,
+                          backgroundColor: 'white',
+
+                          // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
+                          // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
+                          marginHorizontal: 10,
+                          marginVertical: 10,
+                          alignItems: 'center',
+                          justifyContent: "space-evenly"
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}>
+                          <TouchableOpacity>
+                            <FontAwesome
+                              name="comment-o"
+                              size={30}
+                              color="#32cd32"
+                              onPress={() => {
+                                this.setModalVisible();
+                                this.CommentPost(item.post_id);
+                              }}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              top: 5,
+                              color: '#32cd32',
+                              fontSize: responsiveFontSize(1.6),
+                            }}>
+                            0{/* {item.comments.length} */}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          <TouchableOpacity>
+                            <AIcon
+                              name={this.state.hit_like ? 'like1' : 'like2'}
+                              size={28}
+                              color={'#32cd32'}
+                              onPress={() => {
+                                this.likePost(item.post_id);
+                                this.setState({
+                                  hit_like: !this.state.hit_like,
+                                });
+                              }}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              alignItems: 'center',
+                              color: '#32cd32',
+
+                              fontSize: responsiveFontSize(1.6),
+                            }}>
+                            {/* {item.like.length} */}0
+                        </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          <Text
+                            style={{
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              color: '#7e7a7a',
+                              fontSize: responsiveFontSize(1.6),
+                            }}>
+                            {/* {item.favorite.length} */}
+                          </Text>
+                          <TouchableOpacity>
+                            <Ionicon
+                              name={this.state.hit_favorite ? "md-heart" : "md-heart-empty"}
+                              size={30}
+                              color={'#32cd32'}
+                              style={{ top: 1 }}
+                              onPress={() => {
+                                this.favoritePost(item.post_id);
+                                this.setState({
+                                  hit_favorite: !this.state.hit_favorite,
+
+                                });
+                              }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
                       <View
                         style={{
-                          flexDirection: 'column',
-                          flexWrap: 'wrap',
-                          width: '33%',
-                          justifyContent: 'center',
+                          marginBottom: responsiveHeight(2),
+                          backgroundColor: 'white',
+                          flexDirection: 'row',
+                          padding: 1,
+                          marginHorizontal: 20,
+                          // alignItems:'center',
                         }}>
-                        <TouchableOpacity>
-                          <Icon name="account" size={20} color="#7e7a7a" />
-                        </TouchableOpacity>
-                        <Text
+                        <View
                           style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                            fontSize: responsiveFontSize(1.8),
+                            fontSize: 12,
+                            paddingHorizontal: 20,
+                            padding: 0,
+                            height: '90%',
+                            backgroundColor: '#dee3e1',
+                            width: '80%',
+                            borderRadius: 50,
+                            flexDirection: 'row',
                           }}>
-                          878
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'column',
-                          flexWrap: 'wrap',
-                          width: '33%',
-                          justifyContent: 'center',
-                        }}>
-                        <TouchableOpacity>
-                          <EIcon name="like" size={25} color="#7e7a7a" />
-                        </TouchableOpacity>
-                        <Text
+                          <TextInput
+                            value={this.state.comments_words}
+                            onChangeText={values =>
+                              this.setState({ comments_words: values })
+                            }
+                            placeholder="Type something">
+                            {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                          </TextInput>
+                          <Ionicon
+                            name="ios-camera"
+                            size={30}
+                            style={{ right: 15, position: 'absolute', top: 5 }}
+                            onPress={this.handleChoosePhoto}
+                          />
+                        </View>
+                        {/* </View> */}
+                        <View
                           style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                            fontSize: responsiveFontSize(1.8),
+                            width: '20%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}>
-                          91
-                        </Text>
+                          <Icon
+                            name="send-circle-outline"
+                            size={30}
+                            color="#32cd32"
+                            onPress={() => {
+                              this.CommentsPost(item.post_id);
+                            }}
+                          />
+                        </View>
                       </View>
-                      <View
-                        style={{
-                          flexDirection: 'column',
-                          flexWrap: 'wrap-reverse',
-                          width: '33%',
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        <Text
-                          style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            color: '#32cd32',
-                            fontSize: responsiveFontSize(1.8),
-                          }}>
-                          878
-                        </Text>
-                        <TouchableOpacity>
-                          <Ionicon name="ios-heart" size={20} color="#32cd32" />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
+
+
+
+
                   </View>
                 )}
               />
@@ -681,17 +886,7 @@ class Feed extends Component {
                       onClose={() => {
                         this.setState({displayIMG: false});
                       }}
-                      renderFooter={currentImage => (
-                        <View
-                          style={{
-                            marginBottom: responsiveHeight(4),
-                            alignItems: 'center',
-                          }}>
-                          <Text style={{fontSize: 20, color: 'white'}}>
-                            Hello! I'm Footer
-                          </Text>
-                        </View>
-                      )}
+                      renderFooter={(currentImage) => (<View style={{ marginBottom: responsiveHeight(4), alignItems: 'center' }}><Text style={{ fontSize: 20, color: 'white' }}>Hello! I'm Footer</Text></View>)}
                     />
 
                     <TouchableOpacity

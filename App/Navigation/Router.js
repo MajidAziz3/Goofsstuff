@@ -80,10 +80,18 @@ import CommunityGuide from '../Components/Login/CommunityGuide';
 import VisionBoard from '../Components/UserProfile/VisionBoard'
 import AppWorking1 from '../Components/Login/AppWorking1';
 import House1 from '../Components/Login/House1';
+import FriendsProfile from '../Components/UserProfile/FriendsProfile';
+import LearnMore from '../Components/Home/LearnMore';
 
 var width = Dimensions.get('window').width;
 
 console.disableYellowBox = true;
+
+const FriendStack = createStackNavigator({
+  FriendsList:FriendsList,
+  FriendsProfile:FriendsProfile,
+  Chat:Chat
+});
 const AuthStack = createStackNavigator({
   Login: Login,
   Signup: Signup,
@@ -119,6 +127,11 @@ const CommunityStack = createStackNavigator({
   JobInfo: JobInfo,
 });
 
+const WatchStack = createStackNavigator({
+  Watch: Watch,
+  LearnMore: LearnMore,
+});
+
 const HomeTabs = createMaterialTopTabNavigator(
   {
     Home: {
@@ -128,7 +141,7 @@ const HomeTabs = createMaterialTopTabNavigator(
       },
     },
     Watch: {
-      screen: Watch,
+      screen: WatchStack,
       navigationOptions: {
         tabBarLabel: 'Watch',
       },
@@ -306,7 +319,7 @@ const AppDrawerNavigator = createDrawerNavigator(
       screen: UserProfileStack,
     },
     Friend: {
-      screen: FriendsList,
+      screen: FriendStack,
     },
     InviteFriend: {
       screen: InviteFriend,
