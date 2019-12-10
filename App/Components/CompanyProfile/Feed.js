@@ -30,7 +30,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import VideoPlayer from 'react-native-video-controls';
 import {
   ScrollableTabView,
@@ -39,10 +39,18 @@ import {
 } from '@valdio/react-native-scrollable-tabview';
 import ImageView from 'react-native-image-view';
 import {CompanyPost} from '../../Backend/Create/CompanyPost';
-import {getData} from '../../Backend/Utility';
+import {
+  getData,
+  uploadImage,
+  uploadVideo,
+  getAllOfCollection,
+} from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import firebase from 'firebase';
-
+import ViewMoreText from 'react-native-view-more-text';
+import ImageResizer from 'react-native-image-resizer';
+import ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-community/async-storage';
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
 ///Company Profile  5th Screen
@@ -77,6 +85,15 @@ class Feed extends Component {
       file: null,
       post_data: null,
       loading: true,
+
+      imageType: null,
+      photo: null,
+      ImageName: null,
+      videoPath: null,
+      videoType: null,
+      videoName: null,
+      ImageUrl: null,
+      posts: [],
     };
   }
 
@@ -106,29 +123,193 @@ class Feed extends Component {
       uploading_time:
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
+    getAllOfCollection('CompanyPost').then(res => {
+      this.setState({posts: res});
+    });
   };
+
+  handlechooseVideo = () => {
+    const options = {
+      title: 'Select video',
+      mediaType: 'video',
+
+      quality: 1,
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        this.setState({
+          videoPath: response.uri,
+          videoType: 'mp4',
+          videoName: response.path,
+          imageType: null,
+          photo: null,
+          ImageName: null,
+          ImageUrl: null,
+        });
+      }
+    });
+  };
+
+  upload_Video = async () => {
+    var parts = this.state.videoName.split('/');
+    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      await uploadVideo(
+        this.state.videoPath,
+        this.state.videoType,
+        lastSegment,
+        'video',
+        'CompanyPost',
+        item,
+      );
+      console.log('i m here');
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+    AsyncStorage.removeItem('doc_id');
+  };
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+              videoPath: null,
+              videoType: null,
+              videoName: null,
+            });
+          });
+        },
+      );
+    });
+  };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      console.log('refffffffff', item);
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'CompanyPost',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
 
   renderViewMore(onPress) {
     return (
-      <Text onPress={onPress} style={{
-        fontSize: responsiveFontSize(2.1),
-        fontWeight: 'bold',
-        color: '#7e7a7a',
-      }}>View more</Text>
-    )
+      <Text
+        onPress={onPress}
+        style={{
+          fontSize: responsiveFontSize(2.1),
+          fontWeight: 'bold',
+          color: '#7e7a7a',
+        }}>
+        View more
+      </Text>
+    );
   }
 
   renderViewLess(onPress) {
     return (
-      <Text onPress={onPress} style={{
-        fontSize: responsiveFontSize(2.1),
-        fontWeight: 'bold',
-        color: '#7e7a7a',
-      }}>View less</Text>
-    )
+      <Text
+        onPress={onPress}
+        style={{
+          fontSize: responsiveFontSize(2.1),
+          fontWeight: 'bold',
+          color: '#7e7a7a',
+        }}>
+        View less
+      </Text>
+    );
   }
 
   render() {
+    console.log('dhhajhdhahjdah', this.state.posts);
     const {
       description,
       uploading_time,
@@ -438,7 +619,7 @@ class Feed extends Component {
                     elevation: 1,
                   }}
                   onPress={() => {
-                    alert('Posted');
+                    this.handleChoosePhoto();
                   }}>
                   <FA name="camera" size={18} color="#32cd32" style={{}} />
 
@@ -463,7 +644,7 @@ class Feed extends Component {
                     elevation: 1,
                   }}
                   onPress={() => {
-                    alert('Posted');
+                    this.handlechooseVideo();
                   }}>
                   <FA
                     name="video-camera"
@@ -499,7 +680,14 @@ class Feed extends Component {
                       comment,
                       like,
                       favorite,
-                      file,
+                    ).then(
+                      setTimeout(async () => {
+                        if (this.state.videoPath !== null) {
+                          await this.upload_Video();
+                        } else {
+                          await this.Upload_Image();
+                        }
+                      }, 10000),
                     );
                   }}>
                   <FA name="upload" size={18} color="white" style={{}} />
@@ -536,7 +724,7 @@ class Feed extends Component {
                         item.imageUrl || item.videoUrl ? 10 : 10,
                       backgroundColor: 'white',
                       marginBottom: responsiveHeight(2),
-                      marginTop: responsiveHeight(2)
+                      marginTop: responsiveHeight(2),
                     }}>
                     <View
                       style={{
@@ -564,17 +752,17 @@ class Feed extends Component {
                             name="user"
                             size={40}
                             color="#d0d0d0dd"
-                            style={{ width: 60, height: 60, borderRadius: 60 }}
+                            style={{width: 60, height: 60, borderRadius: 60}}
                           />
                         ) : (
-                            <Image
-                              source={{
-                                uri:
-                                  'https://randomuser.me/api/portraits/men/94.jpg',
-                              }}
-                              style={{ width: 60, height: 60, borderRadius: 60 }}
-                            />
-                          )}
+                          <Image
+                            source={{
+                              uri:
+                                'https://randomuser.me/api/portraits/men/94.jpg',
+                            }}
+                            style={{width: 60, height: 60, borderRadius: 60}}
+                          />
+                        )}
                       </View>
 
                       <View
@@ -589,7 +777,7 @@ class Feed extends Component {
                             fontWeight: 'bold',
                           }}>
                           Asad
-                          </Text>
+                        </Text>
                       </View>
                       <View
                         style={{
@@ -614,7 +802,7 @@ class Feed extends Component {
                         paddingHorizontal: 20,
                         marginBottom: responsiveHeight(2),
                         backgroundColor: 'white',
-                        marginBottom: 3
+                        marginBottom: 3,
                       }}>
                       {/* <ScrollView> */}
                       <ViewMoreText
@@ -626,10 +814,12 @@ class Feed extends Component {
                           fontWeight: '600',
                           color: '#7e7a7a',
                           flexWrap: 'wrap',
-                        }}
-                      >
+                        }}>
                         <Text>
-                          ckjdsnjcndjksnckjsdnjkcnksdjncjknsdjkcnjksd jdcdjks c sdc sdccjkndskjcds cds csd c sdc dks csd cds chjds csd chsdc sdhbckhjsdchjksdbckjsdsd cks dcsd ckjsd ckjsdcsdc ksd ckjsdcsdccksd
+                          ckjdsnjcndjksnckjsdnjkcnksdjncjknsdjkcnjksd jdcdjks c
+                          sdc sdccjkndskjcds cds csd c sdc dks csd cds chjds csd
+                          chsdc sdhbckhjsdchjksdbckjsdsd cks dcsd ckjsd
+                          ckjsdcsdc ksd ckjsdcsdccksd
                         </Text>
                       </ViewMoreText>
                       {/* <Text
@@ -644,11 +834,14 @@ class Feed extends Component {
                         </Text> */}
                     </View>
 
-                    <View style={{
-                      width: '100%',
-                      height: item.imageUrl || item.videoUrl ? responsiveHeight(30) : null,
-
-                    }}>
+                    <View
+                      style={{
+                        width: '100%',
+                        height:
+                          item.imageUrl || item.videoUrl
+                            ? responsiveHeight(30)
+                            : null,
+                      }}>
                       {item.imageUrl ? (
                         <View
                           style={{
@@ -659,15 +852,13 @@ class Feed extends Component {
                             height: '100%',
                             flexDirection: 'row',
                             marginBottom: 1,
-
                           }}>
-
                           <Image
                             style={{
                               width: '100%',
                               height: '100%',
                             }}
-                            source={{ uri: item.imageUrl }}
+                            source={{uri: item.imageUrl}}
                             resizeMode={'cover'}
                           />
                         </View>
@@ -698,170 +889,169 @@ class Feed extends Component {
                     </View>
 
                     <View
-                        style={{
-                          flexDirection: 'row',
-                          paddingHorizontal: 0,
-                          backgroundColor: 'white',
+                      style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 0,
+                        backgroundColor: 'white',
 
-                          // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
-                          // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
-                          marginHorizontal: 10,
-                          marginVertical: 10,
-                          alignItems: 'center',
-                          justifyContent: "space-evenly"
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}>
-                          <TouchableOpacity>
-                            <FontAwesome
-                              name="comment-o"
-                              size={30}
-                              color="#32cd32"
-                              onPress={() => {
-                                this.setModalVisible();
-                                this.CommentPost(item.post_id);
-                              }}
-                            />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              top: 5,
-                              color: '#32cd32',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            0{/* {item.comments.length} */}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                          }}>
-                          <TouchableOpacity>
-                            <AIcon
-                              name={this.state.hit_like ? 'like1' : 'like2'}
-                              size={28}
-                              color={'#32cd32'}
-                              onPress={() => {
-                                this.likePost(item.post_id);
-                                this.setState({
-                                  hit_like: !this.state.hit_like,
-                                });
-                              }}
-                            />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              alignItems: 'center',
-                              color: '#32cd32',
-
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            {/* {item.like.length} */}0
-                        </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                          }}>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            {/* {item.favorite.length} */}
-                          </Text>
-                          <TouchableOpacity>
-                            <Ionicon
-                              name={this.state.hit_favorite ? "md-heart" : "md-heart-empty"}
-                              size={30}
-                              color={'#32cd32'}
-                              style={{ top: 1 }}
-                              onPress={() => {
-                                this.favoritePost(item.post_id);
-                                this.setState({
-                                  hit_favorite: !this.state.hit_favorite,
-
-                                });
-                              }}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-
+                        // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
+                        // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignItems: 'center',
+                        justifyContent: 'space-evenly',
+                      }}>
                       <View
                         style={{
-                          marginBottom: responsiveHeight(2),
-                          backgroundColor: 'white',
                           flexDirection: 'row',
-                          padding: 1,
-                          marginHorizontal: 20,
-                          // alignItems:'center',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
                         }}>
-                        <View
-                          style={{
-                            fontSize: 12,
-                            paddingHorizontal: 20,
-                            padding: 0,
-                            height: '90%',
-                            backgroundColor: '#dee3e1',
-                            width: '80%',
-                            borderRadius: 50,
-                            flexDirection: 'row',
-                          }}>
-                          <TextInput
-                            value={this.state.comments_words}
-                            onChangeText={values =>
-                              this.setState({ comments_words: values })
-                            }
-                            placeholder="Type something">
-                            {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-                          </TextInput>
-                          <Ionicon
-                            name="ios-camera"
-                            size={30}
-                            style={{ right: 15, position: 'absolute', top: 5 }}
-                            onPress={this.handleChoosePhoto}
-                          />
-                        </View>
-                        {/* </View> */}
-                        <View
-                          style={{
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Icon
-                            name="send-circle-outline"
+                        <TouchableOpacity>
+                          <FontAwesome
+                            name="comment-o"
                             size={30}
                             color="#32cd32"
                             onPress={() => {
-                              this.CommentsPost(item.post_id);
+                              this.setModalVisible();
+                              this.CommentPost(item.post_id);
                             }}
                           />
-                        </View>
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            top: 5,
+                            color: '#32cd32',
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          0{/* {item.comments.length} */}
+                        </Text>
                       </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
 
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <TouchableOpacity>
+                          <AIcon
+                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            size={28}
+                            color={'#32cd32'}
+                            onPress={() => {
+                              this.likePost(item.post_id);
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              });
+                            }}
+                          />
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            alignItems: 'center',
+                            color: '#32cd32',
 
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          {/* {item.like.length} */}0
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
 
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            color: '#7e7a7a',
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          {/* {item.favorite.length} */}
+                        </Text>
+                        <TouchableOpacity>
+                          <Ionicon
+                            name={
+                              this.state.hit_favorite
+                                ? 'md-heart'
+                                : 'md-heart-empty'
+                            }
+                            size={30}
+                            color={'#32cd32'}
+                            style={{top: 1}}
+                            onPress={() => {
+                              this.favoritePost(item.post_id);
+                              this.setState({
+                                hit_favorite: !this.state.hit_favorite,
+                              });
+                            }}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
 
+                    <View
+                      style={{
+                        marginBottom: responsiveHeight(2),
+                        backgroundColor: 'white',
+                        flexDirection: 'row',
+                        padding: 1,
+                        marginHorizontal: 20,
+                        // alignItems:'center',
+                      }}>
+                      <View
+                        style={{
+                          fontSize: 12,
+                          paddingHorizontal: 20,
+                          padding: 0,
+                          height: '90%',
+                          backgroundColor: '#dee3e1',
+                          width: '80%',
+                          borderRadius: 50,
+                          flexDirection: 'row',
+                        }}>
+                        <TextInput
+                          value={this.state.comments_words}
+                          onChangeText={values =>
+                            this.setState({comments_words: values})
+                          }
+                          placeholder="Type something">
+                          {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                        </TextInput>
+                        <Ionicon
+                          name="ios-camera"
+                          size={30}
+                          style={{right: 15, position: 'absolute', top: 5}}
+                          onPress={this.handleChoosePhoto}
+                        />
+                      </View>
+                      {/* </View> */}
+                      <View
+                        style={{
+                          width: '20%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Icon
+                          name="send-circle-outline"
+                          size={30}
+                          color="#32cd32"
+                          onPress={() => {
+                            this.CommentsPost(item.post_id);
+                          }}
+                        />
+                      </View>
+                    </View>
                   </View>
                 )}
               />
@@ -886,7 +1076,17 @@ class Feed extends Component {
                       onClose={() => {
                         this.setState({displayIMG: false});
                       }}
-                      renderFooter={(currentImage) => (<View style={{ marginBottom: responsiveHeight(4), alignItems: 'center' }}><Text style={{ fontSize: 20, color: 'white' }}>Hello! I'm Footer</Text></View>)}
+                      renderFooter={currentImage => (
+                        <View
+                          style={{
+                            marginBottom: responsiveHeight(4),
+                            alignItems: 'center',
+                          }}>
+                          <Text style={{fontSize: 20, color: 'white'}}>
+                            Hello! I'm Footer
+                          </Text>
+                        </View>
+                      )}
                     />
 
                     <TouchableOpacity
