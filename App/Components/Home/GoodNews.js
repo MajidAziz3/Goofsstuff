@@ -20,6 +20,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Thumbnail, Item } from 'native-base';
+
 import Entypo from 'react-native-vector-icons/Entypo';
 import FA from 'react-native-vector-icons/Entypo';
 import AIcon from 'react-native-vector-icons/AntDesign';
@@ -66,6 +67,9 @@ export default class GoodNews extends Component {
       ImageName: null,
       imageType: null,
       displayIMG: false,
+      showImage: null,
+      imageFooter: null,
+
       datasource: [
         {
           name: 'Woody Allen',
@@ -304,7 +308,7 @@ export default class GoodNews extends Component {
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}>
-          <SafeAreaView style={{ height: '90%' }}>
+          <SafeAreaView style={{ flex: 1 }}>
             <FA
               name="cross"
               size={30}
@@ -315,7 +319,7 @@ export default class GoodNews extends Component {
               }}
             />
 
-{console.log(this.state.comment_data)}
+            {console.log(this.state.comment_data)}
             <FlatList
               style={styles.root}
               data={this.state.comment_data.comments}
@@ -325,13 +329,13 @@ export default class GoodNews extends Component {
                 )
               }}
               keyExtractor={item => item.user_id}
-              renderItem={({ item, index }) => {
-                 {console.log(item.imageUrl)}
+              renderItem={({ item}) => {
+                { console.log(item.imageUrl) }
                 return (
                   item.imageUrl ? (
-                   
-                    <View style={styles.container2} key={index}>
-                      
+
+                    <View style={styles.container2}>
+
                       <TouchableOpacity onPress={() => { }}>
                         <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
                       </TouchableOpacity>
@@ -349,7 +353,7 @@ export default class GoodNews extends Component {
                     </View>
 
                   ) : (
-                      <View style={styles.container2} key={index}>
+                      <View style={styles.container2}>
                         <TouchableOpacity onPress={() => { }}>
                           <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
                         </TouchableOpacity>
@@ -368,58 +372,58 @@ export default class GoodNews extends Component {
                     )
                 );
               }} />
-<View
-                        style={{
-                          marginBottom: responsiveHeight(2),
-                          backgroundColor: 'white',
-                          flexDirection: 'row',
-                          padding: 1,
-                          marginHorizontal: 20,
-                          // alignItems:'center',
-                        }}>
-                        <View
-                          style={{
-                            fontSize: 12,
-                            paddingHorizontal: 20,
-                            padding: 0,
-                            height: '90%',
-                            backgroundColor: '#dee3e1',
-                            width: '80%',
-                            borderRadius: 50,
-                            flexDirection: 'row',
-                          }}>
-                          <TextInput
-                            value={this.state.comments_words}
-                            onChangeText={values =>
-                              this.setState({ comments_words: values })
-                            }
-                            placeholder="Type something">
-                            {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-                          </TextInput>
-                          <Ionicon
-                            name="ios-camera"
-                            size={30}
-                            style={{ right: 15, position: 'absolute', top: 5 }}
-                            onPress={this.handleChoosePhoto}
-                          />
-                        </View>
-                        {/* </View> */}
-                        <View
-                          style={{
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Icon
-                            name="send-circle-outline"
-                            size={30}
-                            color="#32cd32"
-                            onPress={() => {
-                              this.CommentsPost(item.post_id);
-                            }}
-                          />
-                        </View>
-                      </View>
+            <View
+              style={{
+                marginBottom: responsiveHeight(2),
+                backgroundColor: 'white',
+                flexDirection: 'row',
+                padding: 1,
+                marginHorizontal: 20,
+                // alignItems:'center',
+              }}>
+              <View
+                style={{
+                  fontSize: 12,
+                  paddingHorizontal: 20,
+                  padding: 0,
+                  height: '90%',
+                  backgroundColor: '#dee3e1',
+                  width: '80%',
+                  borderRadius: 50,
+                  flexDirection: 'row',
+                }}>
+                <TextInput
+                  value={this.state.comments_words}
+                  onChangeText={values =>
+                    this.setState({ comments_words: values })
+                  }
+                  placeholder="Type something">
+                  {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                </TextInput>
+                <Ionicon
+                  name="ios-camera"
+                  size={30}
+                  style={{ right: 15, position: 'absolute', top: 5 }}
+                  onPress={this.handleChoosePhoto}
+                />
+              </View>
+              {/* </View> */}
+              <View
+                style={{
+                  width: '20%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  name="send-circle-outline"
+                  size={30}
+                  color="#32cd32"
+                  onPress={() => {
+                    this.CommentsPost(item.post_id);
+                  }}
+                />
+              </View>
+            </View>
 
           </SafeAreaView>
         </Modal>
@@ -660,11 +664,11 @@ export default class GoodNews extends Component {
                 <FlatList
                   data={this.state.post_data}
                   keyExtractor={item => item.id}
-                  
-                  renderItem={({ item, index }) => (
-                    
+
+                  renderItem={({ item}) => (
+
                     <View
-                      key={index}
+                      
                       style={{
 
                         shadowColor: '#000',
@@ -683,7 +687,7 @@ export default class GoodNews extends Component {
                         marginBottom: responsiveHeight(2)
 
                       }}>
-                        {console.log("ITEMM:::", item)}
+                      {console.log("ITEMM:::", item)}
                       <View
                         style={{
                           top: 2,
@@ -748,7 +752,7 @@ export default class GoodNews extends Component {
                             style={{
                               fontSize: responsiveFontSize(1.5),
                               fontWeight: '400',
-                              color: '#7e7a7a', 
+                              color: '#7e7a7a',
                             }}>
                             8h ago
                         </Text>
@@ -807,15 +811,56 @@ export default class GoodNews extends Component {
                               marginBottom: 1,
 
                             }}>
+                            {this.state.showImage && this.state.imageFooter &&
+                              <ImageView
+                                images={[
+                                  {
+                                    source: {
+                                      uri: this.state.showImage
+                                    },
 
-                            <Image
+                                    width: 1200,
+                                    height: 800,
+                                  },
+                                ]}
+
+                                isVisible={this.state.displayIMG}
+                                
+                                onClose={() => {
+                                  this.setState({ displayIMG: false }, () => {
+                                    this.setState({ showImage: null }, () => {
+                                      this.setState({ itemFooter: null })
+                                    })
+                                  });
+                                }}
+                                renderFooter={(currentImage) => (<View style={{ marginBottom: responsiveHeight(4), alignItems: 'center' }}><Text style={{ fontSize: 20, color: 'white' }}>{this.state.imageFooter}</Text></View>)}
+                              />}
+                            {console.log("Image URL::::", item.imageUrl)}
+
+                            <TouchableOpacity
                               style={{
-                                width: '100%',
-                                height: '100%',
+                                height: responsiveHeight(16),
+                                width: responsiveHeight(16.5),
                               }}
-                              source={{ uri: item.imageUrl }}
-                              resizeMode={'cover'}
-                            />
+                              onPress={() => {
+                                this.setState({ displayIMG: true }, () => {
+                                  this.setState({ showImage: item.imageUrl }, () => {
+                                    this.setState({ imageFooter: item.description })
+                                  })
+                                });
+                              }}>
+                              <Image
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                }}
+                                source={{ uri: item.imageUrl }}
+                                resizeMode={'cover'}
+                              />
+
+                            </TouchableOpacity>
+
+
                           </View>
                         ) : item.videoUrl ? (
                           <View
@@ -951,7 +996,7 @@ export default class GoodNews extends Component {
                         </View>
                       </View>
 
-                      
+
 
 
 

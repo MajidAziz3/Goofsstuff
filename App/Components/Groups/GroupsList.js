@@ -54,8 +54,6 @@ class GroupList extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Create_Group');
         this.setState({ post_data: data, loading: false });
-        console.log(data);
-        console.log('\n');
       });
   };
 
