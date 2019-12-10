@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Image, Dimensions, TextInput, FlatList, Picker, TouchableOpacity, ScrollView, Modal, TouchableHighlight, SafeAreaView } from 'react-native';
 import { Thumbnail, Button } from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import EIcon from 'react-native-vector-icons/Entypo';
@@ -37,13 +37,13 @@ export default class Settings extends Component {
 
     onPress1 = () => {
         this.setState({ switchOn1: !this.state.switchOn1 });
-      }
-      onPress2 = () => {
+    }
+    onPress2 = () => {
         this.setState({ switchOn2: !this.state.switchOn2 });
-      }
-      onPress3 = () => {
+    }
+    onPress3 = () => {
         this.setState({ switchOn3: !this.state.switchOn3 });
-      }
+    }
     toggleModal(visible) {
         this.setState({ modalVisible: visible });
     }
@@ -68,7 +68,7 @@ export default class Settings extends Component {
         // const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
         const uri = <Icon name="location" size={40} color="#900" />;
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style={styles.welcome}>Account Settings</Text>
                 <Ionicon name="ios-menu" size={35} color={'#32cd32'} onPress={() => this.props.navigation.openDrawer()} style={styles.menu} />
                 <Image source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }} style={styles.menu1} />
@@ -121,7 +121,6 @@ export default class Settings extends Component {
 
                             </View>
                         </View>
-
                         <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
 
                             <View style={{ backgroundColor: 'white', width: '100%', height: '50%', flexDirection: 'row', shadowColor: 'green', justifyContent: 'space-evenly' }}>
@@ -239,7 +238,7 @@ export default class Settings extends Component {
                                         Font
                             </Text>
                                 </View>
-                                <View style={{ marginHorizontal: 10,top:0, height: '80%', backgroundColor: 'white', width: '60%', justifyContent: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 5 }}>
+                                <View style={{ marginHorizontal: 10, top: 0, height: '80%', backgroundColor: 'white', width: '60%', justifyContent: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 5 }}>
                                     <Picker
 
                                         style={{ width: '100%', height: '100%', color: '#000000', fontSize: 12 }}
@@ -253,99 +252,99 @@ export default class Settings extends Component {
                                 </View>
 
                             </View>
-                            
+
                         </View>
-                        <View style={{ backgroundColor: 'white',top:0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
+                        <View style={{ backgroundColor: 'white', top: 0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Affirmation Push Notification'}
                             </Text>
-                                <SwitchToggle
-                                    containerStyle={{
-                                        marginTop: 5,
-                                        width: 40,
-                                        height: 25,
-                                        borderRadius: 30,
-                                        padding: 1,
-                                        marginRight:10,
+                            <SwitchToggle
+                                containerStyle={{
+                                    marginTop: 5,
+                                    width: 40,
+                                    height: 25,
+                                    borderRadius: 30,
+                                    padding: 1,
+                                    marginRight: 10,
 
-                                    }}
-                                    backgroundColorOn='#32cd32'
-                                    backgroundColorOff='#d3d4d3'
-                                    circleStyle={{
-                                        width: 25,
-                                        height: 25,
-                                        borderRadius: 27.5,
-                                        backgroundColor: '#d6d3d3', // rgb(102,134,205)
-                                    }}
-                                    switchOn={this.state.switchOn1}
-                                    onPress={this.onPress1}
-                                    circleColorOff='#e5e1e0'
-                                    circleColorOn='#e5e1e0'
-                                    duration={500}
-                                />
+                                }}
+                                backgroundColorOn='#32cd32'
+                                backgroundColorOff='#d3d4d3'
+                                circleStyle={{
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius: 27.5,
+                                    backgroundColor: '#d6d3d3', // rgb(102,134,205)
+                                }}
+                                switchOn={this.state.switchOn1}
+                                onPress={this.onPress1}
+                                circleColorOff='#e5e1e0'
+                                circleColorOn='#e5e1e0'
+                                duration={500}
+                            />
 
-                            </View>
-                            <View style={{ backgroundColor: 'white',top:0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
+                        </View>
+                        <View style={{ backgroundColor: 'white', top: 0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Healthy Self Notification'}
                             </Text>
-                                <SwitchToggle
-                                    containerStyle={{
-                                        marginTop: 5,
-                                        width: 40,
-                                        height: 25,
-                                        borderRadius: 30,
-                                        padding: 1,
-                                        marginRight:10,
+                            <SwitchToggle
+                                containerStyle={{
+                                    marginTop: 5,
+                                    width: 40,
+                                    height: 25,
+                                    borderRadius: 30,
+                                    padding: 1,
+                                    marginRight: 10,
 
-                                    }}
-                                    backgroundColorOn='#32cd32'
-                                    backgroundColorOff='#d3d4d3'
-                                    circleStyle={{
-                                        width: 25,
-                                        height: 25,
-                                        borderRadius: 27.5,
-                                        backgroundColor: '#d6d3d3', // rgb(102,134,205)
-                                    }}
-                                    switchOn={this.state.switchOn2}
-                                    onPress={this.onPress2}
-                                    circleColorOff='#e5e1e0'
-                                    circleColorOn='#e5e1e0'
-                                    duration={500}
-                                />
+                                }}
+                                backgroundColorOn='#32cd32'
+                                backgroundColorOff='#d3d4d3'
+                                circleStyle={{
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius: 27.5,
+                                    backgroundColor: '#d6d3d3', // rgb(102,134,205)
+                                }}
+                                switchOn={this.state.switchOn2}
+                                onPress={this.onPress2}
+                                circleColorOff='#e5e1e0'
+                                circleColorOn='#e5e1e0'
+                                duration={500}
+                            />
 
-                            </View>
-                            <View style={{ backgroundColor: 'white',top:0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
+                        </View>
+                        <View style={{ backgroundColor: 'white', top: 0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Kindness To Others Notification'}
                             </Text>
-                                <SwitchToggle
-                                    containerStyle={{
-                                        marginTop: 5,
-                                        width: 40,
-                                        height: 25,
-                                        borderRadius: 30,
-                                        padding: 1,
-                                        marginRight:10,
+                            <SwitchToggle
+                                containerStyle={{
+                                    marginTop: 5,
+                                    width: 40,
+                                    height: 25,
+                                    borderRadius: 30,
+                                    padding: 1,
+                                    marginRight: 10,
 
-                                    }}
-                                    backgroundColorOn='#32cd32'
-                                    backgroundColorOff='#d3d4d3'
-                                    circleStyle={{
-                                        width: 25,
-                                        height: 25,
-                                        borderRadius: 27.5,
-                                        backgroundColor: '#d6d3d3', // rgb(102,134,205)
-                                    }}
-                                    switchOn={this.state.switchOn3}
-                                    onPress={this.onPress3}
-                                    circleColorOff='#e5e1e0'
-                                    circleColorOn='#e5e1e0'
-                                    duration={500}
-                                />
+                                }}
+                                backgroundColorOn='#32cd32'
+                                backgroundColorOff='#d3d4d3'
+                                circleStyle={{
+                                    width: 25,
+                                    height: 25,
+                                    borderRadius: 27.5,
+                                    backgroundColor: '#d6d3d3', // rgb(102,134,205)
+                                }}
+                                switchOn={this.state.switchOn3}
+                                onPress={this.onPress3}
+                                circleColorOff='#e5e1e0'
+                                circleColorOn='#e5e1e0'
+                                duration={500}
+                            />
 
-                            </View>
-                            
+                        </View>
+
 
 
                         <TouchableOpacity style={{ marginTop: 5, backgroundColor: "white", width: '100%', height: '8%', justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 4, borderRadius: 10 }}>
@@ -371,7 +370,7 @@ export default class Settings extends Component {
                             </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginTop: 2, paddingHorizontal: 20, backgroundColor: "white", width: '100%', height: '15%', borderRadius: 5, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation:2, borderRadius: 5 }}>
+                        <View style={{ marginTop: 2, paddingHorizontal: 20, backgroundColor: "white", width: '100%', height: '15%', borderRadius: 5, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 5 }}>
 
                             <TouchableOpacity style={{ flexDirection: 'row', width: '100%', height: '50%' }}>
 
@@ -407,23 +406,23 @@ export default class Settings extends Component {
                           </Text>
 
                     </View>
-                    <TouchableOpacity style={{ marginTop: 1,marginBottom:5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
-                                <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
-                                    Log Out
+                    <TouchableOpacity style={{ marginTop: 1, marginBottom: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+                            <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
+                                Log Out
                             </Text>
 
-                            </TouchableOpacity>
                         </TouchableOpacity>
+                    </TouchableOpacity>
 
-                        <TouchableOpacity style={{ marginBottom:5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }} onPress={() => this.toggleModal(true)}>
-                            <TouchableOpacity>
-                                <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
-                                    Delete Account
+                    <TouchableOpacity style={{ marginBottom: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(6), justifyContent: 'center', alignItems: 'center', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 2, borderRadius: 10 }} onPress={() => this.toggleModal(true)}>
+                        <TouchableOpacity>
+                            <Text style={{ fontSize: responsiveFontSize(2), color: '#ff0000', }}>
+                                Delete Account
                             </Text>
 
-                            </TouchableOpacity>
                         </TouchableOpacity>
+                    </TouchableOpacity>
 
 
 
@@ -432,42 +431,42 @@ export default class Settings extends Component {
 
 
                 <Modal animationType={"slide"} transparent={false} transparent={true}
-                        visible={this.state.modalVisible}
-                        onRequestClose={() => { console.log("Modal has been closed.") }}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => { console.log("Modal has been closed.") }}
 
-                    >
+                >
 
-                        <View style={styles.modal}>
-                            <View style={{ height: '30%', width: '100%', justifyContent: 'center' }}>
-                                <Text style={{ fontSize: responsiveFontSize(2.5), color: 'white' }}>
-                                    Confrim?
+                    <View style={styles.modal}>
+                        <View style={{ height: '30%', width: '100%', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: responsiveFontSize(2.5), color: 'white' }}>
+                                Confrim?
                    </Text>
-                            </View>
-                            <View style={{ height: '20%', width: '100%', justifyContent: 'center' }}>
-                                <Text style={{ fontSize: responsiveFontSize(2), color: 'white' }}>
-                                    Are you sure to update your setting?
+                        </View>
+                        <View style={{ height: '20%', width: '100%', justifyContent: 'center' }}>
+                            <Text style={{ fontSize: responsiveFontSize(2), color: 'white' }}>
+                                Are you sure to update your setting?
                    </Text>
-                            </View>
-                            <View style={{ padding: 5, height: '40%', width: '100%', justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center' }}>
+                        </View>
+                        <View style={{ padding: 5, height: '40%', width: '100%', justifyContent: 'flex-end', flexDirection: 'row', alignItems: 'center' }}>
 
-                                <TouchableHighlight onPress={() => {
-                                    this.toggleModal(!this.state.modalVisible)
-                                }} style={{ marginEnd: 10, backgroundColor: 'white', height: 50, width: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 30 }}>
-                                    <AIcon name="close" size={25} color='#0d4d28' style={{}} />
-                                </TouchableHighlight>
-                                <TouchableHighlight style={{ backgroundColor: 'white', height: 50, width: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 30 }}>
-                                    <AIcon name="check" size={25} color='#0d4d28' style={{}} />
-                                </TouchableHighlight>
-
-                            </View>
-
-
+                            <TouchableHighlight onPress={() => {
+                                this.toggleModal(!this.state.modalVisible)
+                            }} style={{ marginEnd: 10, backgroundColor: 'white', height: 50, width: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 30 }}>
+                                <AIcon name="close" size={25} color='#0d4d28' style={{}} />
+                            </TouchableHighlight>
+                            <TouchableHighlight style={{ backgroundColor: 'white', height: 50, width: 50, justifyContent: 'center', alignItems: 'center', borderRadius: 30 }}>
+                                <AIcon name="check" size={25} color='#0d4d28' style={{}} />
+                            </TouchableHighlight>
 
                         </View>
-                    </Modal>
 
 
-            </View>
+
+                    </View>
+                </Modal>
+
+
+            </SafeAreaView>
         );
     }
 }

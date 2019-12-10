@@ -18,6 +18,7 @@ import {
 import { Left, Thumbnail } from 'native-base';
 import ImageView from 'react-native-image-view';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import FIcon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -87,6 +88,8 @@ class UserProfile extends Component {
       displayIMG: false,
       imageType: null,
       photo: null,
+      friendID: this.props.navigation.state.params.id,
+      friendName: this.props.navigation.state.params.name,
       ImageName: null,
       ImageUrl: null,
       datasource: [
@@ -233,13 +236,13 @@ class UserProfile extends Component {
             <View style={{ flex: 1 }}>
               <View style={{ marginBottom: 10 }}>
                 <Text style={styles.welcome}>Profile</Text>
-                <Ionicon
-                  name="ios-menu"
-                  size={35}
-                  color={'#32cd32'}
-                  onPress={() => this.props.navigation.openDrawer()}
-                  style={styles.menu}
-                />
+                <FIcon
+              name="chevron-left"
+              size={25}
+              color={'#32cd32'}
+              onPress={() => this.props.navigation.goBack()}
+              style={styles.menu}
+            />
                 {this.state.data_user.profile_picuture == null ? (
                   <Entypo
                     name="user"
@@ -291,16 +294,6 @@ class UserProfile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <Ionicon
-                      name="ios-camera"
-                      size={30}
-                      style={{ right: 15, position: 'absolute' }}
-                      onPress={this.handleChoosePhoto}
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    />
                   </View>
                   <View
                     style={{
@@ -320,7 +313,7 @@ class UserProfile extends Component {
                           fontSize: responsiveFontSize(2.4),
                           fontWeight: 'bold',
                         }}>
-                        {this.state.data_user.name}
+                        {this.state.friendName}
                       </Text>
                     </View>
                     <View
@@ -409,7 +402,7 @@ class UserProfile extends Component {
                           alignItems: 'center',
                           height: '100%',
                         }}>
-                        <Text>You Have No Family Members Yet</Text>
+                        <Text>User Have No Family Members Yet</Text>
                       </View>
                     ) : (
                         <FlatList
@@ -518,7 +511,7 @@ class UserProfile extends Component {
                           alignItems: 'center',
                           height: '100%',
                         }}>
-                        <Text>You Are Not A Member Of Any Group</Text>
+                        <Text>User is Not A Member Of Any Group</Text>
                       </View>
                     ) : (
                         <FlatList
@@ -711,18 +704,6 @@ class UserProfile extends Component {
                       Vision Board
                   </Text>
                   </View>
-                  <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('VisionBoard')}
-                  style={{ top: 4, right: 10, position: 'absolute' }}
-                  >
-                    <AntDesign
-                      name="pluscircle"
-                      color={'#32cd32'}
-                      size={20}
-                      
-                    />
-
-                  </TouchableOpacity>
 
                   <View style={{ top: 5, height: '90%' }}>
                     <View
@@ -912,122 +893,6 @@ class UserProfile extends Component {
                       </View>
                     )}
                   />
-                </View>
-
-                <View
-                  style={{
-                    borderRadius: 10,
-                    width: '96%',
-                    backgroundColor: '',
-                    height: responsiveHeight(12),
-                    justifyContent: 'space-between',
-                    elevation: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={6}
-                    style={{
-                      textAlignVertical: 'top',
-                      fontSize: responsiveFontSize(2),
-                      height: '100%',
-                      width: '100%',
-                      paddingHorizontal: 10,
-                    }}
-                    placeholder={'Post Something'}
-                  />
-                </View>
-                <View
-                  style={{
-                    top: 3,
-                    height: responsiveHeight(6),
-                    width: '96%',
-                    flexDirection: 'row',
-                    alignSelf: 'center',
-                    borderRadius: 10,
-                    elevation: 2,
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="camera" size={18} color="#32cd32" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Image
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA
-                      name="video-camera"
-                      size={18}
-                      color="#32cd32"
-                      style={{}}
-                    />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Video
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#32cd32',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="upload" size={18} color="white" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: 'white',
-                      }}>
-                      Post
-                  </Text>
-                  </TouchableOpacity>
                 </View>
 
                 <FlatList

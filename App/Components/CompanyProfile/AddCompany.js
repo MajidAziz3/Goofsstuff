@@ -12,6 +12,7 @@ import {
   ScrollView,
   Modal,
   TouchableHighlight,
+  SafeAreaView,
 } from 'react-native';
 import {Thumbnail, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -29,6 +30,11 @@ import {
 import {placeholder} from '@babel/types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Company_Profile} from '../../Backend/Create/Company_profile';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import {getData, uploadImage} from '../../Backend/Utility';
+
+import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 
 export default class AddCompany extends Component {
   static navigationOptions = {
@@ -52,14 +58,95 @@ export default class AddCompany extends Component {
       days: '',
       Descriptions: '',
       admins: [],
-      file: null,
+      members: [],
       address: '',
       phone: '',
       rating: [],
+      photo: null,
+      imageType: null,
+      ImageName: null,
+      ImageUrl: null,
     };
   }
   toggleModal(visible) {
     this.setState({modalVisible: visible});
+  }
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('user').then(async item => {
+      console.log('refffffffff', item);
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'Company_Profile',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
   }
 
   render() {
@@ -74,14 +161,13 @@ export default class AddCompany extends Component {
       days,
       Descriptions,
       admins,
-      file,
-      address,
+      members,
       phone,
       rating,
     } = this.state;
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Add Company</Text>
         <FIcon
           name="chevron-left"
@@ -109,7 +195,7 @@ export default class AddCompany extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '15%',
+                  height: '12.5%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
@@ -154,7 +240,7 @@ export default class AddCompany extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '15%',
+                  height: '12.5%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
@@ -199,7 +285,52 @@ export default class AddCompany extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '15%',
+                  height: '12.5%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 5,
+                    width: '40%',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: responsiveFontSize(1.8),
+                      color: '#000000',
+                    }}>
+                    Phone Number
+                  </Text>
+                </View>
+
+                <TextInput
+                  value={phone}
+                  onChangeText={phone => this.setState({phone})}
+                  placeholder="+92xxxxxxxxxxxx"
+                  style={{
+                    fontSize: 12,
+                    marginTop: 3,
+                    padding: 5,
+                    justifyContent: 'center',
+                    backgroundColor: 'white',
+                    width: '60%',
+                    height: '80%',
+                    shadowColor: 'black',
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 1.41,
+                    elevation: 5,
+                    borderRadius: 10,
+                  }}
+                />
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  height: '12.5%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
@@ -243,7 +374,7 @@ export default class AddCompany extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '15%',
+                  height: '12.5%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
@@ -288,7 +419,7 @@ export default class AddCompany extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '15%',
+                  height: '12.5%',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
@@ -399,7 +530,7 @@ export default class AddCompany extends Component {
                   borderRadius: 10,
                 }}>
                 <Text style={{left: 20, fontSize: 14, color: '#7e7a7a'}}>
-                  Upload Video
+                  Upload Company Image
                 </Text>
               </View>
               <View
@@ -410,29 +541,20 @@ export default class AddCompany extends Component {
                   height: '100%',
                   alignItems: 'center',
                   borderRadius: 10,
+                  // marginLeft:20,
                 }}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: 'white',
                     width: '26%',
-                    height: '60%',
+                    height: '30%',
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 10,
-                  }}>
+                    marginLeft: 25,
+                  }}
+                  onPress={() => this.handleChoosePhoto()}>
                   <EIcon name="camera" size={20} color="#7e7a7a" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    left: 8,
-                    backgroundColor: 'white',
-                    width: '25%',
-                    height: '60%',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    borderRadius: 10,
-                  }}>
-                  <EIcon name="attachment" size={20} color="#7e7a7a" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -623,18 +745,29 @@ export default class AddCompany extends Component {
             }}>
             <TouchableOpacity
               onPress={() => {
-                Company_Profile(
-                  company_name,
-                  location,
-                  opening,
-                  closing_time,
-                  days,
-                  Descriptions,
-                  admins,
-                  file,
-                  address,
-                  phone,
-                  rating,
+                _retrieveData('user').then(result =>
+                  getData('users', result).then(user => {
+                    let data = admins;
+                    data.push(result);
+                    this.setState({admins: result, members: result});
+                    Company_Profile(
+                      company_name,
+                      location,
+                      opening,
+                      closing_time,
+                      days,
+                      Descriptions,
+                      admins,
+                      members,
+                      phone,
+                      rating,
+                      user.email,
+                    ).then(() => {
+                      setTimeout(async () => {
+                        await this.Upload_Image();
+                      }, 3000);
+                    });
+                  }),
                 );
               }}>
               <Text style={{fontSize: responsiveFontSize(2), color: '#ff0000'}}>
@@ -652,7 +785,7 @@ export default class AddCompany extends Component {
                         </TouchableOpacity>
                     </View> */}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

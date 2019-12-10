@@ -7,7 +7,7 @@ import {
     Image,
     Alert,
     ScrollView,
-    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView
+    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView, SafeAreaView
 } from 'react-native';
 import { Left, Thumbnail } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,7 +30,7 @@ class Gallary extends Component {
     render() {
         return (
 
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <View style={{marginBottom:10}}>
               <Text style={styles.welcome}>Company Profile</Text>
         <Ionicon name="ios-menu" size={35} color={'#32cd32'} onPress={() => this.props.navigation.openDrawer()} style={styles.menu} />
@@ -85,7 +85,7 @@ class Gallary extends Component {
 
                 </View> 
                 </ScrollView>
-            </View>
+            </SafeAreaView>
 
 
         );

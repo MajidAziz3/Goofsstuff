@@ -11,6 +11,7 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -172,7 +173,7 @@ class Signup extends Component {
       family_member,
     } = this.state;
     return (
-      <View style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView>
           <View
             style={{
@@ -195,6 +196,7 @@ class Signup extends Component {
                 style={{height: '100%', width: '100%'}}
               />
             </View> */}
+            
 
             <View
               style={{
@@ -615,7 +617,8 @@ class Signup extends Component {
               <Text
                 style={{
                   top: responsiveHeight(4),
-                  left: 10,
+                  left: 20,
+                  width: '70%'
                 }}>
                 I agree to the community guidelines, terms and conditions for
                 The Good Stuff App
@@ -707,7 +710,7 @@ class Signup extends Component {
             </Text>
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

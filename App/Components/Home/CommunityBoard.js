@@ -24,6 +24,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import GlobalConst from '../../Backend/GlobalConst';
+import firebase from 'firebase';
+import {getAllOfCollection} from '../../Backend/Utility';
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
 
@@ -64,9 +66,11 @@ export default class CommunityBoard extends Component {
       alldatasource: [
         {
           name: 'Sports',
+          // data: this.state.sport_data,
         },
         {
           name: 'Events',
+          // data: this.state.event_data,
         },
         {
           name: 'Outdoor',
@@ -75,12 +79,15 @@ export default class CommunityBoard extends Component {
       sportsdatasource: [
         {
           name: 'Cricket',
+          // data: this.state.sport_data,
         },
         {
           name: 'Football',
+          // data: this.state.sport_data,
         },
         {
           name: 'BaseBall',
+          // data: this.state.sport_data,
         },
       ],
       jobsdatasource: [
@@ -112,10 +119,50 @@ export default class CommunityBoard extends Component {
       eventsflag1: false,
       outdoorflag: false,
       jobflag: false,
+      sport_data: [],
+      event_data: [],
+      loading: true,
+      job_data: [],
     };
+  }
+  async sportPost() {
+    firebase
+      .firestore()
+      .collection('Sport')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('Sport');
+        // this.setState({sport_data: data, loading: false});
+        console.log(data);
+        console.log('\n');
+      });
+  }
+  async EventPost() {
+    firebase
+      .firestore()
+      .collection('Event')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('Event');
+        // this.setState({event_data: data, loading: false});
+        console.log(data);
+        console.log('\n');
+      });
+  }
+  async JobPost() {
+    firebase
+      .firestore()
+      .collection('Sport')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('Create_Job');
+        // this.setState({job_data: data, loading: false});
+        console.log(data);
+        console.log('\n');
+      });
   }
 
   componentDidMount() {
+    this.sportPost();
+    this.EventPost();
+    this.JobPost();
     this.setState({datasource: this.state.alldatasource});
 
     const {addListener} = this.props.navigation;
@@ -289,7 +336,7 @@ export default class CommunityBoard extends Component {
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     const myIcon = <Icon name="account" size={30} color="#900" />;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Community Board</Text>
         <Ionicon
           name="ios-menu"
@@ -309,6 +356,7 @@ export default class CommunityBoard extends Component {
               height: responsiveHeight(6),
               backgroundColor: 'white',
               justifyContent: 'center',
+              width: '100%'
             }}>
             <View
               style={{
@@ -316,6 +364,7 @@ export default class CommunityBoard extends Component {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                
               }}>
               <TouchableOpacity
                 style={{
@@ -410,21 +459,6 @@ export default class CommunityBoard extends Component {
                   Outdoor
                 </Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  right: 8,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: responsiveHeight(5),
-                  width: responsiveHeight(5),
-                  backgroundColor: '#24ec28',
-                  flexDirection: 'row',
-                  borderRadius: responsiveHeight(5),
-                }}>
-                <EIcon name="search" size={25} color="white" />
-              </TouchableOpacity>
             </View>
           </View>
           <ScrollView style={{height: '83%'}}>
@@ -512,11 +546,12 @@ export default class CommunityBoard extends Component {
                                   fontSize: responsiveFontSize(1.4),
                                   fontWeight: '600',
                                   color: '#5e5d5d',
-                                }}>{
-                                  this.state.jobflag?<Text>Company Name</Text>:
-                                
-                                <Text>Sun,Sep 8,10:00 AM</Text>
-                                }
+                                }}>
+                                {this.state.jobflag ? (
+                                  <Text>Company Name</Text>
+                                ) : (
+                                  <Text>Sun,Sep 8,10:00 AM</Text>
+                                )}
                               </Text>
                             </View>
                           </View>
@@ -538,10 +573,12 @@ export default class CommunityBoard extends Component {
                                   fontSize: responsiveFontSize(2),
                                   fontWeight: '600',
                                   color: '#5e5d5d',
-                                }}>{
-                                  this.state.jobflag?<Text>Job Title</Text>:<Text>Training Hike</Text>
-                                }
-                                
+                                }}>
+                                {this.state.jobflag ? (
+                                  <Text>Job Title</Text>
+                                ) : (
+                                  <Text>Training Hike</Text>
+                                )}
                               </Text>
                             </View>
 
@@ -574,7 +611,7 @@ export default class CommunityBoard extends Component {
                                   fontWeight: '600',
                                   color: '#5e5d5d',
                                 }}>
-                                Jena louis
+                                {item.user_name}
                               </Text>
                             </View>
 
@@ -598,7 +635,7 @@ export default class CommunityBoard extends Component {
                                   fontWeight: '600',
                                   color: 'black',
                                 }}>
-                                Annapolis Rock
+                                {item.location}
                               </Text>
                             </View>
 
@@ -699,7 +736,7 @@ export default class CommunityBoard extends Component {
               )}></FlatList>
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -731,6 +768,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   container1: {
-    marginTop: responsiveHeight(8.5),
+    marginTop: responsiveHeight(6.7),
   },
 });

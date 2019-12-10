@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   FlatList,
+  SafeAreaView
 } from 'react-native';
 import { Left } from 'native-base';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions";
@@ -57,7 +58,7 @@ export default class Family extends Component {
 
   render() {
     return(
-      <View style={{ flex: 1 ,backgroundColor: '#F5F5F5',}} >
+      <SafeAreaView style={{ flex: 1 ,backgroundColor: '#F5F5F5',}} >
         <View style={{marginBottom: responsiveHeight(1.5)}}>
         <Text style={styles.welcome}>My Family</Text>
                 <FA name="chevron-left" size={26} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
@@ -70,7 +71,7 @@ export default class Family extends Component {
             return item.id;
           }}
           renderItem={this.renderItem}/>
-      </View>
+      </SafeAreaView>
     );
   }
 }

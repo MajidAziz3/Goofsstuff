@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  SafeAreaView
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,7 +31,7 @@ class House extends Component {
   };
   render() {
     return (
-      <View style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1}}>
         <ScrollView>
           <View
             style={{
@@ -53,9 +54,9 @@ class House extends Component {
                 }}>
                 <Image
                   source={require('../../Assets/goodstuff.png')}
-                  style={{height: '100%', width: '100%'}}
+                  style={{height: '80%', width: '100%'}}
                 />
-                <Text>POST YOUR VECTORIES</Text>
+                
               </View>
             </View>
             <View
@@ -63,15 +64,6 @@ class House extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  marginBottom: 20,
-                }}>
-                Build The House…
-              </Text>
             </View>
             <View
               style={{
@@ -80,8 +72,9 @@ class House extends Component {
               <Text
                 style={{
                   color: '#000',
-                  fontWeight: 'bold',
+                  fontWeight: '500',
                   marginBottom: 15,
+                  fontSize: 15
                 }}>
                 One night, after putting our children to bed, we sat on the
                 couch and without even realizing, got on our phones and started
@@ -136,16 +129,21 @@ class House extends Component {
 
               <TouchableOpacity
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  backgroundColor: 'rgb(53, 203, 53)',
+                    width: responsiveWidth(25),
+                    height: responsiveHeight(5),
+                    borderRadius: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 30,
                 }}
                 onPress={() => this.props.navigation.navigate('MainAuth')}>
                 <Text
                   style={{
-                    color: '#000',
-                    fontWeight: 'bold',
-                    fontSize: 18,
-                    marginBottom: 20,
+                    fontSize: responsiveFontSize(2.6),
+                      alignSelf: 'center',
+                      color: 'white',
+                      marginright: 10,
                   }}>
                   Back
                 </Text>
@@ -153,7 +151,7 @@ class House extends Component {
             </View>
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }

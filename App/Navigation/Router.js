@@ -77,10 +77,21 @@ import CommunityEvent from '../Components/Home/CommunityEvent';
 import JobInfo from '../Components/Home/JobInfo';
 import AppWorking from '../Components/Login/AppWorking';
 import CommunityGuide from '../Components/Login/CommunityGuide';
+import VisionBoard from '../Components/UserProfile/VisionBoard'
+import AppWorking1 from '../Components/Login/AppWorking1';
+import House1 from '../Components/Login/House1';
+import FriendsProfile from '../Components/UserProfile/FriendsProfile';
+import LearnMore from '../Components/Home/LearnMore';
 
 var width = Dimensions.get('window').width;
 
 console.disableYellowBox = true;
+
+const FriendStack = createStackNavigator({
+  FriendsList:FriendsList,
+  FriendsProfile:FriendsProfile,
+  Chat:Chat
+});
 const AuthStack = createStackNavigator({
   Login: Login,
   Signup: Signup,
@@ -95,6 +106,7 @@ const UserProfileStack = createStackNavigator({
   UserProfile: UserProfile,
   UserGallery: UserGallery,
   Family: Family,
+  VisionBoard: VisionBoard,
 });
 const CompanyStack = createStackNavigator({
   Feed: Feed,
@@ -115,6 +127,11 @@ const CommunityStack = createStackNavigator({
   JobInfo: JobInfo,
 });
 
+const WatchStack = createStackNavigator({
+  Watch: Watch,
+  LearnMore: LearnMore,
+});
+
 const HomeTabs = createMaterialTopTabNavigator(
   {
     Home: {
@@ -124,7 +141,7 @@ const HomeTabs = createMaterialTopTabNavigator(
       },
     },
     Watch: {
-      screen: Watch,
+      screen: WatchStack,
       navigationOptions: {
         tabBarLabel: 'Watch',
       },
@@ -151,7 +168,7 @@ const HomeTabs = createMaterialTopTabNavigator(
         position: 'absolute',
         zIndex: 1,
         backgroundColor: '#ffffff',
-        marginTop: 65,
+        marginTop: Platform.OS === 'android' ? 65 : 110,
       },
     },
   },
@@ -193,7 +210,7 @@ const CompanyProfileTabs = createMaterialTopTabNavigator(
         position: 'absolute',
         zIndex: 1,
         backgroundColor: '#ffffff',
-        marginTop: responsiveHeight(75),
+        marginTop: responsiveHeight(85),
       },
     },
   },
@@ -302,7 +319,7 @@ const AppDrawerNavigator = createDrawerNavigator(
       screen: UserProfileStack,
     },
     Friend: {
-      screen: FriendsList,
+      screen: FriendStack,
     },
     InviteFriend: {
       screen: InviteFriend,
@@ -333,8 +350,8 @@ const AppDrawerNavigator = createDrawerNavigator(
     },
 
     TermsandCondition: {screen: TermsandCondition},
-    House: {screen: House},
-    AppWorking: {screen: AppWorking},
+    House: {screen: House1},
+    AppWorking: {screen: AppWorking1},
     CommunityGuide: {screen: CommunityGuide},
     Chat:{
       screen:Chat
