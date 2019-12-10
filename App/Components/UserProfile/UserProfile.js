@@ -267,12 +267,11 @@ class UserProfile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    {this.state.data_user.profile_picuture == null ? (
-                      <Entypo name="user" size={40} color="#d0d0d0dd" />
-                    ) : (
+                      {console.log("imggggg:", this.state.data_user.profile_picture)}
+                    
                         <Thumbnail
                           large
-                          source={{ uri: uri }}
+                          source={{ uri: this.state.data_user.profile_picture }}
                           style={{
                             backgroundColor: 'white',
                             borderWidth: StyleSheet.hairlineWidth,
@@ -283,7 +282,8 @@ class UserProfile extends Component {
                             elevation: 5,
                           }}
                         />
-                      )}
+                        
+                     
                   </View>
                   <View
                     style={{

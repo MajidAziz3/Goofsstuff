@@ -69,7 +69,7 @@ export default class GoodNews extends Component {
       displayIMG: false,
       showImage: null,
       imageFooter: null,
-
+      data: [],
       datasource: [
         {
           name: 'Woody Allen',
@@ -106,6 +106,7 @@ export default class GoodNews extends Component {
   }
 
   componentDidMount() {
+    this.userData();
     this.showPost();
     // this.CommentPost();
 
@@ -144,6 +145,16 @@ export default class GoodNews extends Component {
   setModalVisible() {
     this.setState({ modalVisible: !this.state.modalVisible });
   }
+
+  userData = async () => {
+    await _retrieveData('user').then(async result => {
+      console.log('uuuuuuuuu', result);
+      let res = await getData('users', result);
+      this.setState({
+        data: res,
+      });
+    });
+  };
 
   CommentsPost = async item => {
     await _retrieveData('user').then(
@@ -435,21 +446,14 @@ export default class GoodNews extends Component {
           onPress={() => this.props.navigation.openDrawer()}
           style={styles.menu}
         />
-        {this.state.post_data.profile_picuture == null ? (
-          <Entypo
-            name="user"
-            size={30}
-            color="#d0d0d0dd"
-            style={[styles.menu1]}
-          />
-        ) : (
+
             <Image
               source={{
-                uri: 'https://randomuser.me/api/portraits/men/85.jpg',
+                uri: this.state.data.profile_picture,
               }}
               style={styles.menu1}
             />
-          )}
+          
         <ScrollView style={styles.container1}>
           {this.state.loading ? (
             <ActivityIndicator
@@ -839,8 +843,8 @@ export default class GoodNews extends Component {
 
                             <TouchableOpacity
                               style={{
-                                height: responsiveHeight(16),
-                                width: responsiveHeight(16.5),
+                                height: responsiveHeight(30),
+                                width: responsiveHeight(40),
                               }}
                               onPress={() => {
                                 this.setState({ displayIMG: true }, () => {
