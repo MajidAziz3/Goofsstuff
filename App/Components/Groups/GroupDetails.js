@@ -80,8 +80,6 @@ class GroupDetails extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('GroupPost');
         this.setState({post_data: data, loading: false});
-        console.log(data);
-        console.log('\n');
       });
     var that = this;
     var date = new Date().getDate(); //Current Date
@@ -132,7 +130,6 @@ class GroupDetails extends Component {
         'GroupPost',
         item,
       );
-      console.log('i m here');
     });
     let that = this;
 
@@ -168,7 +165,6 @@ class GroupDetails extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('ref').then(async item => {
-      console.log('refffffffff', item);
       await uploadImage(
         this.state.ImageUrl,
         this.state.imageType,

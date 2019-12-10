@@ -897,9 +897,9 @@ export default class Watch extends Component {
                     disableVolume={true}
                     disableFullscreen={true}
                     paused={true}
-                    onPlay={()=>  this.setState({ Views: 1 })}
-                    onPause={()=> this.setState({ Views: 0 })}
-                    onEnd={()=> this.saveViews(item)}
+                    // onPlay={()=>  this.setState({ Views: 1 })}
+                    // onPause={()=> this.setState({ Views: 0 })}
+                    // onEnd={()=> this.saveViews(item)}
                     
                   />
                 </View>

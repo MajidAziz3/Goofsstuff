@@ -107,7 +107,6 @@ export default class AddGroup extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('user').then(async item => {
-      console.log('refffffffff', item);
       await uploadImage(
         this.state.ImageUrl,
         this.state.imageType,
