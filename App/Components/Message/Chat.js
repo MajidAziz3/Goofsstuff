@@ -59,6 +59,8 @@ export default class Chat extends Component {
       });
   }
   async onSend(messages = []) {
+
+   
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
@@ -77,6 +79,9 @@ export default class Chat extends Component {
       messages[0],
     );
     messages[0].user._id = 1;
+
+    await addToArray('users',this.state.current_user,'chatted',this.state.friendID);
+    await addToArray('users',this.state.friendID,'chatted',this.state.current_user);
   }
 
   render() {
