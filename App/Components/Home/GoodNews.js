@@ -304,7 +304,7 @@ export default class GoodNews extends Component {
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}>
-          <SafeAreaView style={{ height: '90%' }}>
+          <SafeAreaView style={{ flex:1 }}>
             <FA
               name="cross"
               size={30}
