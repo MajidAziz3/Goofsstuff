@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,8 +14,8 @@ import {
   Modal,
   TouchableHighlight,
 } from 'react-native';
-import {Thumbnail, Item} from 'native-base';
-import {jsxAttribute} from '@babel/types';
+import { Thumbnail, Item } from 'native-base';
+import { jsxAttribute } from '@babel/types';
 import firebase from 'firebase';
 import {
   responsiveHeight,
@@ -28,7 +28,7 @@ import AIcon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import FA from 'react-native-vector-icons/Entypo';
 import GlobalConst from '../../Backend/GlobalConst';
-import {getAllOfCollection, addToArray} from '../../Backend/Utility';
+import { getAllOfCollection, addToArray, saveData } from '../../Backend/Utility';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
@@ -57,6 +57,8 @@ export default class Watch extends Component {
       post_data: [],
       loading: true,
       video: false,
+      viewsData: 0,
+      Views: 0,
       popular: [
         {
           name: 'Harrison Ford',
@@ -138,29 +140,29 @@ export default class Watch extends Component {
       .collection('News')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Watch');
-        this.setState({post_data: data, loading: false});
+        this.setState({ post_data: data, loading: false, viewsData: data.Views });
         console.log(data);
         console.log('\n');
       });
 
-    this.setState({datasource: this.state.popular});
-    this.setState({datasource2: this.state.popular});
-    const {addListener} = this.props.navigation;
-    const {isDisplayed} = this.state;
+    this.setState({ datasource: this.state.popular });
+    this.setState({ datasource2: this.state.popular });
+    const { addListener } = this.props.navigation;
+    const { isDisplayed } = this.state;
     const self = this;
 
     this.listeners = [
       addListener('didFocus', () => {
         if (self.state.isDisplayed !== true) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
-          self.setState({isDisplayed: true});
+          self.setState({ isDisplayed: true });
         }
       }),
       addListener('willBlur', () => {
         if (self.state.isDisplayed !== false) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
 
-          self.setState({isDisplayed: false});
+          self.setState({ isDisplayed: false });
         }
       }),
     ];
@@ -176,7 +178,7 @@ export default class Watch extends Component {
     );
   };
 
-  
+
   favoritePost = async item => {
     await _retrieveData('user').then(
       async result =>
@@ -186,6 +188,13 @@ export default class Watch extends Component {
         }),
     );
   };
+
+  saveViews = async (item) => {
+    console.log(item)
+    let finalViews = this.state.viewsData + this.state.Views;
+    await saveData('Watch', item.post_id, { Views: finalViews })
+  }
+
 
   popularEventHandler() {
     this.setState({
@@ -267,7 +276,7 @@ export default class Watch extends Component {
   }
 
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   }
 
   render() {
@@ -277,497 +286,6 @@ export default class Watch extends Component {
     const myIcon = <Icon name="account" size={30} color="#900" />;
     return (
       <SafeAreaView style={styles.container}>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}>
-          <ScrollView style={{}}>
-            <TouchableOpacity
-              onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-              }}>
-              <FA
-                name="cross"
-                size={30}
-                color={'#32cd32'}
-                style={styles.modalcross}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                height: responsiveHeight(25),
-                backgroundColor: 'white',
-                flexDirection: 'row',
-              }}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  width: '40%',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    top: 38,
-                    height: 90,
-                    width: 90,
-                    borderRadius: 20,
-                  }}>
-                  <Image
-                    source={require('../../Assets/watch.jpg')}
-                    style={{height: '100%', width: '100%', borderRadius: 20}}
-                  />
-                </View>
-              </View>
-              <View style={{backgroundColor: 'white', width: '60%', left: -10}}>
-                <Text
-                  style={{
-                    top: 30,
-                    marginHorizontal: 2,
-                    fontSize: responsiveFontSize(2.8),
-                    fontWeight: 'bold',
-                    color: '#000',
-                  }}>
-                  Seidiledahan
-                </Text>
-
-                <Text
-                  style={{
-                    top: 45,
-                    marginHorizontal: 10,
-                    fontSize: responsiveFontSize(2.2),
-                    fontFamily: 'EvilIcons',
-                  }}>
-                  Location:
-                </Text>
-                <Text
-                  style={{
-                    top: 50,
-                    marginHorizontal: 10,
-                    fontSize: responsiveFontSize(2.2),
-                    fontFamily: 'EvilIcons',
-                  }}>
-                  Contact Information
-                </Text>
-                <Text
-                  style={{
-                    top: 55,
-                    marginHorizontal: 10,
-                    fontSize: responsiveFontSize(2.2),
-                    fontFamily: 'EvilIcons',
-                  }}>
-                  A Little About Me:
-                </Text>
-                <Text
-                  style={{
-                    top: 60,
-                    marginHorizontal: 10,
-                    fontSize: responsiveFontSize(2.2),
-                    fontFamily: 'EvilIcons',
-                  }}>
-                  Title:
-                </Text>
-              </View>
-            </View>
-
-            {/* <FlatList
-                    data={this.state.datasource}
-                    showsHorizontalScrollIndicator={false}
-                    // horizontal={true}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item, index }) => */}
-
-            <View
-              style={{
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 5,
-                backgroundColor: '#eee',
-                width: responsiveWidth(100),
-                height: responsiveHeight(30),
-                borderRadius: 25,
-                paddingVertical: 0,
-                paddingHorizontal: 0,
-                backgroundColor: 'white',
-                marginBottom: 5,
-                marginTop: 5,
-              }}>
-              <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                width: '99%',
-                height: '70%',
-                flexDirection: 'row',
-                marginBottom: 1,
-              }}>
-              <VideoPlayer
-                source={{
-                  uri:
-                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-                }}
-                navigator={this.props.navigator}
-                disableBack={true}
-                disableVolume={true}
-                disableFullscreen={true}
-                paused={true}
-              />
-            </View>
-
-              <View
-                style={{
-                  height: '15%',
-                  flexDirection: 'row',
-                  paddingHorizontal: 5,
-                  backgroundColor: 'white',
-                  justifyContent: 'space-evenly',
-                }}>
-                {/* <View
-                  style={{
-                    left: 20,
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    width: '25%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity>
-                    <Icon name="bookmark" size={20} color="#7e7a7a" />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      marginHorizontal: 2,
-                      fontSize: responsiveFontSize(1.8),
-                      fontWeight: '400',
-                      color: '#7e7a7a',
-                    }}>
-                    878
-                  </Text>
-                </View> */}
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    flexDirection: 'row',
-                    width: '25%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity>
-                    <Icon name="account" size={20} color="#7e7a7a" />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      marginHorizontal: 2,
-                      fontSize: responsiveFontSize(1.8),
-                      fontWeight: '400',
-                      color: '#7e7a7a',
-                    }}>
-                    878
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '25%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity>
-                    <EIcon
-                      name="like"
-                      size={25}
-                      color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      marginHorizontal: 2,
-                      fontSize: responsiveFontSize(1.8),
-                      fontWeight: '400',
-                      color: '#7e7a7a',
-                    }}>
-                    91
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '25%',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                  }}>
-                  <TouchableOpacity>
-                    <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}/>
-                  </TouchableOpacity>
-
-                  <Text
-                    style={{
-                      marginHorizontal: 5,
-                      fontSize: responsiveFontSize(1.8),
-                      fontWeight: '400',
-                      color: '#7e7a7a',
-                    }}>
-                    878
-                  </Text>
-                </View>
-              </View>
-            </View>
-            {/* //  }> */}
-
-            {/* </FlatList> */}
-
-            <View
-              style={{
-                height: responsiveHeight(4),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  top: 0,
-                  marginHorizontal: 2,
-                  fontSize: responsiveFontSize(2.8),
-                  fontWeight: 'bold',
-                  color: '#000',
-                  textAlign: 'center',
-                }}>
-                Past Videos From This Speaker
-              </Text>
-            </View>
-
-            <FlatList
-              data={this.state.datasource2}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
-                <View
-                  style={{
-                    shadowColor: '#000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 5,
-                    backgroundColor: '#eee',
-                    width: responsiveWidth(100),
-                    height: responsiveHeight(40),
-                    borderRadius: 25,
-                    paddingVertical: 5,
-                    paddingHorizontal: 0,
-                    backgroundColor: 'white',
-                    marginBottom: 5,
-                    marginTop: 10,
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      width: '99%',
-                      height: '15%',
-                      flexDirection: 'row',
-                      marginBottom: 1,
-                      borderRadius: 25,
-                    }}>
-                    <View
-                      style={{
-                        width: '15%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        left: 10,
-                      }}>
-                      <Thumbnail small source={{uri: item.imageName}} />
-                    </View>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                        width: '50%',
-                        left: 10,
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(2.5),
-                          fontWeight: 'bold',
-                        }}>
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(1.5),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        Title
-                      </Text>
-                    </View>
-                    <View style={{flexDirection: 'row', width: '35%'}}>
-                      {/* <View
-                        style={{
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: responsiveFontSize(1.5),
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                          }}>
-                          Title
-                        </Text>
-                      </View> */}
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: responsiveFontSize(1.5),
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                            left: 55,
-                          }}>
-                          8h ago
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                width: '99%',
-                height: '70%',
-                flexDirection: 'row',
-                marginBottom: 1,
-              }}>
-              <VideoPlayer
-                source={{
-                  uri:
-                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-                }}
-                navigator={this.props.navigator}
-                disableBack={true}
-                disableVolume={true}
-                disableFullscreen={true}
-                paused={true}
-              />
-            </View>
-
-                  <View
-                    style={{
-                      height: '15%',
-                      flexDirection: 'row',
-                      paddingHorizontal: 5,
-                      backgroundColor: 'white',
-                      borderRadius: 25,
-                      justifyContent: 'space-evenly',
-                    }}>
-                    {/* <View
-                      style={{
-                        left: 15,
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        width: '25%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <Icon name="bookmark" size={20} color="#7e7a7a" />
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginHorizontal: 2,
-                          fontSize: responsiveFontSize(1.8),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        878
-                      </Text>
-                    </View> */}
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        flexDirection: 'row',
-                        width: '25%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <Icon name="account" size={20} color="#7e7a7a" />
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginHorizontal: 2,
-                          fontSize: responsiveFontSize(1.8),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        878
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '25%',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <EIcon
-                          name="like"
-                          size={25}
-                          color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                        />
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          marginHorizontal: 2,
-                          fontSize: responsiveFontSize(1.8),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        91
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        width: '25%',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity>
-                        <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}/>
-                      </TouchableOpacity>
-
-                      <Text
-                        style={{
-                          marginHorizontal: 5,
-                          fontSize: responsiveFontSize(1.8),
-                          fontWeight: '400',
-                          color: '#7e7a7a',
-                        }}>
-                        878
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              )}
-            />
-          </ScrollView>
-        </Modal>
 
         <Text style={styles.welcome}>Watch</Text>
         <Ionicon
@@ -778,7 +296,7 @@ export default class Watch extends Component {
           style={styles.menu}
         />
         <Image
-          source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
+          source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }}
           style={styles.menu1}
         />
 
@@ -804,7 +322,7 @@ export default class Watch extends Component {
           <View
             style={{
               shadowColor: '#000',
-              shadowOffset: {width: 0, height: 2},
+              shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 2,
               elevation: 5,
@@ -976,11 +494,11 @@ export default class Watch extends Component {
                 }}>
                 <TouchableOpacity>
                   <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }} />
+                    this.favoritePost(item.post_id);
+                    this.setState({
+                      hit_favorite: !this.state.hit_favorite,
+                    });
+                  }} />
                 </TouchableOpacity>
 
                 <Text
@@ -997,7 +515,7 @@ export default class Watch extends Component {
           </View>
 
           <TouchableOpacity
-            style={{height: responsiveHeight(5), backgroundColor: 'white'}}
+            style={{ height: responsiveHeight(5), backgroundColor: 'white' }}
             onPress={() => {
               this.props.navigation.navigate('LearnMore')
             }}>
@@ -1012,7 +530,7 @@ export default class Watch extends Component {
             </Text>
           </TouchableOpacity>
           <View
-            style={{height: responsiveHeight(10), backgroundColor: 'white'}}>
+            style={{ height: responsiveHeight(10), backgroundColor: 'white' }}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -1126,7 +644,7 @@ export default class Watch extends Component {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <View>
                   <View
                     style={{
@@ -1135,7 +653,7 @@ export default class Watch extends Component {
                       width: responsiveWidth(20),
                     }}>
                     <Thumbnail
-                      source={{uri: item.imageName}}
+                      source={{ uri: item.imageName }}
                       style={{
                         width: responsiveHeight(7),
                         height: responsiveHeight(7),
@@ -1187,7 +705,7 @@ export default class Watch extends Component {
     </View> */}
           </View>
 
-          <View style={{height: responsiveHeight(10), backgroundColor: 'red'}}>
+          <View style={{ height: responsiveHeight(10), backgroundColor: 'red' }}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -1290,12 +808,12 @@ export default class Watch extends Component {
           <FlatList
             data={this.state.post_data}
             keyExtractor={item => item.id}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <View
                 key={index}
                 style={{
                   shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 2},
+                  shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.5,
                   shadowRadius: 2,
                   elevation: 5,
@@ -1325,7 +843,7 @@ export default class Watch extends Component {
                       alignItems: 'center',
                       left: 10,
                     }}>
-                    <Thumbnail small source={{uri: item.imageName}} />
+                    <Thumbnail small source={{ uri: item.imageName }} />
                   </View>
                   <View
                     style={{
@@ -1355,7 +873,7 @@ export default class Watch extends Component {
                         color: '#7e7a7a',
                         right: 5,
                       }}>
-                      8h ago
+                      asad
                     </Text>
                   </View>
                 </View>
@@ -1369,6 +887,7 @@ export default class Watch extends Component {
                     flexDirection: 'row',
                     marginBottom: 1,
                   }}>
+                    {console.log("My Video:", item.videoUrl)}
                   <VideoPlayer
                     source={{
                       uri: item.videoUrl,
@@ -1378,6 +897,10 @@ export default class Watch extends Component {
                     disableVolume={true}
                     disableFullscreen={true}
                     paused={true}
+                    onPlay={()=>  this.setState({ Views: 1 })}
+                    onPause={()=> this.setState({ Views: 0 })}
+                    onEnd={()=> this.saveViews(item)}
+                    
                   />
                 </View>
 
@@ -1472,11 +995,11 @@ export default class Watch extends Component {
                     }}>
                     <TouchableOpacity>
                       <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}/>
+                        this.favoritePost(item.post_id);
+                        this.setState({
+                          hit_favorite: !this.state.hit_favorite,
+                        });
+                      }} />
                     </TouchableOpacity>
 
                     <Text
