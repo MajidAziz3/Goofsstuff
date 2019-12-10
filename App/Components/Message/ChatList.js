@@ -25,8 +25,9 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { getAllOfCollection } from '../../Backend/Utility';
+import { getAllOfCollection, getData, getDocRefByKeyValue } from '../../Backend/Utility';
 import SearchInput, { createFilter } from 'react-native-search-filter';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 
 // import { formatResultsErrors } from 'jest-message-util';
 ///Inbox swiplist
@@ -40,15 +41,46 @@ class ChatList extends Component {
       datasource: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
       datasource2: [1, 2],
       data: [],
+      data2:[],
       loading: true,
       searchTerm: '',
+      friends:[],
+      chatted:[]
     };
   }
   componentDidMount = async () => {
-    await getAllOfCollection('users').then(result => {
-      console.log('data', result);
-      this.setState({ data: result, loading: false });
+    let friends = [];
+    let chatted = [];
+    await _retrieveData('user').then(async(id)=>{
+    await getData('friends', id).then(result => {
+      this.setState({ data: result.request },()=>{
+        this.state.data.map(async(item)=>{
+          console.log('333333333333333333333333333333333333333333333333')
+          console.log(item)
+          await getData('users', item.userId).then((friend)=>{
+            friends.push(friend)
+            this.setState({friends:friends})
+          })
+        })
+      });
     });
+  })
+
+  await _retrieveData('user').then(async(id)=>{
+    await getData('users', id).then(result => {
+      this.setState({ data2: result.chatted },()=>{
+        this.state.data2.map(async(item)=>{
+          console.log('666666666666666666666666666666666666666666666666666666')
+          console.log(item)
+          await getData('users', item).then((chat)=>{
+            chatted.push(chat)
+            this.setState({chatted:chatted,loading: false})
+          })
+        })
+      });
+    });
+  })
+  
   };
 
   searchUpdated(term) {
@@ -57,7 +89,7 @@ class ChatList extends Component {
 
   render() {
     console.log('data', this.state.data);
-    const swipeoutBtns = () => [
+    const swipeoutBtns = (item) => [
       {
         //   text: 'Add', Message
         backgroundColor: 'white',
@@ -85,7 +117,7 @@ class ChatList extends Component {
           </TouchableOpacity>
         ),
         onPress: () => {
-          alert('Add');
+          this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
         },
       },
       {
@@ -195,7 +227,7 @@ class ChatList extends Component {
                     marginBottom: 6,
                   }}>
                   <FlatList
-                    data={this.state.data}
+                    data={this.state.friends}
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}
                     keyExtractor={item => item.id}
@@ -242,10 +274,11 @@ class ChatList extends Component {
                     height: responsiveHeight(70),
                   }}>
                   <FlatList
-                    data={this.state.data}
+                    data={this.state.chatted}
                     showsHorizontalScrollIndicator={true}
                     horizontal={false}
                     keyExtractor={item => item.id}
+                    
                     renderItem={({ item, index }) => (
                       <TouchableOpacity
                         key={index}
@@ -257,7 +290,7 @@ class ChatList extends Component {
                         <Swipeout
                           buttonWidth={105}
                           autoClose={true}
-                          right={swipeoutBtns()}
+                          right={swipeoutBtns(item)}
                           style={{ borderRadius: 0 }}>
                           <View style={styles.row}>
                             <View
