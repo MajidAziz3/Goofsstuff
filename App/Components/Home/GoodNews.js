@@ -373,10 +373,14 @@ export default class GoodNews extends Component {
                       }}>
                       <Text
                         style={{
-                          fontSize: responsiveFontSize(3),
+                          fontSize: responsiveFontSize(1.5),
                           fontWeight: 'bold',
+                          color:'green'
                         }}>
-                        {item.name}
+                        {item.user_name}
+                        {item.comments}
+                        {console.log(this.state.comment_data)}
+                        
                       </Text>
                     </View>
                   </View>
@@ -706,7 +710,7 @@ export default class GoodNews extends Component {
                             style={{
                               fontSize: responsiveFontSize(1.5),
                               fontWeight: '400',
-                              color: '#7e7a7a',
+                              color: '#7e7a7a', 
                             }}>
                             8h ago
                         </Text>
