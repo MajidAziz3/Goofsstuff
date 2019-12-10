@@ -314,7 +314,38 @@ export default class GoodNews extends Component {
                 this.setModalVisible();
               }}
             />
+
+
             <FlatList
+              style={styles.root}
+              data={this.state.comment_data.comments}
+              ItemSeparatorComponent={() => {
+                return (
+                  <View style={styles.separator} />
+                )
+              }}
+              keyExtractor={item => item.user_id}
+              renderItem={({ item, index }) => {
+                return (
+                  <View style={styles.container2} key={index}>
+                    <TouchableOpacity onPress={() => { }}>
+                      <Image style={styles.image} source={{ uri: 'https://randomuser.me/api/portraits/men/94.jpg' }} />
+                    </TouchableOpacity>
+                    <View style={styles.content}>
+                      <View style={styles.contentHeader}>
+                        <Text style={styles.name}>{item.user_name}</Text>
+                        <Text style={styles.time}>
+                          {item.time}
+                        </Text>
+                      </View>
+                      <Text rkType='primary3 mediumLine'>{item.comments}</Text>
+                    </View>
+                  </View>
+                );
+              }} />
+
+
+            {/* <FlatList
               data={this.state.comment_data.comments}
               keyExtractor={item => item.user_id}
               renderItem={({ item, index }) => (
@@ -357,7 +388,6 @@ export default class GoodNews extends Component {
                         padding: 5,
                         height: 60,
                       }}>
-                      {/* <Thumbnail source={{ uri: item.imageName }} /> */}
                       <Image
                         source={{
                           uri: 'https://randomuser.me/api/portraits/men/94.jpg',
@@ -382,7 +412,7 @@ export default class GoodNews extends Component {
                   </View>
                 </View>
               )}
-            />
+            /> */}
           </SafeAreaView>
         </Modal>
         <Text style={styles.welcome}>Good News</Text>
@@ -1012,5 +1042,43 @@ const styles = StyleSheet.create({
   },
   container1: {
     marginTop: responsiveHeight(7.5),
+  },
+  root: {
+    backgroundColor: "#ffffff",
+    marginTop: 10,
+  },
+  container2: {
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'flex-start'
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#CCCCCC"
+  },
+  image: {
+    width: 45,
+    height: 45,
+    borderRadius: 20,
+    marginLeft: 20
+  },
+  time: {
+    fontSize: 11,
+    color: "#808080",
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
