@@ -366,19 +366,19 @@ export default class GoodNews extends Component {
                       />
                     </View>
                     <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      width: '60%',
-                    }}>
-                    <Text
                       style={{
-                        fontSize: responsiveFontSize(3),
-                        fontWeight: 'bold',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        width: '60%',
                       }}>
-                      {item.name}
-                    </Text>
-                  </View>
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(3),
+                          fontWeight: 'bold',
+                        }}>
+                        {item.name}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               )}
@@ -683,19 +683,19 @@ export default class GoodNews extends Component {
                         </View>
 
                         <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      width: '60%',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(3),
-                        fontWeight: 'bold',
-                      }}>
-                      {item.name}
-                    </Text>
-                  </View>
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'flex-start',
+                            width: '60%',
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: responsiveFontSize(3),
+                              fontWeight: 'bold',
+                            }}>
+                            {item.name}
+                          </Text>
+                        </View>
                         <View
                           style={{
                             alignItems: 'center',
@@ -734,8 +734,8 @@ export default class GoodNews extends Component {
                           }}
                         >
                           <Text>
-                          {item.description}
-          </Text>
+                            {item.description}
+                          </Text>
                         </ViewMoreText>
                         {/* <Text
                           style={{
@@ -765,7 +765,7 @@ export default class GoodNews extends Component {
                               marginBottom: 1,
 
                             }}>
-                              
+
                             <Image
                               style={{
                                 width: '100%',
@@ -789,7 +789,7 @@ export default class GoodNews extends Component {
                             <VideoPlayer
                               source={{
                                 uri:
-                                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                                  item.videoUrl,
                               }}
                               navigator={this.props.navigator}
                               disableBack={true}
