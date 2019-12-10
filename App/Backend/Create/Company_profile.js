@@ -10,28 +10,28 @@ export async function Company_Profile(
   days,
   Descriptions,
   admins,
-  file,
-  address,
+  members,
   phone,
   rating,
+  email,
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
-      saveData('Company_Profile', user.userId,{
+      saveData('Company_Profile', user.userId, {
         description: Descriptions,
-        file: file,
         Company_Name: company_name,
         location: location,
         opening_Time: opening,
         closing_Time: closing_time,
         days: days,
-        address: address,
         email: user.email,
         phone: phone,
         rating: rating,
         Company_admins: admins,
         admins: result,
         user_name: user.name,
+        members: members,
+        email: email,
       });
     }),
   );

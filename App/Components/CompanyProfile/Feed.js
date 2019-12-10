@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,9 +12,10 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
-  SafeAreaView
+  SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
-import { Left, Thumbnail } from 'native-base';
+import {Left, Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ETIcon from 'react-native-vector-icons/Entypo';
 import EIcon from 'react-native-vector-icons/EvilIcons';
@@ -37,8 +38,10 @@ import {
   ScrollableTabBar,
 } from '@valdio/react-native-scrollable-tabview';
 import ImageView from 'react-native-image-view';
-import { CompanyPost } from '../../Backend/Create/CompanyPost';
-import ViewMoreText from 'react-native-view-more-text';
+import {CompanyPost} from '../../Backend/Create/CompanyPost';
+import {getData} from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import firebase from 'firebase';
 
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
@@ -72,10 +75,25 @@ class Feed extends Component {
       like: [],
       favorite: [],
       file: null,
+      post_data: null,
+      loading: true,
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
+    await _retrieveData('user').then(
+      async result =>
+        await firebase
+          .firestore()
+          .collection('Company_Profile')
+          .onSnapshot(async () => {
+            let data = await getData('Company_Profile', result);
+            this.setState({post_data: data, loading: false});
+            console.log(data);
+            console.log('\n');
+          }),
+    );
+
     var that = this;
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
@@ -118,11 +136,12 @@ class Feed extends Component {
       like,
       favorite,
       file,
+      post_data,
     } = this.state;
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ marginBottom: 10 }}>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
+          <View style={{marginBottom: 10}}>
             <Text style={styles.welcome}>Company Profile</Text>
             <Ionicon
               name="ios-menu"
@@ -141,221 +160,227 @@ class Feed extends Component {
             </TouchableOpacity>
           </View>
 
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                height: responsiveHeight(30),
-                width: responsiveWidth(100),
-              }}>
-              <Image
-                source={require('../../Assets/watch.jpg')}
-                style={{ width: '100%', height: '100%', borderRadius: 0 }}
-              />
-            </View>
-
-            <View
-              style={{
-                backgroundColor: 'white',
-                height: responsiveHeight(32),
-                width: responsiveWidth(100),
-                borderRadius: 20,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.5,
-                shadowRadius: 2,
-                elevation: 1,
-              }}>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  top: 10,
-                  backgroundColor: 'white',
-                  justifyContent: 'flex-start',
-                  width: '90%',
-                  height: '20%',
-                }}>
-                <Text
-                  style={{
-                    left: 5,
-                    fontSize: responsiveFontSize(3),
-                    color: '#32cd32',
-                    fontWeight: 'bold',
-                  }}>
-                  ABC Company
-              </Text>
-              </View>
-
-              <View
-                style={{
-                  paddingHorizontal: 5,
-                  alignSelf: 'center',
-                  top: 0,
-                  backgroundColor: 'white',
-                  justifyContent: 'space-around',
-                  alignItems: 'flex-start',
-                  width: '90%',
-                  height: '35%',
-                }}>
-                {/* <Text style={{letterSpacing:1, left:2,fontSize: responsiveFontSize(2), color: '#7e7474' }}>
-                            Company Info
-                        </Text> */}
-                <Text
-                  style={{
-                    left: 1,
-                    fontSize: responsiveFontSize(1.8),
-                    fontWeight: 'bold',
-                    color: '#7e7474',
-                  }}>
-                  Address:
-                <Text
-                    style={{
-                      letterSpacing: 1,
-                      fontSize: responsiveFontSize(1.6),
-                      fontWeight: '800',
-                    }}>
-                    Plot 14 Street 12
-                </Text>
-                </Text>
-                <Text
-                  style={{
-                    left: 1,
-                    fontSize: responsiveFontSize(1.8),
-                    fontWeight: 'bold',
-                    color: '#7e7474',
-                  }}>
-                  Email:
-                <Text
-                    style={{
-                      letterSpacing: 1,
-                      fontSize: responsiveFontSize(1.6),
-                      fontWeight: '800',
-                    }}>
-                    user123@gmail.com
-                </Text>
-                </Text>
-                <Text
-                  style={{
-                    left: 1,
-                    fontSize: responsiveFontSize(1.8),
-                    fontWeight: 'bold',
-                    color: '#7e7474',
-                  }}>
-                  Phone#:
-                <Text
-                    style={{
-                      letterSpacing: 1,
-                      fontSize: responsiveFontSize(1.6),
-                      fontWeight: '800',
-                    }}>
-                    05133449
-                </Text>
-                </Text>
-              </View>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  top: 5,
-                  backgroundColor: 'white',
-                  width: '90%',
-                  height: '10%',
-                  flexDirection: 'row',
-                }}>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            {this.state.loading ? (
+              <ActivityIndicator size={'large'} color={'blue'} />
+            ) : (
+              <View>
                 <View
                   style={{
-                    paddingHorizontal: 7,
-                    width: '80%',
-                    height: '100%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    backgroundColor: 'white',
+                    height: responsiveHeight(30),
+                    width: responsiveWidth(100),
                   }}>
-                  <Text
-                    style={{
-                      left: 1,
-                      fontSize: responsiveFontSize(1.8),
-                      color: '#7e7474',
-                    }}>
-                    9:00 AM - 5:00 PM
-                </Text>
+                  <Image
+                    source={{uri: post_data.imageUrl}}
+                    style={{width: '100%', height: '100%', borderRadius: 0}}
+                  />
+                </View>
 
-                  <Text
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(32),
+                    width: responsiveWidth(100),
+                    borderRadius: 20,
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 1,
+                  }}>
+                  <View
                     style={{
-                      letterSpacing: 1,
-                      fontSize: responsiveFontSize(1.6),
-                      fontWeight: 'bold',
-                    }}>
-                    Sat-Sun off
-                </Text>
-
-
-                  <TouchableOpacity
-                    style={{
-                      top: -18,
+                      alignSelf: 'center',
+                      top: 10,
                       backgroundColor: 'white',
-                      width: '20%',
-                      height: '100%',
-                      flexDirection: 'column',
                       justifyContent: 'flex-start',
-                      alignItems: 'center',
-                      position: 'absolute',
-                      left: responsiveWidth(75),
+                      width: '90%',
+                      height: '20%',
+                    }}>
+                    <Text
+                      style={{
+                        left: 5,
+                        fontSize: responsiveFontSize(3),
+                        color: '#32cd32',
+                        fontWeight: 'bold',
+                      }}>
+                      {post_data.Company_Name}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      paddingHorizontal: 5,
+                      alignSelf: 'center',
+                      top: 0,
+                      backgroundColor: 'white',
+                      justifyContent: 'space-around',
+                      alignItems: 'flex-start',
+                      width: '90%',
+                      height: '35%',
+                    }}>
+                    {/* <Text style={{letterSpacing:1, left:2,fontSize: responsiveFontSize(2), color: '#7e7474' }}>
+                            Company Info
+                        </Text> */}
+                    <Text
+                      style={{
+                        left: 1,
+                        fontSize: responsiveFontSize(1.8),
+                        fontWeight: 'bold',
+                        color: '#7e7474',
+                      }}>
+                      Address:
+                      <Text
+                        style={{
+                          letterSpacing: 1,
+                          fontSize: responsiveFontSize(1.6),
+                          fontWeight: '800',
+                        }}>
+                        {post_data.location}
+                      </Text>
+                    </Text>
+                    <Text
+                      style={{
+                        left: 1,
+                        fontSize: responsiveFontSize(1.8),
+                        fontWeight: 'bold',
+                        color: '#7e7474',
+                      }}>
+                      Email:
+                      <Text
+                        style={{
+                          letterSpacing: 1,
+                          fontSize: responsiveFontSize(1.6),
+                          fontWeight: '800',
+                        }}>
+                        {post_data.email}
+                      </Text>
+                    </Text>
+                    <Text
+                      style={{
+                        left: 1,
+                        fontSize: responsiveFontSize(1.8),
+                        fontWeight: 'bold',
+                        color: '#7e7474',
+                      }}>
+                      Phone#:
+                      <Text
+                        style={{
+                          letterSpacing: 1,
+                          fontSize: responsiveFontSize(1.6),
+                          fontWeight: '800',
+                        }}>
+                        {post_data.phone}
+                      </Text>
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      top: 5,
+                      backgroundColor: 'white',
+                      width: '90%',
+                      height: '10%',
+                      flexDirection: 'row',
                     }}>
                     <View
                       style={{
-                        flexDirection: 'column',
+                        paddingHorizontal: 7,
+                        width: '80%',
                         height: '100%',
-                        width: '50%',
-                        alignItems: 'center',
-                        justifyContent: 'space-evenly',
-                        left: 0,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                       }}>
                       <Text
                         style={{
-                          fontSize: responsiveFontSize(2),
-                          color: '#40d240',
-                          fontWeight: 'bold',
-                          marginBottom: 10,
+                          left: 1,
+                          fontSize: responsiveFontSize(1.8),
+                          color: '#7e7474',
                         }}>
-                        45
-                  </Text>
-                      <TouchableOpacity>
-                        <ETIcon name="star" size={30} color="#32cd32" style={{}} />
+                        {post_data.opening_Time}- {post_data.closing_Time}
+                      </Text>
+
+                      <Text
+                        style={{
+                          letterSpacing: 1,
+                          fontSize: responsiveFontSize(1.6),
+                          fontWeight: 'bold',
+                        }}>
+                        {post_data.days} Open
+                      </Text>
+
+                      <TouchableOpacity
+                        style={{
+                          top: -18,
+                          backgroundColor: 'white',
+                          width: '20%',
+                          height: '100%',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                          position: 'absolute',
+                          left: responsiveWidth(75),
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'column',
+                            height: '100%',
+                            width: '50%',
+                            alignItems: 'center',
+                            justifyContent: 'space-evenly',
+                            left: 0,
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: responsiveFontSize(2),
+                              color: '#40d240',
+                              fontWeight: 'bold',
+                              marginBottom: 10,
+                            }}>
+                            {post_data.rating.length}
+                          </Text>
+                          <TouchableOpacity>
+                            <ETIcon
+                              name="star"
+                              size={30}
+                              color="#32cd32"
+                              style={{}}
+                            />
+                          </TouchableOpacity>
+                        </View>
                       </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
+                  </View>
+
+                  <View
+                    style={{
+                      marginTop: 2,
+                      padding: 0,
+                      paddingVertical: 8,
+                      alignSelf: 'center',
+                      top: 0,
+                      backgroundColor: 'white',
+                      width: '90%',
+                      height: '34%',
+                    }}>
+                    <Text
+                      numberOfLines={3}
+                      style={{
+                        flex: 1,
+                        flexGrow: 1,
+                        fontSize: responsiveFontSize(1.8),
+                        color: '#7e7474',
+                      }}>
+                      {post_data.description}
+                    </Text>
+                  </View>
                 </View>
               </View>
-
-              <View
-                style={{
-                  marginTop: 2,
-                  padding: 0,
-                  paddingVertical: 8,
-                  alignSelf: 'center',
-                  top: 0,
-                  backgroundColor: 'white',
-                  width: '90%',
-                  height: '34%',
-                }}>
-                <Text
-                  numberOfLines={3}
-                  style={{
-                    flex: 1,
-                    flexGrow: 1,
-                    fontSize: responsiveFontSize(1.8),
-                    color: '#7e7474',
-                  }}>
-                  SimpleText is the native text editor for the Apple classic Mac
-                  OS. SimpleText allows editing including text formatting, fonts,
-                  and sizes. It was developed to integrate the features included
-                  in the different versions of TeachText that were created by
-                  various software development groups within Appl
-              </Text>
-              </View>
-            </View>
+            )}
           </View>
 
           <ScrollableTabView
-            tabBarUnderlineStyle={{ height: 2, backgroundColor: '#32cd32' }}
+            tabBarUnderlineStyle={{height: 2, backgroundColor: '#32cd32'}}
             tabBarInactiveTextColor="gray"
             tabBarActiveTextColor="#32cd32"
             renderTabBar={() => <DefaultTabBar />}>
@@ -424,7 +449,7 @@ class Feed extends Component {
                       color: '#32cd32',
                     }}>
                     Image
-                </Text>
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -440,7 +465,12 @@ class Feed extends Component {
                   onPress={() => {
                     alert('Posted');
                   }}>
-                  <FA name="video-camera" size={18} color="#32cd32" style={{}} />
+                  <FA
+                    name="video-camera"
+                    size={18}
+                    color="#32cd32"
+                    style={{}}
+                  />
 
                   <Text
                     style={{
@@ -449,7 +479,7 @@ class Feed extends Component {
                       color: '#32cd32',
                     }}>
                     Video
-                </Text>
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
@@ -481,19 +511,19 @@ class Feed extends Component {
                       color: 'white',
                     }}>
                     Post
-                </Text>
+                  </Text>
                 </TouchableOpacity>
               </View>
 
               <FlatList
                 data={[1, 2]}
                 keyExtractor={item => item.id}
-                renderItem={({ item, index }) => (
+                renderItem={({item, index}) => (
                   <View
                     key={index}
                     style={{
                       shadowColor: '#000',
-                      shadowOffset: { width: 0, height: 2 },
+                      shadowOffset: {width: 0, height: 2},
                       shadowOpacity: 0.5,
                       shadowRadius: 2,
                       elevation: 2,
@@ -840,7 +870,7 @@ class Feed extends Component {
               <FlatList
                 data={[1, 2, 3, 1]}
                 keyExtractor={item => item.id}
-                renderItem={({ item, index }) => (
+                renderItem={({item, index}) => (
                   <View
                     style={{
                       paddingVertical: 5,
@@ -854,7 +884,7 @@ class Feed extends Component {
                       imageIndex={0}
                       isVisible={this.state.displayIMG}
                       onClose={() => {
-                        this.setState({ displayIMG: false });
+                        this.setState({displayIMG: false});
                       }}
                       renderFooter={(currentImage) => (<View style={{ marginBottom: responsiveHeight(4), alignItems: 'center' }}><Text style={{ fontSize: 20, color: 'white' }}>Hello! I'm Footer</Text></View>)}
                     />
@@ -865,13 +895,13 @@ class Feed extends Component {
                         width: responsiveHeight(16.5),
                       }}
                       onPress={() => {
-                        this.setState({ displayIMG: true });
+                        this.setState({displayIMG: true});
                       }}>
                       <Image
                         source={{
                           uri: 'https://picsum.photos/id/1060/536/354?blur=2',
                         }}
-                        style={{ height: '100%', width: '100%' }}
+                        style={{height: '100%', width: '100%'}}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -880,13 +910,13 @@ class Feed extends Component {
                         width: responsiveHeight(16.5),
                       }}
                       onPress={() => {
-                        this.setState({ displayIMG: true });
+                        this.setState({displayIMG: true});
                       }}>
                       <Image
                         source={{
                           uri: 'https://picsum.photos/id/1060/536/354?blur=2',
                         }}
-                        style={{ height: '100%', width: '100%' }}
+                        style={{height: '100%', width: '100%'}}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -898,9 +928,9 @@ class Feed extends Component {
                         source={{
                           uri: 'https://picsum.photos/id/1060/536/354?blur=2',
                         }}
-                        style={{ height: '100%', width: '100%' }}
+                        style={{height: '100%', width: '100%'}}
                         onPress={() => {
-                          this.setState({ displayIMG: true });
+                          this.setState({displayIMG: true});
                         }}
                       />
                     </TouchableOpacity>

@@ -121,7 +121,6 @@ export default class Settings extends Component {
 
                             </View>
                         </View>
-
                         <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
 
                             <View style={{ backgroundColor: 'white', width: '100%', height: '50%', flexDirection: 'row', shadowColor: 'green', justifyContent: 'space-evenly' }}>
