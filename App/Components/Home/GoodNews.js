@@ -674,7 +674,9 @@ export default class GoodNews extends Component {
                 <FlatList
                   data={this.state.post_data}
                   keyExtractor={item => item.id}
+                  
                   renderItem={({ item, index }) => (
+                    
                     <View
                       key={index}
                       style={{
@@ -695,6 +697,7 @@ export default class GoodNews extends Component {
                         marginBottom: responsiveHeight(2)
 
                       }}>
+                        {console.log("ITEMM:::", item)}
                       <View
                         style={{
                           top: 2,
@@ -745,7 +748,8 @@ export default class GoodNews extends Component {
                               fontSize: responsiveFontSize(3),
                               fontWeight: 'bold',
                             }}>
-                            {item.name}
+                            {item.user_name}
+                            {console.log("ITEM NAME", item.name)}
                           </Text>
                         </View>
                         <View
