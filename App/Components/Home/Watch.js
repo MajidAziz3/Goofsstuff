@@ -37,6 +37,9 @@ const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
 
 export default class Watch extends Component {
+  static navigationOptions = {
+    header: null,
+  }
   constructor(props) {
     super(props);
     this.state = {
