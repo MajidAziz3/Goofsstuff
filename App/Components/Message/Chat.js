@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 import { addToArray, getData } from '../../Backend/Utility';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import FA from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import EIcon from 'react-native-vector-icons/Entypo';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
@@ -59,6 +59,8 @@ export default class Chat extends Component {
       });
   }
   async onSend(messages = []) {
+
+   
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
@@ -77,6 +79,9 @@ export default class Chat extends Component {
       messages[0],
     );
     messages[0].user._id = 1;
+
+    await addToArray('users',this.state.current_user,'chatted',this.state.friendID);
+    await addToArray('users',this.state.friendID,'chatted',this.state.current_user);
   }
 
   render() {
@@ -85,11 +90,11 @@ export default class Chat extends Component {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.welcome}>{this.state.friendName}</Text>
-        <Ionicon
-          name="ios-menu"
-          size={35}
+        <FA
+          name="chevron-left"
+          size={26}
           color={'#32cd32'}
-          onPress={() => this.props.navigation.openDrawer()}
+          onPress={() => this.props.navigation.goBack()}
           style={styles.menu}
         />
         <Image
@@ -135,4 +140,13 @@ const styles = StyleSheet.create({
     marginLeft: '85%',
     position: 'absolute',
   },
+  menu: {
+    
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginTop: responsiveHeight(2.6),
+    marginLeft: '4%',
+    position: 'absolute'
+
+},
 });

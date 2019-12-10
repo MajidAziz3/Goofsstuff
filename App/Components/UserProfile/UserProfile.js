@@ -226,7 +226,7 @@ class UserProfile extends Component {
         {this.state.loading ? (
           <ActivityIndicator
             size={'large'}
-            color="blue"
+            color="#32cd32"
             style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
           />
         ) : (
@@ -357,8 +357,8 @@ class UserProfile extends Component {
                     alignItems: 'center',
                   }}>
                   <Text
-                    style={{ fontSize: responsiveFontSize(2.4), color: 'white' }}>
-                    {this.state.data_user.bio}
+                    style={{ fontSize: responsiveFontSize(2), color: 'white' }}>
+                    hdhdhdhdhdhdhdhdhdhd hdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhd
                   </Text>
                 </View>
 
