@@ -16,6 +16,9 @@ import AIcon from 'react-native-vector-icons/AntDesign';
 import VideoPlayer from 'react-native-video-controls';
 
 export default class LearnMore extends Component {
+    static navigationOptions = {
+        header: null,
+      }
     constructor(props) {
         super(props);
         this.state = {
