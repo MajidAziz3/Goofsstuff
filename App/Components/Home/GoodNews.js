@@ -825,7 +825,7 @@ export default class GoodNews extends Component {
                                 ]}
 
                                 isVisible={this.state.displayIMG}
-                                
+                                isSwipeCloseEnabled={false}
                                 onClose={() => {
                                   this.setState({ displayIMG: false }, () => {
                                     this.setState({ showImage: null }, () => {
