@@ -17,7 +17,6 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 import Picker from 'react-native-image-picker'
 import { uploadVisionImage } from '../../Backend/Utility';
-import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 const icon = require('../../Assets/icon.jpeg')
 // const iconTP = require('./tpimage.png')
 const bg = require('../../Assets/bg.png')
@@ -150,11 +149,13 @@ export default class Login extends React.Component {
     async Upload_Image() {
         let iteratorNum = 0;
         await _retrieveData('user').then(async item => {
+            console.log(this.state.uri)
+            var fileName = this.state.uri.replace(/^.*[\\\/]/, '')
           await uploadVisionImage(
             this.state.uri,
-            'image/jpeg',
-            this.state.fileName,
-            this.state.fileName,
+            'image/png',
+            fileName,
+            fileName,
             'VisionBoard',
             item,
           );
@@ -237,7 +238,7 @@ export default class Login extends React.Component {
                     <View style={styles.op}>
 
                         <TouchableOpacity
-                            style={s.btn}
+                            style={styles.btn}
                             onPress={() => {this._markByPosition(Position.center),
                             this.setState({preview:true})}}
                         >
@@ -247,7 +248,7 @@ export default class Login extends React.Component {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={s.btn} onPress={()=>{
+                        <TouchableOpacity style={styles.btn} onPress={()=>{
 
                             if(this.state.preview == false)
                             {

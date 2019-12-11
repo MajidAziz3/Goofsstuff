@@ -183,12 +183,14 @@ export async function addToArray(collection, doc, array, value) {
     .firestore()
     .collection(collection)
     .doc(doc);
+
+    console.log('DOCREF', docRef);
   let docData = await docRef.get();
-  console.log('DOC DATA', docData)
+  console.log('DOC DATA', docData.data())
   if (docData.exists && docData.data()[array] != undefined) {
-    docRef.update({
+    docRef.set({
       [array]: firebase.firestore.FieldValue.arrayUnion(value),
-    });
+    },{merge:true});
   } else {
     saveData(collection, doc, {[array]: [value]});
   }
