@@ -274,38 +274,41 @@ class GreatNews extends Component {
 
                 <FlatList
                   style={styles.root}
+                  extraData={this.state}
                   data={this.state.posts}
-                  // ItemSeparatorComponent={() => {
-                  //   return <View style={styles.separator} />;
-                  // }}
+                  ItemSeparatorComponent={() => {
+                    return <View style={styles.separator} />;
+                  }}
                   keyExtractor={item => item.user_id}
                   renderItem={({item}) => {
                     item.comments.map(item => {
-                      {
-                        console.log('dskjgfhsadgasdh', item);
-                      }
-
-                      <View style={styles.container2}>
-                        <TouchableOpacity onPress={() => {}}>
-                          <Image
-                            style={styles.image}
-                            source={{
-                              uri:
-                                'https://randomuser.me/api/portraits/men/94.jpg',
-                            }}
-                          />
-                        </TouchableOpacity>
-                        <View style={styles.content}>
-                          <View style={styles.contentHeader}>
-                            <Text style={styles.name}>{item.user_name}</Text>
-                            <Text style={styles.time}>{item.time}</Text>
-                          </View>
-                          <Text rkType="primary3 mediumLine">
-                            {item.comments}
-                            {console.log('Messssssssssssaaage', item.comments)}
-                          </Text>
+                      return (
+                        <View style={{height: 120, backgroundColor: 'black'}}>
+                          <Text style={{color: 'red'}}>item.comments</Text>
                         </View>
-                      </View>;
+                      );
+
+                      // <View style={styles.container2}>
+                      //   <TouchableOpacity onPress={() => {}}>
+                      //     <Image
+                      //       style={styles.image}
+                      //       source={{
+                      //         uri:
+                      //           'https://randomuser.me/api/portraits/men/94.jpg',
+                      //       }}
+                      //     />
+                      //   </TouchableOpacity>
+                      //   <View style={styles.content}>
+                      //     <View style={styles.contentHeader}>
+                      //       <Text style={styles.name}>{item.user_name}</Text>
+                      //       <Text style={styles.time}>{item.time}</Text>
+                      //     </View>
+                      //     <Text rkType="primary3 mediumLine">
+                      //       {item.comments}
+                      //       {console.log('Messssssssssssaaage', item.comments)}
+                      //     </Text>
+                      //   </View>
+                      // </View>;
                     });
                   }}
                 />
@@ -734,6 +737,7 @@ const styles = StyleSheet.create({
   root: {
     backgroundColor: '#ffffff',
     marginTop: 10,
+    flex: 1,
   },
   container2: {
     paddingLeft: 19,
