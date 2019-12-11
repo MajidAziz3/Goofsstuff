@@ -82,6 +82,8 @@ import AppWorking1 from '../Components/Login/AppWorking1';
 import House1 from '../Components/Login/House1';
 import FriendsProfile from '../Components/UserProfile/FriendsProfile';
 import LearnMore from '../Components/Home/LearnMore';
+import MoreVisionBoard from '../Components/UserProfile/MoreVisionBoard';
+
 
 var width = Dimensions.get('window').width;
 
@@ -107,6 +109,7 @@ const UserProfileStack = createStackNavigator({
   UserGallery: UserGallery,
   Family: Family,
   VisionBoard: VisionBoard,
+  MoreVisionBoard:MoreVisionBoard,
 });
 const CompanyStack = createStackNavigator({
   Feed: Feed,
