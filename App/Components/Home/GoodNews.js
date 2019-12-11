@@ -678,6 +678,8 @@ export default class GoodNews extends Component {
                   </View>
                 </View>
               </View>
+
+
               <FlatList
                 data={this.state.post_data}
                 keyExtractor={item => item.id}
@@ -721,22 +723,15 @@ export default class GoodNews extends Component {
                           height: 60,
                         }}>
                         {/* <Thumbnail source={{ uri: item.imageName }} /> */}
-                        {item.profile_picuture == null ? (
-                          <Entypo
-                            name="user"
-                            size={40}
-                            color="#d0d0d0dd"
-                            style={{width: 60, height: 60, borderRadius: 60}}
-                          />
-                        ) : (
+
                           <Image
                             source={{
                               uri:
-                                'https://randomuser.me/api/portraits/men/94.jpg',
+                                item.profile_image,
                             }}
                             style={{width: 60, height: 60, borderRadius: 60}}
                           />
-                        )}
+                      
                       </View>
 
                       <View
@@ -792,16 +787,6 @@ export default class GoodNews extends Component {
                         }}>
                         <Text>{item.description}</Text>
                       </ViewMoreText>
-                      {/* <Text
-                          style={{
-                            fontSize: responsiveFontSize(2.1),
-                            fontWeight: '600',
-                            color: '#7e7a7a',
-                            flexWrap: 'wrap',
-                          }}
-                          numberOfLines={4}>
-                          {item.description}
-                        </Text> */}
                     </View>
                     <View
                       style={{
@@ -856,7 +841,6 @@ export default class GoodNews extends Component {
                               )}
                             />
                           )}
-                          {console.log('Image URL::::', item.imageUrl)}
 
                           <TouchableOpacity
                             style={{
@@ -936,7 +920,6 @@ export default class GoodNews extends Component {
                             onPress={() => {
                               this.setModalVisible();
                               this.setState({_id:item.post_id})
-                              // this.CommentPost(this.state._id);
                             }}
                           />
                         </TouchableOpacity>
