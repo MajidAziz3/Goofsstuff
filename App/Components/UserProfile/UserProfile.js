@@ -15,6 +15,7 @@ import {
   RecyclerViewBackedScrollView,
   SafeAreaView
 } from 'react-native';
+import firebase from 'firebase';
 import { Left, Thumbnail } from 'native-base';
 import ImageView from 'react-native-image-view';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -30,9 +31,12 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { getData, uploadImage, uploadUserImage } from '../../Backend/Utility';
+import { getData, uploadImage, uploadUserImage, getAllOfCollection } from '../../Backend/Utility';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 import ImageResizer from 'react-native-image-resizer';
+import ViewMoreText from 'react-native-view-more-text';
+import VideoPlayer from 'react-native-video-controls';
+import AIcon from 'react-native-vector-icons/AntDesign';
 import { signUp } from '../../Backend/Auths';
 ///ProfileScreen 2 5th Screen
 const images = [
@@ -71,6 +75,7 @@ const imageList = [
     width: 320,
     height: 400,
   },
+
 ];
 class UserProfile extends Component {
   static navigationOptions = {
@@ -89,6 +94,10 @@ class UserProfile extends Component {
       photo: null,
       ImageName: null,
       ImageUrl: null,
+      VisionBoard: [],
+      Gallery: [],
+      userId: '',
+      post_data:[],
       datasource: [
         {
           name: 'Woody Allen',
@@ -165,15 +174,49 @@ class UserProfile extends Component {
   }
 
   componentDidMount = async () => {
+
     await _retrieveData('user').then(async result => {
       await getData('users', result).then(res =>
         this.setState({
           data_user: res,
+          userId: res.userId,
           loading: false,
         }),
       );
     });
+    this.getVisionBoardData();
+    this.getGalleryData();
+    this.showPost();
   };
+
+  async showPost() {
+    firebase
+      .firestore()
+      .collection('News')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('News');
+        this.setState({post_data: data});
+      });
+      console.log("POSTSSSS::", this.state.post_data)
+  }
+
+  getVisionBoardData = async () => {
+    await getData('VisionBoard', this.state.userId).then(res =>
+      this.setState({
+        VisionBoard: res,
+      }),
+    );
+
+  }
+
+  getGalleryData = async () => {
+    await getData('Gallery', this.state.userId).then(res =>
+      this.setState({
+        Gallery: res,
+      }),
+    );
+
+  }
 
   handleChoosePhoto = () => {
     var options = {
@@ -212,13 +255,39 @@ class UserProfile extends Component {
         },
       );
     });
-    // if (this.state.ImageUrl !== null) {
-    //   // console.log('hhhhhh,', this.state.ImageUrl);
-    //   // setTimeout(async () => {
-    //      this.Upload_Image();
-    // //   }, 300);
-    // }
   };
+
+  calculateTime (){
+    var d1 = new Date()
+  }
+
+  renderViewMore(onPress) {
+    return (
+      <Text
+        onPress={onPress}
+        style={{
+          fontSize: responsiveFontSize(2.1),
+          fontWeight: 'bold',
+          color: '#7e7a7a',
+        }}>
+        View more
+      </Text>
+    );
+  }
+
+  renderViewLess(onPress) {
+    return (
+      <Text
+        onPress={onPress}
+        style={{
+          fontSize: responsiveFontSize(2.1),
+          fontWeight: 'bold',
+          color: '#7e7a7a',
+        }}>
+        View less
+      </Text>
+    );
+  }
 
   render() {
     return (
@@ -226,7 +295,7 @@ class UserProfile extends Component {
         {this.state.loading ? (
           <ActivityIndicator
             size={'large'}
-            color="blue"
+            color="#32cd32"
             style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
           />
         ) : (
@@ -267,23 +336,23 @@ class UserProfile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    {this.state.data_user.profile_picuture == null ? (
-                      <Entypo name="user" size={40} color="#d0d0d0dd" />
-                    ) : (
-                        <Thumbnail
-                          large
-                          source={{ uri: uri }}
-                          style={{
-                            backgroundColor: 'white',
-                            borderWidth: StyleSheet.hairlineWidth,
-                            borderColor: '#d1dcff',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.5,
-                            shadowRadius: 2,
-                            elevation: 5,
-                          }}
-                        />
-                      )}
+                    {console.log("imggggg:", this.state.data_user.profile_picture)}
+
+                    <Thumbnail
+                      large
+                      source={{ uri: this.state.data_user.profile_picture }}
+                      style={{
+                        backgroundColor: 'white',
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: '#d1dcff',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 5,
+                      }}
+                    />
+
+
                   </View>
                   <View
                     style={{
@@ -345,8 +414,7 @@ class UserProfile extends Component {
                     backgroundColor: '#32cd32',
                     top: 5,
                     alignSelf: 'center',
-                    height: responsiveHeight(5),
-                    width: responsiveWidth(60),
+
                     borderRadius: 10,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.5,
@@ -357,8 +425,8 @@ class UserProfile extends Component {
                     alignItems: 'center',
                   }}>
                   <Text
-                    style={{ fontSize: responsiveFontSize(2.4), color: 'white' }}>
-                    {this.state.data_user.bio}
+                    style={{ fontSize: responsiveFontSize(2), color: 'white' }}>
+                    hdhdhdhdhdhdhdhdhdhd hdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhdhd
                   </Text>
                 </View>
 
@@ -688,8 +756,6 @@ class UserProfile extends Component {
                 <View
                   style={{
                     backgroundColor: 'white',
-                    top: 10,
-                    height: responsiveHeight(40),
                     paddingHorizontal: 10,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.5,
@@ -700,7 +766,7 @@ class UserProfile extends Component {
                     style={{
                       backgroundColor: 'white',
                       top: 5,
-                      height: '10%',
+
                       justifyContent: 'center',
                     }}>
                     <Text
@@ -712,136 +778,69 @@ class UserProfile extends Component {
                   </Text>
                   </View>
                   <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('VisionBoard')}
-                  style={{ top: 4, right: 10, position: 'absolute' }}
+                    onPress={() => this.props.navigation.navigate('VisionBoard')}
+                    style={{ top: 4, right: 10, position: 'absolute' }}
                   >
                     <AntDesign
                       name="pluscircle"
                       color={'#32cd32'}
                       size={20}
-                      
+
                     />
 
                   </TouchableOpacity>
 
-                  <View style={{ top: 5, height: '90%' }}>
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        height: '65%',
-                        flexDirection: 'row',
-                        padding: 2,
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          height: '100%',
-                          width: '30%',
-                        }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          height: '100%',
-                          width: '70%',
-                        }}>
-                        <View
-                          style={{
-                            height: '40%',
-                            width: '100%',
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            justifyContent: 'space-evenly',
-                          }}>
-                          <View style={{ height: '100%', width: '55%' }}>
-                            <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
-
+                  <View style={{ top: 5 }}>
+                    {this.state.VisionBoard ? (
+                      <FlatList
+                        data={this.state.VisionBoard.vision}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item, index }) => (
                           <View
                             style={{
+                              paddingVertical: 5,
+                              flexDirection: 'row',
                               backgroundColor: 'white',
-                              height: '100%',
-                              width: '40%',
+                              flexWrap: 'wrap',
+                              justifyContent: 'space-evenly',
                             }}>
-                            <Image
-                              source={require('../../Assets/watch.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
+                            <TouchableOpacity
+                              style={{
+                                height: responsiveHeight(16),
+                                width: responsiveHeight(16.5),
+                              }}
+                              onPress={() =>
+                                this.props.navigation.navigate('MoreVisionBoard')
+                              }>
+                              <Image
+                                source={{
+                                  uri: item,
+                                }}
+                                style={{ height: '100%', width: '100%' }}
+                              />
+                            </TouchableOpacity>
                           </View>
-                        </View>
-
+                        )}
+                      />
+                    ) : (
                         <View
                           style={{
-                            height: '60%',
-                            width: '100%',
-                            backgroundColor: 'white',
+                            paddingVertical: 5,
                             flexDirection: 'row',
-                            justifyContent: 'space-evenly',
+                            backgroundColor: 'white',
+                            
+                            justifyContent: 'center',
+                            height: responsiveHeight(10),
+                            marginTop: responsiveHeight(4)
                           }}>
-                          <View style={{ height: '100%', width: '45%' }}>
-                            <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
-
-                          <View
-                            style={{
-                              backgroundColor: 'white',
-                              height: '100%',
-                              width: '20%',
-                            }}>
-                            <Image
-                              source={require('../../Assets/watch.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
-
-                          <View style={{ height: '100%', width: '30%' }}>
-                            <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
+                            <Text>There nothing in your Vision Board!</Text>
                         </View>
-                      </View>
-                    </View>
+                      )}
 
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        height: '30%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                      }}>
-                      <View style={{ height: '100%', width: '38%' }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View style={{ height: '100%', width: '20%' }}>
-                        <Image
-                          source={require('../../Assets/groupsIMG.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View style={{ height: '100%', width: '40%' }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                    </View>
                   </View>
                 </View>
+
+
                 <View>
                   <View style={{ height: 40, padding: 10, marginTop: 10 }}>
                     <Text
@@ -852,432 +851,383 @@ class UserProfile extends Component {
                       Gallery
                   </Text>
                   </View>
-                  <FlatList
-                    data={[1, 2]}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item, index }) => (
-                      <View
-                        style={{
-                          paddingVertical: 5,
-                          flexDirection: 'row',
-                          backgroundColor: 'white',
-                          flexWrap: 'wrap',
-                          justifyContent: 'space-evenly',
-                        }}>
-                        <TouchableOpacity
+                  {this.state.Gallery ? (
+                      <FlatList
+                        data={this.state.Gallery.gallery}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item, index }) => (
+                          <View
+                            style={{
+                              paddingVertical: 5,
+                              flexDirection: 'row',
+                              backgroundColor: 'white',
+                              flexWrap: 'wrap',
+                              justifyContent: 'space-evenly',
+                            }}>
+                            <TouchableOpacity
+                              style={{
+                                height: responsiveHeight(16),
+                                width: responsiveHeight(16.5),
+                              }}
+                              onPress={() =>
+                                this.props.navigation.navigate('MoreGallery')
+                              }>
+                              <Image
+                                source={{
+                                  uri: item,
+                                }}
+                                style={{ height: '100%', width: '100%' }}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                      />
+                    ) : (
+                        <View
                           style={{
-                            height: responsiveHeight(16),
-                            width: responsiveHeight(16.5),
-                          }}
-                          onPress={() =>
-                            this.props.navigation.navigate('UserGallery')
-                          }>
-                          <Image
-                            source={{
-                              uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                            }}
-                            style={{ height: '100%', width: '100%' }}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            height: responsiveHeight(16),
-                            width: responsiveHeight(16.5),
-                          }}
-                          onPress={() =>
-                            this.props.navigation.navigate('UserGallery')
-                          }>
-                          <Image
-                            source={{
-                              uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                            }}
-                            style={{ height: '100%', width: '100%' }}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            height: responsiveHeight(16),
-                            width: responsiveHeight(16.5),
-                          }}
-                          onPress={() =>
-                            this.props.navigation.navigate('UserGallery')
-                          }>
-                          <Image
-                            source={{
-                              uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                            }}
-                            style={{ height: '100%', width: '100%' }}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                  />
+                            paddingVertical: 5,
+                            flexDirection: 'row',
+                            backgroundColor: 'white',
+                            
+                            justifyContent: 'center',
+                            height: responsiveHeight(10),
+                            marginTop: responsiveHeight(4)
+                          }}>
+                            <Text>There nothing in your Gallery!</Text>
+                        </View>
+                      )}
                 </View>
 
-                <View
-                  style={{
-                    borderRadius: 10,
-                    width: '96%',
-                    backgroundColor: '',
-                    height: responsiveHeight(12),
-                    justifyContent: 'space-between',
-                    elevation: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={6}
-                    style={{
-                      textAlignVertical: 'top',
-                      fontSize: responsiveFontSize(2),
-                      height: '100%',
-                      width: '100%',
-                      paddingHorizontal: 10,
-                    }}
-                    placeholder={'Post Something'}
-                  />
-                </View>
-                <View
-                  style={{
-                    top: 3,
-                    height: responsiveHeight(6),
-                    width: '96%',
-                    flexDirection: 'row',
-                    alignSelf: 'center',
-                    borderRadius: 10,
-                    elevation: 2,
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="camera" size={18} color="#32cd32" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Image
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA
-                      name="video-camera"
-                      size={18}
-                      color="#32cd32"
-                      style={{}}
-                    />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Video
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#32cd32',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="upload" size={18} color="white" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: 'white',
-                      }}>
-                      Post
-                  </Text>
-                  </TouchableOpacity>
-                </View>
 
                 <FlatList
-                  data={this.state.datasource}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item, index }) => (
+                data={this.state.post_data}
+                keyExtractor={item => item.id}
+                renderItem={({item}) => (
+                  <View
+                    style={{
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 0.5,
+                      shadowRadius: 2,
+                      elevation: 2,
+                      backgroundColor: '#eee',
+                      width: '100%',
+
+                      borderRadius: 25,
+                      paddingVertical: 0,
+                      paddingHorizontal:
+                        item.imageUrl || item.videoUrl ? 10 : 10,
+                      backgroundColor: 'white',
+                      marginBottom: responsiveHeight(2),
+                    }}>
+                    {console.log('ITEMM:::', item)}
                     <View
-                      key={index}
                       style={{
-                        justifyContent: 'space-evenly',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.5,
-                        shadowRadius: 2,
-                        elevation: 2,
-                        backgroundColor: '#eee',
-                        width: '100%',
-                        height: responsiveHeight(35),
+                        top: 2,
                         borderRadius: 25,
-                        paddingVertical: 0,
-                        paddingHorizontal: 10,
                         backgroundColor: 'white',
-                        marginBottom: 5,
+                        width: '98%',
+                        height: 60,
+                        flexDirection: 'row',
+                        marginBottom: 1,
                       }}>
                       <View
                         style={{
-                          top: 2,
-                          borderRadius: 25,
                           backgroundColor: 'white',
-                          width: '98%',
-                          height: '25%',
-                          flexDirection: 'row',
-                          marginBottom: 1,
+                          borderRadius: 25,
+                          width: 60,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          padding: 5,
+                          height: 60,
                         }}>
-                        <View
-                          style={{
-                            backgroundColor: 'white',
-                            width: '25%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: 1,
-                            height: 65,
-                          }}>
-                          {/* <Thumbnail source={{ uri: item.imageName }} /> */}
                           <Image
-                            source={{ uri: item.imageName }}
-                            style={{ width: 60, height: 60, borderRadius: 60 }}
+                            source={{
+                              uri:
+                              item.profile_image,
+                            }}
+                            style={{width: 60, height: 60, borderRadius: 60}}
                           />
-                        </View>
-
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            width: '60%',
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: responsiveFontSize(3),
-                              fontWeight: 'bold',
-                            }}>
-                            {item.name}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            alignItems: 'center',
-                            width: '15%',
-                            justifyContent: 'center',
-                          }}>
-                          <Text
-                            style={{
-                              fontSize: responsiveFontSize(1.5),
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                            }}>
-                            8h ago
-                        </Text>
-                        </View>
+                        
                       </View>
 
                       <View
                         style={{
-                          width: '99%',
-                          backgroundColor: 'white',
-                          paddingHorizontal: 20,
-                          height: '35%',
+                          justifyContent: 'center',
+                          alignItems: 'flex-start',
+                          width: '60%',
                         }}>
-                        {/* <ScrollView> */}
                         <Text
                           style={{
-                            fontSize: responsiveFontSize(2),
-                            fontWeight: '600',
+                            fontSize: responsiveFontSize(3),
+                            fontWeight: 'bold',
+                          }}>
+                          {item.user_name}
+                          {console.log('ITEM NAME', item.name)}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          width: '15%',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: responsiveFontSize(1.5),
+                            fontWeight: '400',
                             color: '#7e7a7a',
-                            flexWrap: 'wrap',
-                          }}
-                          numberOfLines={4}>
-                          Once I was drawing a perfect chair for myself in my head
-                          but I could not finish her design.. And so I found her!
-                          was drawing a perfect chair for myself in my head but I
-                          could not finish her design.. And so I found her! Once I
-                          was drawing a perfect chair for myself in my head but I
-                          could not finish her design.. And so I found her! was
-                          drawing a perfect chair for myself in my head but I
-                          could not finish her design.. And so I found her!
-                      </Text>
-                        {/* </ScrollView> */}
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          paddingHorizontal: 20,
-                          backgroundColor: 'white',
-                          height: '15%',
-                          alignItems: 'center',
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            width: '25%',
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
                           }}>
-                          <TouchableOpacity>
-                            <Image source={require('../../Assets/clap.png')} />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            878
+                            
+                          {item.uploading_time}
                         </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            width: '25%',
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                          }}>
-                          <TouchableOpacity>
-                            <FontAwesome
-                              name="comment-o"
-                              size={20}
-                              color="#7e7a7a"
-                            />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            878
-                        </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            width: '25%',
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                          }}>
-                          <TouchableOpacity>
-                            <EIcon name="like" size={25} color="#7e7a7a" />
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            91
-                        </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            width: '25%',
-                            justifyContent: 'center',
-                            alignItems: 'flex-end',
-                            alignItems: 'flex-end',
-                          }}>
-                          <Text
-                            style={{
-                              marginHorizontal: 10,
-                              fontWeight: '400',
-                              color: '#7e7a7a',
-                              fontSize: responsiveFontSize(1.6),
-                            }}>
-                            878
-                        </Text>
-                          <TouchableOpacity>
-                            <Ionicon name="ios-heart" size={20} color="#32cd32" />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-
-                      <View
-                        style={{
-                          height: '18%',
-                          backgroundColor: 'white',
-                          flexDirection: 'row',
-                          padding: 1,
-                          marginHorizontal: 20,
-                          alignItems: 'center',
-                        }}>
-                        <TextInput
-                          style={{
-                            fontSize: 12,
-                            paddingHorizontal: 20,
-                            padding: 0,
-                            height: '90%',
-                            backgroundColor: '#dee3e1',
-                            width: '80%',
-                            borderRadius: 50,
-                          }}
-                          placeholder="Type something">
-                          {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
-                        </TextInput>
-                        {/* </View> */}
-                        <View
-                          style={{
-                            width: '20%',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Icon
-                            name="message"
-                            size={20}
-                            color="#7e7a7a"
-                            onPress={() => {
-                              alert('message');
-                            }}
-                          />
-                        </View>
                       </View>
                     </View>
-                  )}
-                />
+
+                    <View
+                      style={{
+                        width: '99%',
+                        paddingHorizontal: 20,
+                        marginBottom: responsiveHeight(2),
+                        backgroundColor: 'white',
+                        marginBottom: 3,
+                      }}>
+                      {/* <ScrollView> */}
+                      <ViewMoreText
+                        numberOfLines={3}
+                        renderViewMore={this.renderViewMore}
+                        renderViewLess={this.renderViewLess}
+                        textStyle={{
+                          fontSize: responsiveFontSize(2.1),
+                          fontWeight: '600',
+                          color: '#7e7a7a',
+                          flexWrap: 'wrap',
+                        }}>
+                        <Text>{item.description}</Text>
+                      </ViewMoreText>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        height:
+                          item.imageUrl || item.videoUrl
+                            ? responsiveHeight(30)
+                            : null,
+                      }}>
+                      {item.imageUrl ? (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            width: '99%',
+                            height: '100%',
+                            flexDirection: 'row',
+                            marginBottom: 1,
+                          }}>
+                          {this.state.showImage && this.state.imageFooter && (
+                            <ImageView
+                              images={[
+                                {
+                                  source: {
+                                    uri: this.state.showImage,
+                                  },
+
+                                  width: 1200,
+                                  height: 800,
+                                },
+                              ]}
+                              isVisible={this.state.displayIMG}
+                              isSwipeCloseEnabled={false}
+                              onClose={() => {
+                                this.setState({displayIMG: false}, () => {
+                                  this.setState({showImage: null}, () => {
+                                    this.setState({itemFooter: null});
+                                  });
+                                });
+                              }}
+                              renderFooter={currentImage => (
+                                <View
+                                  style={{
+                                    marginBottom: responsiveHeight(4),
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text style={{fontSize: 20, color: 'white'}}>
+                                    {this.state.imageFooter}
+                                  </Text>
+                                </View>
+                              )}
+                            />
+                          )}
+
+                          <TouchableOpacity
+                            style={{
+                              height: responsiveHeight(30),
+                              width: responsiveHeight(40),
+                            }}
+                            onPress={() => {
+                              this.setState({displayIMG: true}, () => {
+                                this.setState(
+                                  {showImage: item.imageUrl},
+                                  () => {
+                                    this.setState({
+                                      imageFooter: item.description,
+                                    });
+                                  },
+                                );
+                              });
+                            }}>
+                            <Image
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                              }}
+                              source={{uri: item.imageUrl}}
+                              resizeMode={'cover'}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ) : item.videoUrl ? (
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'white',
+                            width: '99%',
+                            height: '100%',
+                            flexDirection: 'row',
+                            marginBottom: 1,
+                          }}>
+                          <VideoPlayer
+                            source={{
+                              uri: item.videoUrl,
+                            }}
+                            navigator={this.props.navigator}
+                            disableBack={true}
+                            disableVolume={true}
+                            disableFullscreen={true}
+                            paused={true}
+                          />
+                        </View>
+                      ) : null}
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 0,
+                        backgroundColor: 'white',
+
+                        // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
+                        // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignItems: 'center',
+                        justifyContent: 'space-evenly',
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                        <TouchableOpacity>
+                          <FontAwesome
+                            name="comment-o"
+                            size={30}
+                            color="#32cd32"
+                            onPress={() => {
+                              this.setModalVisible();
+                              this.setState({_id:item.post_id})
+                            }}
+                          />
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            top: 5,
+                            color: '#32cd32',
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          0{/* {item.comments.length} */}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
+
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <TouchableOpacity>
+                          <AIcon
+                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            size={28}
+                            color={'#32cd32'}
+                            onPress={() => {
+                              this.likePost(item.post_id);
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              });
+                            }}
+                          />
+                        </TouchableOpacity>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            alignItems: 'center',
+                            color: '#32cd32',
+
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          {/* {item.like.length} */}0
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
+
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontWeight: '400',
+                            color: '#7e7a7a',
+                            fontSize: responsiveFontSize(1.6),
+                          }}>
+                          {/* {item.favorite.length} */}
+                        </Text>
+                        <TouchableOpacity>
+                          <Ionicon
+                            name={
+                              this.state.hit_favorite
+                                ? 'md-heart'
+                                : 'md-heart-empty'
+                            }
+                            size={30}
+                            color={'#32cd32'}
+                            style={{top: 1}}
+                            onPress={() => {
+                              this.favoritePost(item.post_id);
+                              this.setState({
+                                hit_favorite: !this.state.hit_favorite,
+                              });
+                            }}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                )}
+              />
+
+
+                
               </ScrollView>
             </View>
           )}
@@ -1289,10 +1239,8 @@ class UserProfile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    width: responsiveWidth(100),
-    height: responsiveHeight(100),
-    marginBottom: 10,
+    backgroundColor: '#eee',
+
   },
   profileContainer: {
     width: responsiveWidth(100),

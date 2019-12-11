@@ -65,7 +65,7 @@ class Signup extends Component {
       groups: [],
       vission_board: null,
       likes: [],
-      profile_picture: null,
+      profile_picture: 'https://cdn2.iconfinder.com/data/icons/website-icons/512/User_Avatar-512.png',
       gallery: [],
     };
   }
@@ -149,7 +149,7 @@ class Signup extends Component {
       favorite,
       family_member,
     ).then(() => {
-      this.props.navigation.navigate('App');
+      this.props.navigation.navigate('Login');
     });
   };
 

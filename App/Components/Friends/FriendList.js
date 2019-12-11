@@ -29,6 +29,7 @@ import {getAllOfCollection, addToArray, getData} from '../../Backend/Utility';
 import SearchInput, {createFilter} from 'react-native-search-filter';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import firebase from 'firebase';
 
 //frineds Screen
 const uri = 'https://randomuser.me/api/portraits/men/27.jpg';
@@ -46,13 +47,33 @@ export default class FriendsList extends Component {
       searchTerm: '',
       modalVisible: false,
       loading: true,
+      friends: [],
+      user: false,
     };
   }
 
   componentDidMount = async () => {
-    await getAllOfCollection('users').then(result => {
-      this.setState({data: result, loading: false});
+    _retrieveData('user').then(async result => {
+      await firebase
+        .firestore()
+        .collection('friends')
+        .onSnapshot(async () => {
+          await getData('friends', result).then(result => {
+            this.setState({friends: result, loading: false});
+          });
+        });
     });
+  };
+
+  getUser = async () => {
+    await firebase
+      .firestore()
+      .collection('friends')
+      .onSnapshot(async () => {
+        await getAllOfCollection('users').then(result => {
+          this.setState({data: result, loading: false, user: !this.state.user});
+        });
+      });
   };
 
   toggleModal(visible) {
@@ -90,29 +111,11 @@ export default class FriendsList extends Component {
   };
 
   renderItem = ({item}) => {
+    console.log('hy i m item', item);
     return (
-      <View style={styles.box}>
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('FriendsProfile', {
-              id: item.userId,
-              name: item.name,
-            })
-          }>
-          <Image
-            style={styles.image}
-            source={
-              item.profile_picture == null
-                ? {
-                    uri:
-                      'https://static-s.aa-cdn.net/img/ios/981028611/e05febed124ce8b8178b07e4f857ea6f?v=1',
-                  }
-                : {uri: item.profile_picture}
-            }
-          />
-        </TouchableOpacity>
-        <View style={styles.boxContent}>
-          <View style={{flexDirection: 'row'}}>
+      <View>
+        {item ? (
+          <View style={styles.box}>
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate('FriendsProfile', {
@@ -120,38 +123,67 @@ export default class FriendsList extends Component {
                   name: item.name,
                 })
               }>
-              <Text style={styles.title}>{item.name}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() =>
-                this.props.navigation.navigate('Chat', {
-                  id: item.userId,
-                  name: item.name,
-                })
-              }>
-              <Ionicon
-                name="ios-chatboxes"
-                size={28}
-                color={'#32cd32'}
-                style={styles.menu}
+              <Image
+                style={styles.image}
+                source={
+                  item.profile_picture == null
+                    ? {
+                        uri:
+                          'https://static-s.aa-cdn.net/img/ios/981028611/e05febed124ce8b8178b07e4f857ea6f?v=1',
+                      }
+                    : {uri: item.profile_picture}
+                }
               />
             </TouchableOpacity>
+            <View style={styles.boxContent}>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('FriendsProfile', {
+                      id: item.userId,
+                      name: item.name,
+                    })
+                  }>
+                  <Text style={styles.title}>{item.name}</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => this.sendRequest(item)}>
-              <Ionicon
-                name="md-person-add"
-                size={28}
-                color={'#32cd32'}
-                style={styles.menu}
-              />
-            </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button]}
+                  onPress={() =>
+                    this.props.navigation.navigate('Chat', {
+                      id: item.userId,
+                      name: item.name,
+                    })
+                  }>
+                  <Ionicon
+                    name="ios-chatboxes"
+                    size={28}
+                    color={'#32cd32'}
+                    style={styles.menu}
+                  />
+                </TouchableOpacity>
+                {this.state.user ? (
+                  <TouchableOpacity
+                    style={[styles.button]}
+                    onPress={() => this.sendRequest(item)}>
+                    <Ionicon
+                      name="md-person-add"
+                      size={28}
+                      color={'#32cd32'}
+                      style={styles.menu}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+              <Text style={styles.description}>{item.bio}</Text>
+            </View>
           </View>
-          <Text style={styles.description}>{item.bio}</Text>
-        </View>
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>No Friends</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -197,6 +229,7 @@ export default class FriendsList extends Component {
             size={40}
             color="#3fee4a"
             style={{marginTop: 5, marginLeft: 20}}
+            onPress={() => this.getUser()}
           />
         </View>
 
@@ -207,7 +240,7 @@ export default class FriendsList extends Component {
               color="#32cd32"
               style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
             />
-          ) : (
+          ) : this.state.user ? (
             <FlatList
               data={this.state.data}
               ItemSeparatorComponent={this.renderSeparator}
@@ -215,6 +248,24 @@ export default class FriendsList extends Component {
                 return item.id;
               }}
               renderItem={this.renderItem}
+            />
+          ) : this.state.friends.request ? (
+            <FlatList
+              data={this.state.friends.request}
+              ItemSeparatorComponent={this.renderSeparator}
+              keyExtractor={item => {
+                return item.id;
+              }}
+              renderItem={this.renderItem}
+            />
+          ) : (
+            <FlatList
+              data={this.state.friends.request}
+              ItemSeparatorComponent={this.renderSeparator}
+              keyExtractor={item => {
+                return item.id;
+              }}
+              renderItem={this.renderItem('item')}
             />
           )
         ) : this.state.loading ? (

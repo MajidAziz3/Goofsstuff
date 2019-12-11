@@ -205,7 +205,7 @@ export default class InviteFriends extends Component {
             name="ios-menu"
             size={35}
             color={'#32cd32'}
-            onPress={() => this.props.navigation.openDrawer()}
+            onPress={() => this.props.navigation.goback()}
             style={styles.menu}
           />
           <Image

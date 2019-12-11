@@ -14,22 +14,39 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import VideoPlayer from 'react-native-video-controls';
+import { getData, uploadImage, uploadUserImage } from '../../Backend/Utility';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 
 export default class LearnMore extends Component {
     static navigationOptions = {
         header: null,
-      }
+    }
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
             video: false,
+            data_user: ''
         }
     }
+    componentDidMount = async () => {
+        await _retrieveData('user').then(async result => {
+            await getData('users', result).then(res =>
+                this.setState({
+                    data_user: res.profile_picture,
+                }),
+            );
+        });
+    };
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <View style={{ marginBottom: responsiveHeight(1.5) }}>
+                    <Text style={styles.welcome1}>About Speaker</Text>
+                    <FA name="chevron-left" size={26} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
+                    <Image source={{ uri: this.state.data_user }} style={styles.menu1} />
+                </View>
                 <ScrollView>
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
 
@@ -666,6 +683,27 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
+    },
+    welcome1: {
+        fontSize: responsiveFontSize(3.8),
+        fontWeight: 'bold',
+        textAlign: 'center',
+        margin: 7,
+    },
+    menu: {
+
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        marginTop: responsiveHeight(2.6),
+        marginLeft: '4%',
+        position: 'absolute'
+
+    },
+    menu1: {
+        width: 10, height: 50, borderRadius: 42,
+        marginTop: responsiveHeight(1.2),
+        marginLeft: '85%',
+        position: 'absolute'
     },
     instructions: {
         textAlign: 'center',

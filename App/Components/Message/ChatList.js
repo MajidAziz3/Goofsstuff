@@ -41,46 +41,46 @@ class ChatList extends Component {
       datasource: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
       datasource2: [1, 2],
       data: [],
-      data2:[],
+      data2: [],
       loading: true,
       searchTerm: '',
-      friends:[],
-      chatted:[]
+      friends: [],
+      chatted: []
     };
   }
   componentDidMount = async () => {
     let friends = [];
     let chatted = [];
-    await _retrieveData('user').then(async(id)=>{
-    await getData('friends', id).then(result => {
-      this.setState({ data: result.request },()=>{
-        this.state.data.map(async(item)=>{
-          console.log('333333333333333333333333333333333333333333333333')
-          console.log(item)
-          await getData('users', item.userId).then((friend)=>{
-            friends.push(friend)
-            this.setState({friends:friends})
+    await _retrieveData('user').then(async (id) => {
+      await getData('friends', id).then(result => {
+        this.setState({ data: result.request }, () => {
+          this.state.data.map(async (item) => {
+            console.log('333333333333333333333333333333333333333333333333')
+            console.log(item)
+            await getData('users', item.userId).then((friend) => {
+              friends.push(friend)
+              this.setState({ friends: friends })
+            })
           })
-        })
+        });
       });
-    });
-  })
+    })
 
-  await _retrieveData('user').then(async(id)=>{
-    await getData('users', id).then(result => {
-      this.setState({ data2: result.chatted },()=>{
-        this.state.data2.map(async(item)=>{
-          console.log('666666666666666666666666666666666666666666666666666666')
-          console.log(item)
-          await getData('users', item).then((chat)=>{
-            chatted.push(chat)
-            this.setState({chatted:chatted,loading: false})
+    await _retrieveData('user').then(async (id) => {
+      await getData('users', id).then(result => {
+        this.setState({ data2: result.chatted }, () => {
+          this.state.data2.map(async (item) => {
+            console.log('666666666666666666666666666666666666666666666666666666')
+            console.log(item)
+            await getData('users', item).then((chat) => {
+              chatted.push(chat)
+              this.setState({ chatted: chatted, loading: false })
+            })
           })
-        })
+        });
       });
-    });
-  })
-  
+    })
+
   };
 
   searchUpdated(term) {
@@ -241,7 +241,7 @@ class ChatList extends Component {
                         <View style={{ backgroundColor: 'white', height: '70%' }}>
                           <Thumbnail
                             source={{
-                              uri: 'https://randomuser.me/api/portraits/men/76.jpg',
+                              uri: item.profile_picture,
                             }}
                             style={{ alignSelf: 'center', top: 2, height: 60, width: 60 }}
                           />
@@ -278,7 +278,7 @@ class ChatList extends Component {
                     showsHorizontalScrollIndicator={true}
                     horizontal={false}
                     keyExtractor={item => item.id}
-                    
+
                     renderItem={({ item, index }) => (
                       <TouchableOpacity
                         key={index}
@@ -305,7 +305,7 @@ class ChatList extends Component {
                                 borderRadius: 20,
                               }}>
                               <Image
-                                source={{ uri: 'https://randomuser.me/api/portraits/men/76.jpg' }}
+                                source={{ uri: item.profile_picture }}
                                 style={{ borderRadius: 10, width: '80%', height: '90%' }}
                               />
                             </View>
@@ -440,9 +440,9 @@ class ChatList extends Component {
                                   borderRadius: 20,
                                 }}>
                                 <Image
-                                  source={{ uri: 'https://randomuser.me/api/portraits/men/76.jpg' }}
-                                  style={{ borderRadius: 10, width: '80%', height: '90%' }}
-                                />
+                                source={{ uri: item.profile_picture }}
+                                style={{ borderRadius: 10, width: '80%', height: '90%' }}
+                              />
                               </View>
                               <View
                                 style={{

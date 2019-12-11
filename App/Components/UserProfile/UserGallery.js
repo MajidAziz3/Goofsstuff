@@ -7,7 +7,7 @@ import {
     Image,
     Alert,
     ScrollView,
-    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView,
+    FlatList, TextInput, BackHandler, RecyclerViewBackedScrollView, SafeAreaView
 } from 'react-native';
 import { Left, Thumbnail } from 'native-base';
 import ImageView from 'react-native-image-view';
@@ -61,7 +61,7 @@ class UserGallery extends Component {
     }
     render() {
         return (
-            <View style={{flex:1}}>
+            <SafeAreaView style={{flex:1}}>
                  <View style={{marginBottom:2}}>
                 <Text style={styles.welcome}>Gallery</Text>
                 <FIcon name="chevron-left" size={25} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
@@ -106,7 +106,7 @@ class UserGallery extends Component {
             </ScrollView>
 
 
-            </View>
+            </SafeAreaView>
            
 
         );

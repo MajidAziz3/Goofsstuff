@@ -84,7 +84,7 @@ export default class CustomDrawer extends Component {
                 ) : (
                   <Image
                     source={{
-                      uri: 'https://randomuser.me/api/portraits/men/85.jpg',
+                      uri: this.state.data.profile_picture,
                     }}
                     style={{
                       height: 70,
@@ -116,7 +116,7 @@ export default class CustomDrawer extends Component {
                   marginLeft: 25,
                   top: -10,
                 }}>
-                @aurelianSalmon
+                {this.state.data.email}
               </Text>
             </View>
             <TouchableOpacity
