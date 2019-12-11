@@ -6,6 +6,8 @@ import FA from 'react-native-vector-icons/FontAwesome';
 
 
 import Picker from 'react-native-image-picker'
+import { uploadVisionImage } from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 const icon = require('../../Assets/icon.jpeg')
 // const iconTP = require('./tpimage.png')
 const bg = require('../../Assets/bg.png')
@@ -73,7 +75,8 @@ export default class Login extends React.Component {
             textBgStretch: 0,
             saveFormat: ImageFormat.png,
             loading: false,
-            uploadText: ''
+            uploadText: '',
+            preview:false
         }
     }
 
@@ -98,6 +101,48 @@ export default class Login extends React.Component {
             saveFormat: this.state.saveFormat === ImageFormat.base64 ? ImageFormat.png : ImageFormat.base64
         })
     }
+    async Upload_Image() {
+        let iteratorNum = 0;
+        await _retrieveData('user').then(async item => {
+          await uploadVisionImage(
+            this.state.uri,
+            'image/jpeg',
+            this.state.fileName,
+            this.state.fileName,
+            'VisionBoard',
+            item,
+          );
+        });
+        let that = this;
+    
+        let refreshId = setInterval(function() {
+          iteratorNum += 1;
+          _retrieveData('imageUploadProgress').then(data => {
+            that.setState({uploadProgress: data});
+            if (Number(data) >= 100) {
+              clearInterval(refreshId);
+              alert('Uploaded', 'Profile is updated', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (data == '-1') {
+              clearInterval(refreshId);
+              alert('goes wrong', 'Something went wrong', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (iteratorNum == 120) {
+              clearInterval(refreshId);
+              alert(
+                'To Long TIme',
+                'Picture uploading taking too long. Please upload a low resolution picture',
+                [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+              );
+            }
+          });
+        }, 1000);
+      }
+    
 
     render() {
         return (
@@ -130,7 +175,8 @@ export default class Login extends React.Component {
 
                         <TouchableOpacity
                             style={s.btn}
-                            onPress={() => this._markByPosition(Position.center)}
+                            onPress={() => {this._markByPosition(Position.center),
+                            this.setState({preview:true})}}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <FA name="eye" size={18} color='white' style={{ marginRight: 10 }} />
@@ -138,9 +184,18 @@ export default class Login extends React.Component {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            style={s.btn}
-                        >
+                        <TouchableOpacity style={s.btn} onPress={()=>{
+
+                            if(this.state.preview == false)
+                            {
+                                alert('Please preview image first')
+                            }
+                            else
+                            {
+                                this.Upload_Image()
+                            }
+                            
+                        }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <FA name="save" size={18} color='white' style={{ marginRight: 10 }} />
                                 <Text style={s.text}>Save</Text>
@@ -184,8 +239,13 @@ export default class Login extends React.Component {
     }
 
     _markByPosition = (type) => {
+        this.setState({type:type})
         this._showLoading()
         if (this.state.markImage) {
+            console.log('55555555555555555555',this.state.image)
+            console.log('55555555555555555555',this.state.markImage)
+            console.log('55555555555555555555',type)
+            console.log('55555555555555555555',this.state.saveFormat)
             Marker.markImage({
                 src: this.state.image,
                 markerSrc: this.state.markImage,
@@ -204,8 +264,16 @@ export default class Login extends React.Component {
                 console.log('====================================')
                 console.log(err, 'err')
                 console.log('====================================')
+                alert(err)
+                this.setState({loading:false})
             })
         } else {
+            console.log("IIIIIIIIINNNNNNNNNNNN EEEEEEEEELLLLLLLLLLSSSSSSEEEEEEEEEEEE")
+            console.log('55555555555555555555',this.state.image)
+            console.log('55555555555555555555',this.state.markImage)
+            console.log('55555555555555555555',type)
+            console.log('55555555555555555555',this.state.saveFormat)
+            console.log('55555555555555555555',this.state.uploadText)
             Marker.markText({
                 src: this.state.image,
                 text: this.state.uploadText,
@@ -216,7 +284,6 @@ export default class Login extends React.Component {
                 fontWeight: 'bold',
                 scale: 1,
                 quality: 100,
-
                 saveFormat: this.state.saveFormat
             })
                 .then((path) => {
@@ -229,6 +296,8 @@ export default class Login extends React.Component {
                     console.log('====================================')
                     console.log(err)
                     console.log('====================================')
+                    alert(err)
+                    this.setState({loading:false})
                 })
         }
     }
@@ -323,6 +392,8 @@ export default class Login extends React.Component {
                 // You can display the image using either:
                 // const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
                 const uri = response.uri
+                console.log("IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",response)
+                this.setState({fileName:response.fileName})
                 if (type === 'image') {
                     this.setState({
                         image: uri
