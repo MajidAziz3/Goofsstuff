@@ -453,6 +453,7 @@ export default class GoodNews extends Component {
               }}
               style={styles.menu1}
             />
+            
           
         <ScrollView style={styles.container1}>
           {this.state.loading ? (

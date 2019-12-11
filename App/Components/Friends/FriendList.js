@@ -46,12 +46,20 @@ export default class FriendsList extends Component {
       searchTerm: '',
       modalVisible: false,
       loading: true,
+      data_user: '',
     };
   }
 
   componentDidMount = async () => {
     await getAllOfCollection('users').then(result => {
       this.setState({data: result, loading: false});
+    });
+    await _retrieveData('user').then(async result => {
+      await getData('users', result).then(res =>
+        this.setState({
+          data_user: res.profile_picture,
+        }),
+      );
     });
   };
 
@@ -101,15 +109,8 @@ export default class FriendsList extends Component {
           }>
           <Image
             style={styles.image}
-            source={
-              item.profile_picture == null
-                ? {
-                    uri:
-                      'https://static-s.aa-cdn.net/img/ios/981028611/e05febed124ce8b8178b07e4f857ea6f?v=1',
-                  }
-                : {uri: item.profile_picture}
-            }
-          />
+            source={{ uri: item.profile_picture }}
+                />
         </TouchableOpacity>
         <View style={styles.boxContent}>
           <View style={{flexDirection: 'row'}}>
@@ -169,7 +170,7 @@ export default class FriendsList extends Component {
             style={styles.menu}
           />
           <Image
-            source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
+            source={{uri:this.state.data_user}}
             style={styles.menu1}
           />
         </View>
