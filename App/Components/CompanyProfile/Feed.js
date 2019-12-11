@@ -123,9 +123,14 @@ class Feed extends Component {
       uploading_time:
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
-    getAllOfCollection('CompanyPost').then(res => {
-      this.setState({posts: res});
-    });
+     firebase
+      .firestore()
+      .collection('CompanyPost')
+      .onSnapshot(async () => {
+        getAllOfCollection('CompanyPost').then(res => {
+          this.setState({posts: res});
+        });
+      });
   };
 
   handlechooseVideo = () => {
