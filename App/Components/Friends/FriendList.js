@@ -113,9 +113,9 @@ export default class FriendsList extends Component {
   renderItem = ({item}) => {
     console.log('hy i m item', item);
     return (
-      <View style={styles.box}>
-        {item !== undefined ? (
-          <View>
+      <View>
+        {item ? (
+          <View style={styles.box}>
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate('FriendsProfile', {
@@ -179,7 +179,10 @@ export default class FriendsList extends Component {
             </View>
           </View>
         ) : (
-          <Text>No Friends</Text>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text>No Friends</Text>
+          </View>
         )}
       </View>
     );
