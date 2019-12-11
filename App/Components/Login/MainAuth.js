@@ -121,7 +121,7 @@ class MainAuth extends Component {
                       alignItems: 'center',
                       
                     }}
-                    onPress={() => this.props.navigation.navigate('House')}>
+                    onPress={() => this.props.navigation.navigate('House1Ini')}>
                     <Text
                       style={{
                         fontSize: responsiveFontSize(2.0),
@@ -192,7 +192,7 @@ class MainAuth extends Component {
                   marginBottom: 35,
                 }}
                 onPress={() => {
-                  this.props.navigation.navigate('TermsandCondition');
+                  this.props.navigation.navigate('TCI');
                 }}>
                 <Text
                   style={{
