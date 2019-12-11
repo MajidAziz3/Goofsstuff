@@ -71,6 +71,7 @@ const imageList = [
     width: 320,
     height: 400,
   },
+
 ];
 class UserProfile extends Component {
   static navigationOptions = {
@@ -89,6 +90,8 @@ class UserProfile extends Component {
       photo: null,
       ImageName: null,
       ImageUrl: null,
+      VisionBoard: [],
+      userId: '',
       datasource: [
         {
           name: 'Woody Allen',
@@ -165,15 +168,28 @@ class UserProfile extends Component {
   }
 
   componentDidMount = async () => {
+
     await _retrieveData('user').then(async result => {
       await getData('users', result).then(res =>
         this.setState({
           data_user: res,
+          userId: res.userId,
           loading: false,
         }),
       );
     });
+    this.getVisionBoardData();
   };
+
+  getVisionBoardData = async () => {
+    await getData('VisionBoard', this.state.userId).then(res =>
+      this.setState({
+        VisionBoard: res,
+      }),
+    );
+    console.log("Vision Board", this.state.VisionBoard)
+
+  }
 
   handleChoosePhoto = () => {
     var options = {
@@ -722,70 +738,56 @@ class UserProfile extends Component {
                   </TouchableOpacity>
 
                   <View style={{ top: 5 }}>
-                    <FlatList
-                      data={[1, 2]}
-                      keyExtractor={item => item.id}
-                      renderItem={({ item, index }) => (
+                    {this.state.VisionBoard ? (
+                      <FlatList
+                        data={this.state.VisionBoard.vision}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item, index }) => (
+                          <View
+                            style={{
+                              paddingVertical: 5,
+                              flexDirection: 'row',
+                              backgroundColor: 'white',
+                              flexWrap: 'wrap',
+                              justifyContent: 'space-evenly',
+                            }}>
+                            <TouchableOpacity
+                              style={{
+                                height: responsiveHeight(16),
+                                width: responsiveHeight(16.5),
+                              }}
+                              onPress={() =>
+                                this.props.navigation.navigate('MoreVisionBoard')
+                              }>
+                              <Image
+                                source={{
+                                  uri: item,
+                                }}
+                                style={{ height: '100%', width: '100%' }}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                      />
+                    ) : (
                         <View
                           style={{
                             paddingVertical: 5,
                             flexDirection: 'row',
                             backgroundColor: 'white',
-                            flexWrap: 'wrap',
-                            justifyContent: 'space-evenly',
+                            
+                            justifyContent: 'center',
+                            height: responsiveHeight(10),
+                            marginTop: responsiveHeight(4)
                           }}>
-                          <TouchableOpacity
-                            style={{
-                              height: responsiveHeight(16),
-                              width: responsiveHeight(16.5),
-                            }}
-                            onPress={() =>
-                              this.props.navigation.navigate('MoreVisionBoard')
-                            }>
-                            <Image
-                              source={{
-                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                              }}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              height: responsiveHeight(16),
-                              width: responsiveHeight(16.5),
-                            }}
-                            onPress={() =>
-                              this.props.navigation.navigate('UserGallery')
-                            }>
-                            <Image
-                              source={{
-                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                              }}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              height: responsiveHeight(16),
-                              width: responsiveHeight(16.5),
-                            }}
-                            onPress={() =>
-                              this.props.navigation.navigate('UserGallery')
-                            }>
-                            <Image
-                              source={{
-                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-                              }}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </TouchableOpacity>
+                            <Text>There nothing in your Vision Board!</Text>
                         </View>
                       )}
-                    />
+
                   </View>
                 </View>
 
-                
+
                 <View>
                   <View style={{ height: 40, padding: 10, marginTop: 10 }}>
                     <Text

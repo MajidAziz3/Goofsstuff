@@ -1,8 +1,18 @@
 import React from 'react'
-import { TouchableOpacity, Image, View, Text, Platform, Dimensions, StyleSheet, ScrollView, ActivityIndicator, TextInput } from 'react-native'
+import { TouchableOpacity, Image, View, Text, Platform, Dimensions, StyleSheet, ScrollView, ActivityIndicator, TextInput, SafeAreaView } from 'react-native'
 import Marker, { Position, ImageFormat } from 'react-native-image-marker'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions";
 import FA from 'react-native-vector-icons/FontAwesome';
+import { getData, uploadImage, uploadUserImage } from '../../Backend/Utility';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import EIcon from 'react-native-vector-icons/EvilIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import ImagePicker from 'react-native-image-picker';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 
 import Picker from 'react-native-image-picker'
@@ -13,7 +23,7 @@ const base64Bg = require('../../Assets/base64bg').default
 
 const { width, height } = Dimensions.get('window')
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 20
@@ -54,12 +64,36 @@ const s = StyleSheet.create({
         width,
         height: 300,
         flex: 1,
-    }
+    },
+    menu: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        marginTop: responsiveHeight(1.8),
+        marginLeft: '4%',
+        position: 'absolute',
+      },
+      menu1: {
+        width: 10,
+        height: 50,
+        borderRadius: 42,
+        marginTop: responsiveHeight(1.2),
+        marginLeft: '85%',
+        position: 'absolute',
+      },
+      welcome: {
+        fontSize: responsiveFontSize(3.8),
+        fontWeight: 'bold',
+        textAlign: 'center',
+        margin: 7,
+      },
 })
 
 const textBgStretch = ['', 'stretchX', 'stretchY']
 
 export default class Login extends React.Component {
+    static navigationOptions = {
+        header: null,
+      };
     constructor(props) {
         super(props)
         this.state = {
@@ -73,9 +107,21 @@ export default class Login extends React.Component {
             textBgStretch: 0,
             saveFormat: ImageFormat.png,
             loading: false,
-            uploadText: ''
+            uploadText: '',
+            data_user: [],
         }
     }
+
+    componentDidMount = async () => {
+        await _retrieveData('user').then(async result => {
+          await getData('users', result).then(res =>
+            this.setState({
+              data_user: res,
+              loading: false,
+            }),
+          );
+        });
+      };
 
     _switch = () => {
         this.setState({
@@ -101,18 +147,35 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <ScrollView style={s.container}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={{ marginBottom: 10 }}>
+                <Text style={styles.welcome}>Vision Board</Text>
+                <Ionicon
+                  name="ios-menu"
+                  size={35}
+                  color={'#32cd32'}
+                  onPress={() => this.props.navigation.openDrawer()}
+                  style={styles.menu}
+                />
+                    <Image
+                      source={{
+                        uri: this.state.data_user.profile_picture,
+                      }}
+                      style={styles.menu1}
+                    />
+                  
+              </View>
+                <ScrollView style={styles.container}>
 
 
                     <View>
                         <TouchableOpacity
-                            style={[s.btn, { backgroundColor: '#32cd32' }]}
+                            style={[styles.btn, { backgroundColor: '#32cd32' }]}
                             onPress={() => this._pickImage('image')}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <FA name="upload" size={18} color='white' style={{ marginRight: 10 }} />
-                                <Text style={s.text}>Upload Image</Text>
+                                <Text style={styles.text}>Upload Image</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -126,24 +189,24 @@ export default class Login extends React.Component {
                             placeholder={'Post Something'} />
 
                     </View>
-                    <View style={s.op}>
+                    <View style={styles.op}>
 
                         <TouchableOpacity
-                            style={s.btn}
+                            style={styles.btn}
                             onPress={() => this._markByPosition(Position.center)}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <FA name="eye" size={18} color='white' style={{ marginRight: 10 }} />
-                                <Text style={s.text}>Preview</Text>
+                                <Text style={styles.text}>Preview</Text>
                             </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={s.btn}
+                            style={styles.btn}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <FA name="save" size={18} color='white' style={{ marginRight: 10 }} />
-                                <Text style={s.text}>Save</Text>
+                                <Text style={styles.text}>Save</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -153,7 +216,7 @@ export default class Login extends React.Component {
                     >
                         {
                             this.state.show
-                                ? <Image source={{ uri: this.state.uri }} resizeMode='contain' style={s.preview} />
+                                ? <Image source={{ uri: this.state.uri }} resizeMode='contain' style={styles.preview} />
                                 : null
                         }
                     </View>
@@ -172,7 +235,7 @@ export default class Login extends React.Component {
                         <Text style={{ color: 'white' }}>loading...</Text>
                     </View>
                 }
-            </View>
+            </SafeAreaView>
 
         )
     }
