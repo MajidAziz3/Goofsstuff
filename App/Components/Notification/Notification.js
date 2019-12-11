@@ -101,6 +101,8 @@ export default class Notification extends Component {
   };
 
   friends = async item => {
+    
+    console.log('dshksdhhksdhhhds', item);
     _retrieveData('user').then(async result => {
       await getData('users', result).then(
         async check =>
@@ -123,18 +125,20 @@ export default class Notification extends Component {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={{marginBottom: responsiveHeight(1.5)}}>
-        <Text style={styles.welcome1}>Notifications</Text>
-        <Ionicon
-          name="ios-menu"
-          size={35}
-          color={'#32cd32'}
-          onPress={() => this.props.navigation.openDrawer()}
-          style={styles.menu}
-        />               
-         <Image source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }} style={styles.menu1} />
+          <Text style={styles.welcome1}>Notifications</Text>
+          <Ionicon
+            name="ios-menu"
+            size={35}
+            color={'#32cd32'}
+            onPress={() => this.props.navigation.openDrawer()}
+            style={styles.menu}
+          />
+          <Image
+            source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
+            style={styles.menu1}
+          />
         </View>
         <View style={styles.container}>
-
           <TouchableOpacity>
             <Image
               source={{
@@ -150,23 +154,39 @@ export default class Notification extends Component {
                   {this.state.friend_request && this.state.friend_request.name}
                 </Text>
               </TouchableOpacity>
-              <View style={{flexDirection:'row'}}>
-              <TouchableOpacity
-                style={styles.text2}
-                onPress={() => {
-                  this.state.friend_request &&
-                    this.friends(this.state.friend_request);
-                }}>
-                <Text style={{textAlign:'center',color:'white',alignSelf:'center',marginTop:15}}>Accept</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.text3}
-                onPress={() => {
-                  this.state.friend_request &&
-                    this.friends(this.state.friend_request);
-                }}>
-                <Text style={{textAlign:'center',color:'white',alignSelf:'center',marginTop:15}}>Reject</Text>
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={styles.text2}
+                  onPress={() => {
+                    this.state.friend_request &&
+                      this.friends(this.state.friend_request);
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: 'white',
+                      alignSelf: 'center',
+                      marginTop: 15,
+                    }}>
+                    Accept
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.text3}
+                  onPress={() => {
+                    this.state.friend_request &&
+                      this.friends(this.state.friend_request);
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: 'white',
+                      alignSelf: 'center',
+                      marginTop: 15,
+                    }}>
+                    Reject
+                  </Text>
+                </TouchableOpacity>
               </View>
               <Text style={styles.timeAgo}>2 hours ago</Text>
             </View>
@@ -185,8 +205,7 @@ export default class Notification extends Component {
           }}
           renderItem={item => {
             const Notification = item.item;
-           
-            
+
             return (
               <View style={styles.container}>
                 <TouchableOpacity>
@@ -205,7 +224,6 @@ export default class Notification extends Component {
                     </View>
                     <Text style={styles.timeAgo}>2 hours ago</Text>
                   </View>
-                
                 </View>
               </View>
             );
@@ -225,22 +243,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 7,
-},
-menu: {
-
+  },
+  menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(2.6),
     marginLeft: '4%',
-    position: 'absolute'
-
-},
-menu1: {
-    width: 10, height: 50, borderRadius: 42,
+    position: 'absolute',
+  },
+  menu1: {
+    width: 10,
+    height: 50,
+    borderRadius: 42,
     marginTop: responsiveHeight(1.2),
     marginLeft: '85%',
-    position: 'absolute'
-},
+    position: 'absolute',
+  },
   container: {
     padding: 16,
     flexDirection: 'row',
@@ -262,28 +280,26 @@ menu1: {
     marginBottom: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor:'#32cd32',
-    elevation:5,
-    width:'40%',
-    height:38,
-    borderRadius:5,
-    justifyContent:'center',
-    alignItems:'center'
-
+    backgroundColor: '#32cd32',
+    elevation: 5,
+    width: '40%',
+    height: 38,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text3: {
-    left:20,
+    left: 20,
     marginBottom: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor:'red',
-    elevation:5,
-    width:'40%',
-    height:38,
-    borderRadius:5,
-    justifyContent:'center',
-    alignItems:'center'
-
+    backgroundColor: 'red',
+    elevation: 5,
+    width: '40%',
+    height: 38,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {
     flex: 1,
