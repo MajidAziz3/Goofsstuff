@@ -82,6 +82,8 @@ import AppWorking1 from '../Components/Login/AppWorking1';
 import House1 from '../Components/Login/House1';
 import FriendsProfile from '../Components/UserProfile/FriendsProfile';
 import LearnMore from '../Components/Home/LearnMore';
+import TCI from '../Components/Login/TermsandConditionIni'
+import House1Ini from '../Components/Login/House1Ini';
 
 var width = Dimensions.get('window').width;
 
@@ -96,6 +98,9 @@ const AuthStack = createStackNavigator({
   Login: Login,
   Signup: Signup,
   MainAuth: MainAuth,
+  TCI:TCI,
+  House1Ini:House1Ini
+  
 });
 const FamilyStack = createStackNavigator({
   FamilyList: FamilyList,
@@ -366,6 +371,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     TermsandCondition: {screen: TermsandCondition},
     House: {screen: House1},
     AppWorking: {screen: AppWorking1},
+    
     CommunityGuide: {screen: CommunityGuide},
     Chat:{
       screen:Chat
