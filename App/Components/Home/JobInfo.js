@@ -72,7 +72,7 @@ class JobInfo extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');

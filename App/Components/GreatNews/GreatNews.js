@@ -85,7 +85,7 @@ class GreatNews extends Component {
   }
 
   async CommentPost(item) {
-    console.log('ittttttttttt', item);
+    // console.log('ittttttttttt', item);
     await _retrieveData('user').then(
       async result =>
         await getData('users', result).then(async res => {

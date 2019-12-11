@@ -106,8 +106,8 @@ class Feed extends Component {
           .onSnapshot(async () => {
             let data = await getData('Company_Profile', result);
             this.setState({post_data: data, loading: false});
-            console.log(data);
-            console.log('\n');
+            // console.log(data);
+            // console.log('\n');
           }),
     );
 
@@ -172,7 +172,7 @@ class Feed extends Component {
         'CompanyPost',
         item,
       );
-      console.log('i m here');
+      // console.log('i m here');
     });
     let that = this;
 
@@ -245,7 +245,7 @@ class Feed extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('ref').then(async item => {
-      console.log('refffffffff', item);
+      // console.log('refffffffff', item);
       await uploadImage(
         this.state.ImageUrl,
         this.state.imageType,
@@ -314,7 +314,7 @@ class Feed extends Component {
   }
 
   render() {
-    console.log('dhhajhdhahjdah', this.state.posts);
+    // console.log('dhhajhdhahjdah', this.state.posts);
     const {
       description,
       uploading_time,

@@ -20,7 +20,7 @@ export async function Community_Event(
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
-      console.log('desired sadgjas', Event_Category, event_sub_category);
+      // console.log('desired sadgjas', Event_Category, event_sub_category);
       if (Event_Category == 'Sport') {
       //   switch(event_sub_category){
       //     case 'Cricket':

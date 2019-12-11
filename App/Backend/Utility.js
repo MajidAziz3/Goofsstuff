@@ -458,13 +458,8 @@ export async function uploadUserImage(
     },
     function() {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        firebase
-          .firestore()
-          .collection(databaseCollection)
-          .doc(docRef)
-          .update({profile_picture: downloadURL})
-          // saveData(databaseCollection, docRef, {imageUrl: downloadURL})
+      uploadTask.snapshot.ref.getDownloadURL().then(async(downloadURL) =>{
+          await saveData(databaseCollection, docRef, {profile_picture: downloadURL})
           .then(() => {
             _storeData('imageUploadProgress', '100');
           });

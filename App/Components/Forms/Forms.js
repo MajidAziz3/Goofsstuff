@@ -191,7 +191,7 @@ export default class Forms extends Component {
         'Watch',
         item,
       );
-      console.log('i m here');
+      // console.log('i m here');
     });
     let that = this;
 
