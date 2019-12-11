@@ -267,23 +267,23 @@ class UserProfile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                      {console.log("imggggg:", this.state.data_user.profile_picture)}
-                    
-                        <Thumbnail
-                          large
-                          source={{ uri: this.state.data_user.profile_picture }}
-                          style={{
-                            backgroundColor: 'white',
-                            borderWidth: StyleSheet.hairlineWidth,
-                            borderColor: '#d1dcff',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.5,
-                            shadowRadius: 2,
-                            elevation: 5,
-                          }}
-                        />
-                        
-                     
+                    {console.log("imggggg:", this.state.data_user.profile_picture)}
+
+                    <Thumbnail
+                      large
+                      source={{ uri: this.state.data_user.profile_picture }}
+                      style={{
+                        backgroundColor: 'white',
+                        borderWidth: StyleSheet.hairlineWidth,
+                        borderColor: '#d1dcff',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 5,
+                      }}
+                    />
+
+
                   </View>
                   <View
                     style={{
@@ -345,8 +345,7 @@ class UserProfile extends Component {
                     backgroundColor: '#32cd32',
                     top: 5,
                     alignSelf: 'center',
-                    height: responsiveHeight(5),
-                    width: responsiveWidth(60),
+
                     borderRadius: 10,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.5,
@@ -688,8 +687,6 @@ class UserProfile extends Component {
                 <View
                   style={{
                     backgroundColor: 'white',
-                    top: 10,
-                    height: responsiveHeight(40),
                     paddingHorizontal: 10,
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.5,
@@ -700,7 +697,7 @@ class UserProfile extends Component {
                     style={{
                       backgroundColor: 'white',
                       top: 5,
-                      height: '10%',
+
                       justifyContent: 'center',
                     }}>
                     <Text
@@ -712,136 +709,83 @@ class UserProfile extends Component {
                   </Text>
                   </View>
                   <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('VisionBoard')}
-                  style={{ top: 4, right: 10, position: 'absolute' }}
+                    onPress={() => this.props.navigation.navigate('VisionBoard')}
+                    style={{ top: 4, right: 10, position: 'absolute' }}
                   >
                     <AntDesign
                       name="pluscircle"
                       color={'#32cd32'}
                       size={20}
-                      
+
                     />
 
                   </TouchableOpacity>
 
-                  <View style={{ top: 5, height: '90%' }}>
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        height: '65%',
-                        flexDirection: 'row',
-                        padding: 2,
-                      }}>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          height: '100%',
-                          width: '30%',
-                        }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          height: '100%',
-                          width: '70%',
-                        }}>
+                  <View style={{ top: 5 }}>
+                    <FlatList
+                      data={[1, 2]}
+                      keyExtractor={item => item.id}
+                      renderItem={({ item, index }) => (
                         <View
                           style={{
-                            height: '40%',
-                            width: '100%',
-                            backgroundColor: 'white',
+                            paddingVertical: 5,
                             flexDirection: 'row',
+                            backgroundColor: 'white',
+                            flexWrap: 'wrap',
                             justifyContent: 'space-evenly',
                           }}>
-                          <View style={{ height: '100%', width: '55%' }}>
-                            <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
-
-                          <View
+                          <TouchableOpacity
                             style={{
-                              backgroundColor: 'white',
-                              height: '100%',
-                              width: '40%',
-                            }}>
+                              height: responsiveHeight(16),
+                              width: responsiveHeight(16.5),
+                            }}
+                            onPress={() =>
+                              this.props.navigation.navigate('MoreVisionBoard')
+                            }>
                             <Image
-                              source={require('../../Assets/watch.jpg')}
+                              source={{
+                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                              }}
                               style={{ height: '100%', width: '100%' }}
                             />
-                          </View>
-                        </View>
-
-                        <View
-                          style={{
-                            height: '60%',
-                            width: '100%',
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            justifyContent: 'space-evenly',
-                          }}>
-                          <View style={{ height: '100%', width: '45%' }}>
-                            <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
-                              style={{ height: '100%', width: '100%' }}
-                            />
-                          </View>
-
-                          <View
+                          </TouchableOpacity>
+                          <TouchableOpacity
                             style={{
-                              backgroundColor: 'white',
-                              height: '100%',
-                              width: '20%',
-                            }}>
+                              height: responsiveHeight(16),
+                              width: responsiveHeight(16.5),
+                            }}
+                            onPress={() =>
+                              this.props.navigation.navigate('UserGallery')
+                            }>
                             <Image
-                              source={require('../../Assets/watch.jpg')}
+                              source={{
+                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                              }}
                               style={{ height: '100%', width: '100%' }}
                             />
-                          </View>
-
-                          <View style={{ height: '100%', width: '30%' }}>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              height: responsiveHeight(16),
+                              width: responsiveHeight(16.5),
+                            }}
+                            onPress={() =>
+                              this.props.navigation.navigate('UserGallery')
+                            }>
                             <Image
-                              source={require('../../Assets/groupsIMG.jpg')}
+                              source={{
+                                uri: 'https://picsum.photos/id/1060/536/354?blur=2',
+                              }}
                               style={{ height: '100%', width: '100%' }}
                             />
-                          </View>
+                          </TouchableOpacity>
                         </View>
-                      </View>
-                    </View>
-
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        height: '30%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                      }}>
-                      <View style={{ height: '100%', width: '38%' }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View style={{ height: '100%', width: '20%' }}>
-                        <Image
-                          source={require('../../Assets/groupsIMG.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                      <View style={{ height: '100%', width: '40%' }}>
-                        <Image
-                          source={require('../../Assets/watch.jpg')}
-                          style={{ height: '100%', width: '100%' }}
-                        />
-                      </View>
-                    </View>
+                      )}
+                    />
                   </View>
                 </View>
+
+                
                 <View>
                   <View style={{ height: 40, padding: 10, marginTop: 10 }}>
                     <Text
@@ -914,125 +858,11 @@ class UserProfile extends Component {
                   />
                 </View>
 
-                <View
-                  style={{
-                    borderRadius: 10,
-                    width: '96%',
-                    backgroundColor: '',
-                    height: responsiveHeight(12),
-                    justifyContent: 'space-between',
-                    elevation: 1,
-                    alignSelf: 'center',
-                  }}>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={6}
-                    style={{
-                      textAlignVertical: 'top',
-                      fontSize: responsiveFontSize(2),
-                      height: '100%',
-                      width: '100%',
-                      paddingHorizontal: 10,
-                    }}
-                    placeholder={'Post Something'}
-                  />
-                </View>
-                <View
-                  style={{
-                    top: 3,
-                    height: responsiveHeight(6),
-                    width: '96%',
-                    flexDirection: 'row',
-                    alignSelf: 'center',
-                    borderRadius: 10,
-                    elevation: 2,
-                    justifyContent: 'space-evenly',
-                  }}>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="camera" size={18} color="#32cd32" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Image
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#ffffff',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA
-                      name="video-camera"
-                      size={18}
-                      color="#32cd32"
-                      style={{}}
-                    />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: '#32cd32',
-                      }}>
-                      Video
-                  </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: 'row',
-                      backgroundColor: '#32cd32',
-                      width: '33%',
-                      height: '100%',
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      elevation: 1,
-                    }}
-                    onPress={() => {
-                      alert('Posted');
-                    }}>
-                    <FA name="upload" size={18} color="white" style={{}} />
-
-                    <Text
-                      style={{
-                        marginLeft: 5,
-                        fontSize: responsiveFontSize(1.8),
-                        color: 'white',
-                      }}>
-                      Post
-                  </Text>
-                  </TouchableOpacity>
-                </View>
 
                 <FlatList
                   data={this.state.datasource}
                   keyExtractor={item => item.id}
+                  style={{ marginTop: responsiveHeight(5) }}
                   renderItem={({ item, index }) => (
                     <View
                       key={index}
@@ -1050,7 +880,7 @@ class UserProfile extends Component {
                         paddingVertical: 0,
                         paddingHorizontal: 10,
                         backgroundColor: 'white',
-                        marginBottom: 5,
+                        marginBottom: 10,
                       }}>
                       <View
                         style={{
@@ -1289,10 +1119,8 @@ class UserProfile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    width: responsiveWidth(100),
-    height: responsiveHeight(100),
-    marginBottom: 10,
+    backgroundColor: '#eee',
+
   },
   profileContainer: {
     width: responsiveWidth(100),

@@ -46,7 +46,7 @@ const imageList = [{
     height: 400
   }
 ];
-class UserGallery extends Component {
+class MoreVisionBoard extends Component {
     static navigationOptions = {
         header: null,
       }
@@ -63,7 +63,7 @@ class UserGallery extends Component {
         return (
             <SafeAreaView style={{flex:1}}>
                  <View style={{marginBottom:2}}>
-                <Text style={styles.welcome}>Gallery</Text>
+                <Text style={styles.welcome}>Vision Board</Text>
                 <FIcon name="chevron-left" size={25} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
         <Image source ={{uri:'https://randomuser.me/api/portraits/men/85.jpg'}} style={styles.menu1}/>
                </View>
@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default UserGallery;
+export default MoreVisionBoard;

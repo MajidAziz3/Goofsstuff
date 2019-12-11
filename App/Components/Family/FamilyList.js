@@ -21,7 +21,8 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { TabView, SceneMap,TabBar } from 'react-native-tab-view';
 import { ScrollableTabView, DefaultTabBar, ScrollableTabBar, } from '@valdio/react-native-scrollable-tabview'
 import ImageView from 'react-native-image-view';
-
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
+import { getData} from '../../Backend/Utility';
 
 const height = Dimensions.get('screen').height / 3
 const width = Dimensions.get('screen').width
@@ -96,7 +97,10 @@ class FamilyList extends Component {
                 ]
               },
              
-            ]
+            ],
+            imgUrl:'',
+            data_user:null,
+            uname: '',
         }
     }
 
@@ -114,6 +118,23 @@ class FamilyList extends Component {
       }
       return null;
     }
+
+    componentDidMount (){
+      this.userData();
+    }
+  
+    userData = async () => {
+      await _retrieveData('user').then(async result => {
+        console.log('uuuuuuuuu', result);
+        let res = await getData('users', result);
+        this.setState({
+          data_user: res,
+          imgUrl: res.profile_picture,
+          uname: res.name
+        });
+      });
+  console.log(this.state.data_user)
+    };
   
 
     render() {
@@ -123,7 +144,7 @@ class FamilyList extends Component {
                  <View style={{marginBottom:10}}>
               <Text style={styles.welcome}>My Family</Text>
         <Ionicon name="ios-menu" size={35} color={'#32cd32'} onPress={() => this.props.navigation.openDrawer()} style={styles.menu} />
-        {/* <AIcon name="plus" size={35} color={'#32cd32'} style={styles.menu1} onPress={() => { this.props.navigation.navigate('InviteToFamily')}}/> */}
+        <Image source={{ uri: this.state.imgUrl}} style={styles.menu1} /> 
         </View>
 
         <ScrollView>
@@ -137,7 +158,7 @@ class FamilyList extends Component {
                       <View style={{width: '60%', height: '100%',}}>
                     <TouchableOpacity style={{ alignSelf: 'center', backgroundColor: 'white', justifyContent: 'center', alignItems: 'flex-start',  }}  onPress={() => { this.props.navigation.navigate('Family')}}>
                         <Text style={{ fontSize: responsiveFontSize(3), color: '#7e7474' }}>
-                            Aurellien's Family
+                            {this.state.uname}'s Family
                         </Text>
                     </TouchableOpacity>
                     </View>
