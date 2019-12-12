@@ -13,7 +13,8 @@ import { placeholder } from '@babel/types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import SwitchToggle from 'react-native-switch-toggle';
-
+import { getData, uploadImage, uploadUserImage, getAllOfCollection, saveData } from '../../Backend/Utility';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 
 export default class Settings extends Component {
 
@@ -31,22 +32,53 @@ export default class Settings extends Component {
             switchOn1: false,
             switchOn2: false,
             switchOn3: false,
+            data_user: [],
+            loading: true,
         }
 
     }
 
-    onPress1 = () => {
+    onPress1 = (val) => {
         this.setState({ switchOn1: !this.state.switchOn1 });
+        this.changeBtn(val, !this.state.switchOn1);
     }
-    onPress2 = () => {
+    onPress2 = (val) => {
         this.setState({ switchOn2: !this.state.switchOn2 });
+        this.changeBtn(val, !this.state.switchOn2);
     }
-    onPress3 = () => {
+    onPress3 = (val) => {
         this.setState({ switchOn3: !this.state.switchOn3 });
+        this.changeBtn(val, !this.state.switchOn3);
     }
     toggleModal(visible) {
         this.setState({ modalVisible: visible });
     }
+
+    componentDidMount = async () => {
+
+        await _retrieveData('user').then(async result => {
+          await getData('users', result).then(res =>
+            this.setState({
+              data_user: res,
+              switchOn1: res.affirmation,
+              switchOn2: res.healthy,
+              switchOn3: res.kindness,
+              
+              loading: false,
+            }),
+          );
+        });
+      };
+
+      async changeBtn (name, value){
+        //   var data = name;
+        await _retrieveData('user').then(async result => {
+            await saveData('users', result, {
+                [name]:value,
+              })
+          });
+      }
+
     render() {
         const Custom_checkBox = (color, flag) => {
             return <CheckBox
@@ -88,9 +120,8 @@ export default class Settings extends Component {
                                 </Text>
                                 </View>
 
-                                <TextInput placeholder='Salomon24' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <Text style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>{this.state.data_user.email} </Text>
 
-                                </TextInput>
 
                             </View>
                             <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row', }}>
@@ -101,25 +132,11 @@ export default class Settings extends Component {
                                 </Text>
                                 </View>
 
-                                <TextInput placeholder='Aurellen Salomon' style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <Text style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>{this.state.data_user.name} </Text>
 
-                                </TextInput>
 
                             </View>
-                            <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row', }}>
 
-                                <View style={{ paddingHorizontal: 5, width: '30%', height: '100%', justifyContent: 'center', }}>
-                                    <Text style={{ fontSize: responsiveFontSize(2), color: '#000000', }}>
-                                        Password
-                                </Text>
-                                </View>
-
-
-                                <TextInput placeholder='********' secureTextEntry={true} style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
-
-                                </TextInput>
-
-                            </View>
                         </View>
                         {/* <View style={{ padding: 5, backgroundColor: "white", width: '100%', height: responsiveHeight(15), borderRadius: 10 }}>
 
@@ -277,7 +294,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn1}
-                                onPress={this.onPress1}
+                                onPress={()=>this.onPress1('affirmation')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}
@@ -307,7 +324,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn2}
-                                onPress={this.onPress2}
+                                onPress={()=>this.onPress2('healthy')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}
@@ -337,7 +354,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn3}
-                                onPress={this.onPress3}
+                                onPress={()=>this.onPress3('kindness')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}

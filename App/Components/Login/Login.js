@@ -228,14 +228,14 @@ class Login extends Component {
                 justifyContent: 'center',
                 alignItems: 'flex-end',
               }}>
-              <Text
+              {/* <Text
                 style={{
                   fontSize: responsiveFontSize(1.6),
                   fontWeight: 'bold',
                   color: '#32cd32',
                 }}>
                 FORGOT
-              </Text>
+              </Text> */}
             </TouchableOpacity>
           </View>
 
