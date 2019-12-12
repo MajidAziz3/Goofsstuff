@@ -109,7 +109,6 @@ export default class GoodNews extends Component {
   componentDidMount() {
     this.userData();
     this.showPost();
-    // this.CommentPost();
 
     const {addListener} = this.props.navigation;
     const {isDisplayed} = this.state;
@@ -170,8 +169,8 @@ export default class GoodNews extends Component {
               user_name: res.name,
               time: this.state.uploading_time,
               imageUrl: '',
-            })
-            .then(() => {
+              userImage:res.profile_picture
+            }).then(() => {
               setTimeout(async () => {
                 this.Upload_Image(item);
               }, 1000);
@@ -205,6 +204,7 @@ export default class GoodNews extends Component {
       .collection('Comments')
       .onSnapshot(async () => {
         let data = await getData('Comments', item);
+        console.log('data', data);
         this.setState({comment_data: data, loading: false});
       });
   }
@@ -340,8 +340,6 @@ export default class GoodNews extends Component {
                 this.setModalVisible();
               }}
             />
-
-            {/* {console.log(this.state.comment_data)} */}
             <FlatList
               style={styles.root}
               data={this.state.comment_data.comments}
@@ -679,7 +677,6 @@ export default class GoodNews extends Component {
                 </View>
               </View>
 
-
               <FlatList
                 data={this.state.post_data}
                 keyExtractor={item => item.id}
@@ -724,14 +721,12 @@ export default class GoodNews extends Component {
                         }}>
                         {/* <Thumbnail source={{ uri: item.imageName }} /> */}
 
-                          <Image
-                            source={{
-                              uri:
-                                item.profile_image,
-                            }}
-                            style={{width: 60, height: 60, borderRadius: 60}}
-                          />
-                      
+                        <Image
+                          source={{
+                            uri: item.profile_image,
+                          }}
+                          style={{width: 60, height: 60, borderRadius: 60}}
+                        />
                       </View>
 
                       <View
@@ -919,7 +914,8 @@ export default class GoodNews extends Component {
                             color="#32cd32"
                             onPress={() => {
                               this.setModalVisible();
-                              this.setState({_id:item.post_id})
+                              this.setState({_id: item.post_id});
+                              this.CommentPost(item.post_id);
                             }}
                           />
                         </TouchableOpacity>
