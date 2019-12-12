@@ -536,7 +536,6 @@ export default class Forms extends Component {
             style={{
               backgroundColor: 'white',
               borderRadius: 20,
-              height: responsiveHeight(70),
               paddingLeft: 15,
               paddingRight: 20,
               paddingTop: 10,
@@ -544,7 +543,7 @@ export default class Forms extends Component {
             <View
               style={{
                 backgroundColor: 'white',
-                height: '10%',
+               
                 flexDirection: 'row',
               }}>
               <Entypo
@@ -563,7 +562,7 @@ export default class Forms extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                   width: '100%',
-                  height: '100%',
+                 
                 }}>
                 <Text
                   style={{
@@ -579,7 +578,6 @@ export default class Forms extends Component {
             <View
               style={{
                 backgroundColor: 'white',
-                height: responsiveHeight(10),
                 width: '100%',
               }}>
               <Text
@@ -600,7 +598,7 @@ export default class Forms extends Component {
 
             <View
               style={{
-                marginTop: 0,
+                marginTop: 15,
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -609,14 +607,16 @@ export default class Forms extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  left: 10,
+                 
                   width: '100%',
                 }}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.1),
-                    color: '#000',
-                    textAlign: 'center',
+                    fontSize: responsiveFontSize(1.5),
+                    color: '#32cd32',
+                    fontWeight:'bold',
+                    left:5
+                    
                   }}>
                   Check what contact information would you like to be publicly
                   displayed with your video.
@@ -628,7 +628,7 @@ export default class Forms extends Component {
               style={{
                 marginTop: 0,
                 backgroundColor: 'white',
-                height: '6%',
+               
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
@@ -637,19 +637,18 @@ export default class Forms extends Component {
                 style={{
                   backgroundColor: 'white',
                   width: '70%',
-                  height: '90%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  
+                 
                 }}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.2),
+                    fontSize: responsiveFontSize(1.8),
                     // fontWeight: 'bold',
                     // padding: 5,
-                    left: 10,
+                    
                     color: '#000',
 
-                    textAlign: 'center',
+                    
                   }}>
                   First & Last Name
                 </Text>
@@ -664,7 +663,7 @@ export default class Forms extends Component {
                   checked={firstNameFlage}
                   checkedIcon="check"
                   uncheckedIcon="close"
-                  checkedColor="green"
+                  checkedColor="#32cd32"
                   uncheckedColor="#fff"
                   iconType="entypo"
                   onPress={() => {
@@ -674,6 +673,7 @@ export default class Forms extends Component {
                     backgroundColor: '#fff',
                     width: 20,
                     height: 20,
+                    borderColor:'black',
                     borderWidth: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -744,7 +744,7 @@ export default class Forms extends Component {
               style={{
                 marginTop: 0,
                 backgroundColor: 'white',
-                height: '5%',
+               
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
@@ -753,18 +753,16 @@ export default class Forms extends Component {
                 style={{
                   backgroundColor: 'white',
                   width: '70%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  
+                  
                 }}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.2),
+                    fontSize: responsiveFontSize(1.8),
                     // fontWeight: 'bold',
                     // padding: 5,
                     color: '#000',
 
-                    textAlign: 'center',
                   }}>
                   Email Address
                 </Text>
@@ -779,7 +777,7 @@ export default class Forms extends Component {
                   checked={emailFlage}
                   checkedIcon="check"
                   uncheckedIcon="close"
-                  checkedColor="green"
+                  checkedColor="#32cd32"
                   uncheckedColor="#fff"
                   size={15}
                   iconType="entypo"
@@ -787,10 +785,11 @@ export default class Forms extends Component {
                     this.setState({emailFlage: !emailFlage});
                   }}
                   containerStyle={{
-                    backgroundColor: '#fff',
+                    top:5,
                     width: 20,
                     height: 20,
                     borderWidth: 1,
+                    borderColor:'black',
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
@@ -833,7 +832,7 @@ export default class Forms extends Component {
                   borderRadius: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  width: '65%',
+                  width: '71%',
                   height: '60%',
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
@@ -842,7 +841,7 @@ export default class Forms extends Component {
                   elevation: 2,
                   backgroundColor: 'white',
                 }}></TextInput>
-              <View style={{backgroundColor: 'white', width: '15%'}}>
+              <View style={{backgroundColor: 'white', width: '29%',left:0.8}}>
                 <CheckBox
                   checked={locationFlage}
                   checkedIcon="check"
@@ -871,8 +870,8 @@ export default class Forms extends Component {
                 borderRadius: 10,
                 width: '96%',
                 backgroundColor: 'white',
-                height: '20%',
-                justifyContent: 'space-between',
+               
+                
                 elevation: 1,
                 alignSelf: 'center',
                 marginTop: 10,
@@ -881,11 +880,11 @@ export default class Forms extends Component {
                 value={vedio_post}
                 onChangeText={vedio_post => this.setState({vedio_post})}
                 multiline={true}
-                numberOfLines={6}
+                numberOfLines={4}
                 style={{
                   textAlignVertical: 'top',
                   fontSize: responsiveFontSize(2),
-                  height: '100%',
+                 
                   width: '100%',
                   paddingHorizontal: 10,
                 }}
@@ -897,8 +896,8 @@ export default class Forms extends Component {
 
             <View
               style={{
-                top: 3,
-                height: '5%',
+                
+                height: responsiveHeight(4.5),
                 width: '33%',
                 alignSelf: 'flex-end',
                 borderRadius: 10,
@@ -935,7 +934,7 @@ export default class Forms extends Component {
                 borderRadius: 10,
                 width: '96%',
                 backgroundColor: 'white',
-                height: '20%',
+                
                 justifyContent: 'space-between',
                 elevation: 1,
                 alignSelf: 'center',
@@ -949,7 +948,7 @@ export default class Forms extends Component {
                 style={{
                   textAlignVertical: 'top',
                   fontSize: responsiveFontSize(2),
-                  height: '100%',
+                  
                   width: '100%',
                   paddingHorizontal: 10,
                 }}
@@ -967,6 +966,8 @@ export default class Forms extends Component {
             }}>
             <CheckBox
               style={{top: responsiveHeight(4), left: 10}}
+              checkedColor={'#32cd32'}
+              uncheckedColor={'gray'}
               onClick={() => {
                 this.setState({
                   isChecked: !isChecked,
@@ -984,9 +985,10 @@ export default class Forms extends Component {
             style={{
               flexDirection: 'row',
               backgroundColor: '#32cd32',
-              height: '10%',
+              height: responsiveHeight(7),
               width: '95%',
               borderRadius: 15,
+              alignSelf:'center'
             }}
             onPress={() => {
               this.sentWatch();
@@ -1058,7 +1060,6 @@ export default class Forms extends Component {
             style={{
               backgroundColor: 'white',
               borderRadius: 20,
-              height: responsiveHeight(93),
               paddingLeft: 20,
               paddingRight: 20,
               paddingTop: 0,
@@ -1103,20 +1104,21 @@ export default class Forms extends Component {
                 style={{
                   marginTop: 5,
                   backgroundColor: 'white',
-                  height: '8%',
+                 
                   flexDirection: 'row',
                   padding: 0,
                 }}>
                 <View
                   style={{
                     width: '30%',
-                    height: '100%',
+                    
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Title*
@@ -1133,7 +1135,7 @@ export default class Forms extends Component {
                     justifyContent: 'center',
                     backgroundColor: 'white',
                     width: '65%',
-                    height: '70%',
+                    height: responsiveHeight(5),
                     shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
@@ -1146,25 +1148,26 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 0,
+                  marginTop: 2,
                   backgroundColor: 'white',
-                  height: '8%',
+                 
                   flexDirection: 'row',
                   padding: 0,
                 }}>
                 <View
                   style={{
                     width: '30%',
-                    height: '100%',
+                   
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
-                    Phone#
+                    Phone.no
                   </Text>
                 </View>
                 <TextInput
@@ -1178,8 +1181,8 @@ export default class Forms extends Component {
                     justifyContent: 'center',
                     backgroundColor: 'white',
                     width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
+                    height: responsiveHeight(5),
+                                        shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
                     shadowRadius: 1.41,
@@ -1190,22 +1193,21 @@ export default class Forms extends Component {
               </View>
               <View
                 style={{
-                  marginTop: 0,
+                  marginTop: 2,
                   backgroundColor: 'white',
-                  height: '8%',
                   flexDirection: 'row',
                   padding: 0,
                 }}>
                 <View
                   style={{
                     width: '30%',
-                    height: '100%',
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Email
@@ -1222,8 +1224,7 @@ export default class Forms extends Component {
                     justifyContent: 'center',
                     backgroundColor: 'white',
                     width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
+                    height: responsiveHeight(5),                    shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
                     shadowRadius: 1.41,
@@ -1235,21 +1236,21 @@ export default class Forms extends Component {
 
               <View
                 style={{
+                  marginTop:2,
                   backgroundColor: 'white',
-                  height: '8%',
                   flexDirection: 'row',
                   padding: 0,
                 }}>
                 <View
                   style={{
                     width: '30%',
-                    height: '100%',
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Category*
@@ -1260,8 +1261,7 @@ export default class Forms extends Component {
                     marginTop: 5,
                     justifyContent: 'center',
                     width: '65%',
-                    height: '70%',
-                    shadowColor: 'black',
+                    height: responsiveHeight(5),                    shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
                     shadowRadius: 1.41,
@@ -1288,20 +1288,20 @@ export default class Forms extends Component {
               <View
                 style={{
                   backgroundColor: 'white',
-                  height: '8%',
+                  marginTop:2,
                   flexDirection: 'row',
                   padding: 0,
                 }}>
                 <View
                   style={{
                     width: '30%',
-                    height: '100%',
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Sub Category*
@@ -1312,7 +1312,7 @@ export default class Forms extends Component {
                     marginTop: 5,
                     justifyContent: 'center',
                     width: '65%',
-                    height: '70%',
+                    height: responsiveHeight(5),
                     shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
@@ -1378,21 +1378,20 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 0,
+                  marginTop: 2,
                   backgroundColor: 'white',
-                  height: '8%',
                   flexDirection: 'row',
                 }}>
                 <View
                   style={{
-                    width: '30%',
-                    height: '100%',
+                    width: '40%',
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Upload Image
@@ -1406,8 +1405,8 @@ export default class Forms extends Component {
                     padding: 5,
                     justifyContent: 'center',
                     backgroundColor: '#32cd32',
-                    width: '65%',
-                    height: '70%',
+                    width: '55%',
+                    height: responsiveHeight(5),
                     shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
@@ -1423,10 +1422,9 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  height: '5%',
                   backgroundColor: 'white',
                   flexDirection: 'row',
-                  marginTop: 5,
+                  marginTop: 15,
                 }}>
                 <View
                   style={{
@@ -1436,8 +1434,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Date
@@ -1451,8 +1450,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       left: 20,
                     }}>
                     Time
@@ -1471,12 +1471,13 @@ export default class Forms extends Component {
                     width: '30%',
                     justifyContent: 'center',
                     marginHorizontal: 10,
-                    top: 8,
+                    top: 15,
                   }}>
                   <Button
                     title="Select Date"
                     onPress={this.showDateTimePicker1}
                     color={'#32cd32'}
+                    
                   />
                   <DateTimePicker
                     mode="date"
@@ -1496,8 +1497,9 @@ export default class Forms extends Component {
                   <View style={{width: '40%'}}>
                     <Text
                       style={{
-                        fontSize: responsiveFontSize(1.6),
-                        color: '#000',
+                        fontSize: responsiveFontSize(1.8),
+                        color: '#32cd32',
+                        textAlign:'center'
                       }}>
                       Start Time
                     </Text>
@@ -1516,8 +1518,8 @@ export default class Forms extends Component {
                   <View style={{width: '40%', alignItems: 'center'}}>
                     <Text
                       style={{
-                        fontSize: responsiveFontSize(1.6),
-                        color: '#000',
+                        fontSize: responsiveFontSize(1.8),
+                        color: '#32cd32',
                       }}>
                       End Time
                     </Text>
@@ -1538,19 +1540,19 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  height: '15%',
-                  width: '95%',
+                  height:responsiveHeight(10),
+                  width: '98%',
                   alignSelf: 'center',
                   flexDirection: 'row',
                   padding: 0,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
                   shadowOpacity: 0.2,
                   shadowRadius: 1.41,
                   elevation: 5,
                   backgroundColor: 'white',
-                  marginTop: 20,
+                  marginTop: 22,
                 }}>
                 <TextInput
                   value={event_description}
@@ -1558,10 +1560,10 @@ export default class Forms extends Component {
                     this.setState({event_description})
                   }
                   placeholderTextColor="grey"
-                  numberOfLines={7}
+                  numberOfLines={5}
                   style={{
                     textAlignVertical: 'top',
-                    fontSize: 12,
+                    fontSize: 14,
                     height: '90%',
                   }}
                   placeholder="Description..."></TextInput>
@@ -1571,22 +1573,22 @@ export default class Forms extends Component {
                 style={{
                   backgroundColor: 'white',
                   width: '100%',
-                  height: '7%',
+                  
                   flexDirection: 'row',
-                  top: 9,
+                  top: 4,
                 }}>
                 <View
                   style={{
                     paddingHorizontal: 5,
                     backgroundColor: 'white',
                     width: '80%',
-                    height: '100%',
                     justifyContent: 'center',
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Attach Event to Company ?
@@ -1594,23 +1596,22 @@ export default class Forms extends Component {
                 </View>
                 <TouchableOpacity
                   style={{
-                    marginTop: 5,
+                    marginTop: 3,
                     marginHorizontal: 20,
-                    borderRadius: 100,
+                    borderRadius: 25,
                     backgroundColor: '#32cd32',
-                    width: 30,
-                    height: 30,
+                    width: 25,
+                    height: 25,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <EIcon name="check" size={20} color="white" />
+                  <EIcon name="check" size={16} color="white" />
                 </TouchableOpacity>
               </View>
               <View
                 style={{
-                  marginTop: 15,
+                  marginTop: 10,
                   backgroundColor: 'white',
-                  height: '12%',
                   flexDirection: 'row',
                   padding: 0,
                 }}>
@@ -1618,17 +1619,17 @@ export default class Forms extends Component {
                   style={{
                     backgroundColor: '#32cd32',
                     marginHorizontal: 10,
-                    width: 50,
-                    height: 50,
+                    width: 40,
+                    height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
                     shadowRadius: 1.41,
                     elevation: 5,
-                    borderRadius: 100,
+                    borderRadius: 40,
                   }}>
-                  <Icon name="location" size={40} color="white" />
+                  <Icon name="location" size={25} color="white" />
                 </TouchableOpacity>
                 <TextInput
                   value={location_event}
@@ -1643,7 +1644,7 @@ export default class Forms extends Component {
                     justifyContent: 'center',
                     alignItems: 'flex-start',
                     width: '80%',
-                    height: '65%',
+                    height: responsiveHeight(5),
                     shadowColor: 'black',
                     shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.2,
@@ -1824,59 +1825,60 @@ export default class Forms extends Component {
             <View
               style={{
                 backgroundColor: 'white',
-                height: '10%',
+                height:responsiveHeight(8.5),
                 padding: 2,
                 marginBottom: 40,
               }}>
-              <View
+              <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   backgroundColor: '#32cd32',
                   height: '90%',
                   width: '100%',
                   borderRadius: 15,
+                }}
+                onPress={() => {
+                  // await this.upload_Image();
+                  Community_Event(
+                    Event_Category,
+                    event_sub_category,
+                    location_event,
+                    event_date,
+                    event_description,
+                    event_start_timing,
+                    phone_number,
+                    email_address,
+                    invite_friends,
+                    joining_members,
+                    title,
+                    img,
+                    ending_timing_event,
+                    company_atteeched,
+                  )
+                  // .then(async () => {
+                  //   await setTimeout(async () => {
+                  //     await this.Upload_Sport_Image();
+                  //   }, 300);
+                  // });
                 }}>
-                <TouchableOpacity
+                <View
                   style={{
                     width: '40%',
                     justifyContent: 'center',
                     alignItems: 'flex-end',
                   }}>
                   <EIcon name="upload" size={30} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity
+                </View>
+                <View
                   style={{
                     width: '60%',
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={() => {
-                    // await this.upload_Image();
-                    Community_Event(
-                      Event_Category,
-                      event_sub_category,
-                      location_event,
-                      event_date,
-                      event_description,
-                      event_start_timing,
-                      phone_number,
-                      email_address,
-                      invite_friends,
-                      joining_members,
-                      title,
-                      img,
-                      ending_timing_event,
-                      company_atteeched,
-                    )
-                    // .then(async () => {
-                    //   await setTimeout(async () => {
-                    //     await this.Upload_Sport_Image();
-                    //   }, 300);
-                    // });
-                  }}>
+                 >
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -1903,7 +1905,6 @@ export default class Forms extends Component {
             style={{
               backgroundColor: 'white',
               borderRadius: 20,
-              height: responsiveHeight(93),
               paddingLeft: 20,
               paddingRight: 20,
               paddingTop: 0,
@@ -1940,9 +1941,10 @@ export default class Forms extends Component {
                   }}>
                   Upload Job
                 </Text>
-                <Text>Job posts are live for 30 days</Text>
+                <Text style={{color:"black"}}>Job posts are live for 30 days</Text>
               </View>
             </View>
+            <View style={{height:'75%'}}>
             <ScrollView style={{backgroundColor: 'white'}}>
               <View
                 style={{
@@ -1963,8 +1965,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                     }}>
                     Company Name*
                   </Text>
@@ -1993,7 +1996,7 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 8.5,
                   backgroundColor: 'white',
                   height: responsiveHeight(7),
                   flexDirection: 'row',
@@ -2010,10 +2013,11 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                     }}>
-                    Phone Number *
+                    Phone Number*
                   </Text>
                 </View>
                 <TextInput
@@ -2040,7 +2044,7 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 8.5,
                   backgroundColor: 'white',
                   height: responsiveHeight(7),
                   flexDirection: 'row',
@@ -2057,8 +2061,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                     }}>
                     Email
                   </Text>
@@ -2089,7 +2094,7 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 8.5,
                   backgroundColor: 'white',
                   height: responsiveHeight(7),
                   flexDirection: 'row',
@@ -2106,8 +2111,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                     }}>
                     Job Title
                   </Text>
@@ -2136,7 +2142,7 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 8.5,
                   backgroundColor: 'white',
                   height: responsiveHeight(7),
                   flexDirection: 'row',
@@ -2153,8 +2159,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                     }}>
                     Job Category
                   </Text>
@@ -2195,7 +2202,7 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  marginTop: 0,
+                  marginTop: 8.5,
                   backgroundColor: 'white',
                   height: '8%',
                   flexDirection: 'row',
@@ -2209,8 +2216,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       alignSelf: 'flex-start',
                     }}>
                     Upload Image
@@ -2241,17 +2249,17 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  height: '15%',
+                 
                   width: '95%',
                   alignSelf: 'center',
                   flexDirection: 'row',
                   padding: 0,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
                   shadowOpacity: 0.2,
                   shadowRadius: 1.41,
-                  elevation: 5,
+                  elevation:3,
                   backgroundColor: 'white',
                   marginTop: 20,
                 }}>
@@ -2263,11 +2271,11 @@ export default class Forms extends Component {
                     })
                   }
                   placeholderTextColor="grey"
-                  numberOfLines={7}
+                  numberOfLines={4}
                   style={{
                     textAlignVertical: 'top',
-                    fontSize: 12,
-                    height: '90%',
+                    fontSize: 14,
+                    height: responsiveHeight(11),
                   }}
                   placeholder="Job Description..."
                 />
@@ -2292,8 +2300,9 @@ export default class Forms extends Component {
                   }}>
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      color: '#7e7a7a',
+                      fontSize: responsiveFontSize(2.3),
+                      fontWeight:'bold',
+                      color: 'black',
                       flex: 1,
                       // textAlign:'center'
                     }}>
@@ -2326,17 +2335,17 @@ export default class Forms extends Component {
 
               <View
                 style={{
-                  height: '15%',
+                  
                   width: '95%',
                   alignSelf: 'center',
                   flexDirection: 'row',
                   padding: 0,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
                   shadowOpacity: 0.2,
                   shadowRadius: 1.41,
-                  elevation: 5,
+                  elevation: 3,
                   backgroundColor: 'white',
                   marginTop: 20,
                 }}>
@@ -2351,8 +2360,8 @@ export default class Forms extends Component {
                   numberOfLines={7}
                   style={{
                     textAlignVertical: 'top',
-                    fontSize: 12,
-                    height: '90%',
+                    fontSize: 14,
+                    height: responsiveHeight(11),
                   }}
                   placeholder="about job..."
                 />
@@ -2583,8 +2592,8 @@ export default class Forms extends Component {
               <TouchableOpacity
                 style={{
                   backgroundColor: 'white',
-                  height: responsiveHeight(20),
-                  width: responsiveWidth(70),
+                  height: responsiveHeight(10),
+                  width: responsiveWidth(90),
                   alignSelf: 'center',
                   justifyContent: 'center',
                   alignItems: 'flex-end',
@@ -2693,59 +2702,61 @@ export default class Forms extends Component {
                 </View>
               </Modal>
             </ScrollView>
+            </View>
             <View
               style={{
                 backgroundColor: 'white',
-                height: '10%',
+                height: responsiveHeight(9),
                 padding: 2,
-                marginBottom: 40,
+                marginBottom: 50,
               }}>
-              <View
+              <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   backgroundColor: '#32cd32',
                   height: '90%',
                   width: '100%',
                   borderRadius: 15,
-                }}>
-                <TouchableOpacity
+                }}
+                onPress={() =>
+                  Create_Job(
+                    job_category,
+                    img,
+                    job_title,
+                    email_address_job,
+                    job_description,
+                    job_compensation,
+                    about_job,
+                    phone_job,
+                    uploading_time,
+                    company_name,
+                  )
+                }>
+                <View
                   style={{
                     width: '40%',
                     justifyContent: 'center',
                     alignItems: 'flex-end',
                   }}>
                   <EIcon name="upload" size={30} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity
+                </View>
+                <View
                   style={{
                     width: '60%',
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={() =>
-                    Create_Job(
-                      job_category,
-                      img,
-                      job_title,
-                      email_address_job,
-                      job_description,
-                      job_compensation,
-                      about_job,
-                      phone_job,
-                      uploading_time,
-                      company_name,
-                    )
-                  }>
+                  >
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       );
     } else if (GlobalConst.STORAGE_KEYS.ScreenType == '5') {
       return (
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor:'orange'}]}>
           <View style={styles.formContent}>
             <View style={styles.inputContainer}>
               <FA
@@ -2861,7 +2872,7 @@ export default class Forms extends Component {
                 borderRadius: 10,
                 width: '96%',
                 backgroundColor: '',
-                height: '30%',
+                height: '29%',
                 justifyContent: 'space-between',
                 elevation: 1,
                 alignSelf: 'center',
@@ -2889,18 +2900,18 @@ export default class Forms extends Component {
             <View
               style={{
                 top: 3,
-                height: '10%',
+                height:responsiveHeight(6),
                 width: '96%',
                 flexDirection: 'row',
                 alignSelf: 'center',
                 borderRadius: 10,
-                elevation: 2,
+                
                 justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
                 style={{
                   flexDirection: 'row',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: '#32cd32',
                   width: '33%',
                   height: '100%',
                   borderRadius: 5,
@@ -2909,13 +2920,13 @@ export default class Forms extends Component {
                   elevation: 1,
                 }}
                 onPress={this.handleChoosePhoto}>
-                <FA name="camera" size={18} color="#32cd32" style={{}} />
+                <FA name="camera" size={18} color="#ffffff" style={{}} />
 
                 <Text
                   style={{
                     marginLeft: 5,
                     fontSize: responsiveFontSize(1.8),
-                    color: '#32cd32',
+                    color: '#ffffff',
                   }}>
                   Image
                 </Text>
@@ -2923,7 +2934,7 @@ export default class Forms extends Component {
               <TouchableOpacity
                 style={{
                   flexDirection: 'row',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: '#32cd32',
                   width: '33%',
                   height: '100%',
                   borderRadius: 5,
@@ -2932,13 +2943,13 @@ export default class Forms extends Component {
                   elevation: 1,
                 }}
                 onPress={this.handlechooseVideo}>
-                <FA name="video-camera" size={18} color="#32cd32" style={{}} />
+                <FA name="video-camera" size={18} color="#ffffff" style={{}} />
 
                 <Text
                   style={{
                     marginLeft: 5,
                     fontSize: responsiveFontSize(1.8),
-                    color: '#32cd32',
+                    color: '#ffffff',
                   }}>
                   Video
                 </Text>
@@ -2947,7 +2958,7 @@ export default class Forms extends Component {
                 style={{
                   flexDirection: 'row',
                   width: '33%',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: '#32cd32',
                   height: '100%',
                   borderRadius: 5,
                   justifyContent: 'center',
@@ -2957,13 +2968,13 @@ export default class Forms extends Component {
                 onPress={() => {
                   alert('Posted');
                 }}>
-                <FA name="microphone" size={18} color="#32cd32" style={{}} />
+                <FA name="microphone" size={18} color="#ffffff" style={{}} />
 
                 <Text
                   style={{
                     marginLeft: 5,
                     fontSize: responsiveFontSize(1.8),
-                    color: '#32cd32',
+                    color: '#ffffff',
                   }}>
                   Voice
                 </Text>
@@ -3206,54 +3217,56 @@ export default class Forms extends Component {
                 height: '12%',
                 padding: 2,
               }}>
-              <View
+              <TouchableOpacity
                 style={{
                   flexDirection: 'row',
                   backgroundColor: '#32cd32',
                   height: '90%',
                   width: '100%',
                   borderRadius: 15,
-                }}>
-                <TouchableOpacity
+                }}
+                onPress={async () => {
+                  await News(
+                    news_descriptions,
+                    file,
+                    onlyme,
+                    friends,
+                    Public,
+                    uploading_time,
+                    like,
+                    favorite,
+                    comments,
+                  ).then(() => {
+                    setTimeout(async () => {
+                      if (this.state.videoPath !== null) {
+                        await this.upload_Video();
+                      } else {
+                        await this.Upload_Image();
+                      }
+                    }, 10000);
+                    //   // await this.Upload_Image();
+                    this.props.navigation.navigate('Home');
+                  });
+                }}
+                >
+                <View
                   style={{
                     width: '40%',
                     justifyContent: 'center',
                     alignItems: 'flex-end',
                   }}>
                   <EIcon name="upload" size={30} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity
+                </View>
+                <View
                   style={{
                     width: '60%',
                     alignSelf: 'center',
                     marginHorizontal: 20,
                   }}
-                  onPress={async () => {
-                    await News(
-                      news_descriptions,
-                      file,
-                      onlyme,
-                      friends,
-                      Public,
-                      uploading_time,
-                      like,
-                      favorite,
-                      comments,
-                    ).then(() => {
-                      setTimeout(async () => {
-                        if (this.state.videoPath !== null) {
-                          await this.upload_Video();
-                        } else {
-                          await this.Upload_Image();
-                        }
-                      }, 10000);
-                      //   // await this.Upload_Image();
-                      this.props.navigation.navigate('Home');
-                    });
-                  }}>
+                  >
                   <Text style={{fontSize: 16, color: 'white'}}>UPLOAD</Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

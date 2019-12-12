@@ -98,6 +98,7 @@ class UserProfile extends Component {
       Gallery: [],
       userId: '',
       post_data:[],
+      timeAgo: 0,
       datasource: [
         {
           name: 'Woody Allen',
@@ -266,8 +267,24 @@ class UserProfile extends Component {
     });
   };
 
-  calculateTime (){
-    var d1 = new Date()
+  calculateTime (date1){
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+
+      var uploading_time = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+
+
+    var diff = Math.round(uploading_time-date1);
+
+    console.log("DI11112222211:", uploading_time)
+    console.log("DI111111:", date1)
+    console.log("DIFFFFFFFEEE:", diff)
+    return diff
+    
   }
 
   renderViewMore(onPress) {
@@ -987,8 +1004,7 @@ class UserProfile extends Component {
                             fontWeight: '400',
                             color: '#7e7a7a',
                           }}>
-                            
-                          {item.uploading_time}
+                            {this.calculateTime(item.uploading_time)}
                         </Text>
                       </View>
                     </View>
