@@ -18,6 +18,9 @@ import {
 } from 'react-native-responsive-dimensions';
 
 export default class Chat extends Component {
+  static navigationOptions = {
+    header: null,
+  };
   constructor(props) {
     super(props);
     // Create and Reset initial State Longitude (lng) and Latitude (lat)

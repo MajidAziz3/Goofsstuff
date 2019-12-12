@@ -35,6 +35,9 @@ const uri = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
 const KEYS_TO_FILTERS = ['name'];
 const bRightColor = '#fff';
 class ChatList extends Component {
+  static navigationOptions = {
+    header: null,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -97,6 +100,7 @@ class ChatList extends Component {
         // backgroundColor:'#3fee4a',
         component: (
           <TouchableOpacity
+          onPress={()=> this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })}
             style={{
               borderRightWidth: 1,
               borderRightColor: bRightColor,
@@ -116,9 +120,7 @@ class ChatList extends Component {
             />
           </TouchableOpacity>
         ),
-        onPress: () => {
-          this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
-        },
+        
       },
       {
         //   text: 'Update',Star
@@ -280,19 +282,19 @@ class ChatList extends Component {
                     keyExtractor={item => item.id}
 
                     renderItem={({ item, index }) => (
-                      <TouchableOpacity
+                      <View
                         key={index}
-                        onPress={() =>
-                          this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
-                        }
-
+                        
+                        
                       >
                         <Swipeout
                           buttonWidth={105}
                           autoClose={true}
                           right={swipeoutBtns(item)}
                           style={{ borderRadius: 0 }}>
-                          <View style={styles.row}>
+                          <TouchableOpacity onPress={() =>
+                          this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
+                        } style={styles.row}>
                             <View
                               style={{
                                 backgroundColor: 'white',
@@ -393,9 +395,9 @@ class ChatList extends Component {
                                 </View>
                               </View>
                             </View>
-                          </View>
+                          </TouchableOpacity>
                         </Swipeout>
-                      </TouchableOpacity>
+                      </View>
                     )}></FlatList>
                 </View>
 

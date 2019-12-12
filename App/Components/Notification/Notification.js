@@ -18,7 +18,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
@@ -166,6 +167,10 @@ export default class Notification extends Component {
         <Container>
           <Tabs
             initialPage={0}
+            swipeEnable={false}
+            tabBarInactiveTextColor='gray'
+            tabBarActiveTextColor='#32cd32'
+            tabBarUnderlineStyle={{ height: 4, backgroundColor: '#32cd32' }}
             onChangeTab={({i}) => this.setState({page: i})}
             renderTabBar={() => (
               <ScrollableTab style={{backgroundColor: '#fff'}} />
@@ -183,7 +188,7 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <EvilIcons name="user" size={45} />
+                  <FontAwesome5 name="user-plus" size={23} color={'gray'} />
                 </TabHeading>
               }>
               <FlatList
@@ -258,7 +263,7 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <FontAwesome name="users" size={40} />
+                  <FontAwesome5 name="users" size={26} color={'gray'}/>
                 </TabHeading>
               }>
               <FlatList
@@ -308,7 +313,7 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <Foundation name="torsos-male-female" size={30} />
+                  <MCI name="home-heart" size={34} color={'gray'}/>
                 </TabHeading>
               }
             />
@@ -322,7 +327,7 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <MaterialIcons name="event" size={35} />
+                  <MaterialIcons name="event" size={31} color={'gray'} />
                 </TabHeading>
               }>
               <Text>Events</Text>
@@ -433,5 +438,5 @@ const styles = StyleSheet.create({
     color: '#32cd32',
   },
   tabStyle: {backgroundColor: 'transparent'},
-  activeTabStyle: {backgroundColor: '#32cd32'},
+  activeTabStyle: {backgroundColor: 'transparent'},
 });
