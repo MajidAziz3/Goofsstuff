@@ -13,9 +13,8 @@ import { placeholder } from '@babel/types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import SwitchToggle from 'react-native-switch-toggle';
-import { getData, uploadImage, uploadUserImage, getAllOfCollection } from '../../Backend/Utility';
+import { getData, uploadImage, uploadUserImage, getAllOfCollection, saveData } from '../../Backend/Utility';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
-
 
 export default class Settings extends Component {
 
@@ -39,14 +38,17 @@ export default class Settings extends Component {
 
     }
 
-    onPress1 = () => {
+    onPress1 = (val) => {
         this.setState({ switchOn1: !this.state.switchOn1 });
+        this.changeBtn(val, !this.state.switchOn1);
     }
-    onPress2 = () => {
+    onPress2 = (val) => {
         this.setState({ switchOn2: !this.state.switchOn2 });
+        this.changeBtn(val, !this.state.switchOn2);
     }
-    onPress3 = () => {
+    onPress3 = (val) => {
         this.setState({ switchOn3: !this.state.switchOn3 });
+        this.changeBtn(val, !this.state.switchOn3);
     }
     toggleModal(visible) {
         this.setState({ modalVisible: visible });
@@ -58,11 +60,24 @@ export default class Settings extends Component {
           await getData('users', result).then(res =>
             this.setState({
               data_user: res,
+              switchOn1: res.affirmation,
+              switchOn2: res.healthy,
+              switchOn3: res.kindness,
+              
               loading: false,
             }),
           );
         });
       };
+
+      async changeBtn (name, value){
+        //   var data = name;
+        await _retrieveData('user').then(async result => {
+            await saveData('users', result, {
+                [name]:value,
+              })
+          });
+      }
 
     render() {
         const Custom_checkBox = (color, flag) => {
@@ -279,7 +294,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn1}
-                                onPress={this.onPress1}
+                                onPress={()=>this.onPress1('affirmation')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}
@@ -309,7 +324,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn2}
-                                onPress={this.onPress2}
+                                onPress={()=>this.onPress2('healthy')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}
@@ -339,7 +354,7 @@ export default class Settings extends Component {
                                     backgroundColor: '#d6d3d3', // rgb(102,134,205)
                                 }}
                                 switchOn={this.state.switchOn3}
-                                onPress={this.onPress3}
+                                onPress={()=>this.onPress3('kindness')}
                                 circleColorOff='#e5e1e0'
                                 circleColorOn='#e5e1e0'
                                 duration={500}

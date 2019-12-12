@@ -97,6 +97,9 @@ class Signup extends Component {
       pending_friends,
       favorite,
       family_member,
+      affirmation,
+      healthy,
+      kindness
     } = this.state;
     if (validator.isEmpty(full_name)) {
       nameInput.focus();

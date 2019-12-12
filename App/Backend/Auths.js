@@ -51,7 +51,7 @@ export async function signUp(
               location: location,
               profile_picture: profile_picture,
               gallery: gallery,
-              affirmation:affirmation,
+              affirmation:false,
               healthy:healthy,
               kindness:kindness
             }).then(res => {
