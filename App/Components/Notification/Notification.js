@@ -17,6 +17,20 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Foundation from 'react-native-vector-icons/Foundation';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {
+  Container,
+  Header,
+  Content,
+  Tab,
+  Tabs,
+  TabHeading,
+  ScrollableTab,
+  Badge,
+} from 'native-base';
 
 export default class Notification extends Component {
   constructor(props) {
@@ -79,34 +93,45 @@ export default class Notification extends Component {
         },
       ],
       friend_request: null,
+      page: 0,
     };
   }
 
   componentDidMount = async () => {
-    await _retrieveData('user').then(async result =>
-      firebase
-        .firestore()
-        .collection('friendRequest')
-        .onSnapshot(
-          async () =>
-            await getData('friendRequest', result).then(data =>
-              data.request.map(item => {
+    await _retrieveData('user').then(
+      async result =>
+        await firebase
+          .firestore()
+          .collection('friendRequest')
+          .onSnapshot(
+            async () =>
+              await getData('friendRequest', result).then(data => {
                 this.setState({
-                  friend_request: item,
+                  friend_request: data.request,
                 });
               }),
-            ),
-        ),
+          ),
     );
   };
 
-  friends = async item => {
-    
-    console.log('dshksdhhksdhhhds', item);
-    _retrieveData('user').then(async result => {
+  friends = async itm => {
+    console.log('ddtttddttt', itm);
+    let data1 = await this.state.friend_request;
+    this.setState({friend_request: []});
+    console.log('Before Delete 2', data1);
+    let data2 = data1.filter(item => item.userId !== itm.item.userId);
+
+    await this.setState({friend_request: data2});
+
+    await _retrieveData('user').then(async result => {
+      await firebase
+        .firestore()
+        .collection('friendRequest')
+        .doc(result)
+        .update({request: this.state.friend_request});
       await getData('users', result).then(
         async check =>
-          await addToArray('friends', item.userId, 'request', {
+          await addToArray('friends', itm.userId, 'request', {
             userId: result,
             name: check.name,
             profile_pic: check.profile_picture,
@@ -138,97 +163,172 @@ export default class Notification extends Component {
             style={styles.menu1}
           />
         </View>
-        <View style={styles.container}>
-          <TouchableOpacity>
-            <Image
-              source={{
-                uri: 'https://bootdey.com/img/Content/avatar/avatar4.png',
+        <Container>
+          <Tabs
+            initialPage={0}
+            onChangeTab={({i}) => this.setState({page: i})}
+            renderTabBar={() => (
+              <ScrollableTab style={{backgroundColor: '#fff'}} />
+            )}>
+            <Tab
+              tabStyle={{backgroundColor: '#fff'}}
+              activeTabStyle={{
+                borderBottomColor: '#32cd32',
+                borderBottomWidth: 8,
               }}
-              style={styles.avatar}
-            />
-          </TouchableOpacity>
-          <View style={styles.content}>
-            <View style={styles.mainContent}>
-              <TouchableOpacity style={styles.text}>
-                <Text style={styles.name}>
-                  {this.state.friend_request && this.state.friend_request.name}
-                </Text>
-              </TouchableOpacity>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.text2}
-                  onPress={() => {
-                    this.state.friend_request &&
-                      this.friends(this.state.friend_request);
-                  }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: 'white',
-                      alignSelf: 'center',
-                      marginTop: 15,
-                    }}>
-                    Accept
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.text3}
-                  onPress={() => {
-                    this.state.friend_request &&
-                      this.friends(this.state.friend_request);
-                  }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: 'white',
-                      alignSelf: 'center',
-                      marginTop: 15,
-                    }}>
-                    Reject
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.timeAgo}>2 hours ago</Text>
-            </View>
-          </View>
-        </View>
-
-        <FlatList
-          style={styles.root}
-          data={this.state.data}
-          extraData={this.state}
-          ItemSeparatorComponent={() => {
-            return <View style={styles.separator} />;
-          }}
-          keyExtractor={item => {
-            return item.id;
-          }}
-          renderItem={item => {
-            const Notification = item.item;
-
-            return (
-              <View style={styles.container}>
-                <TouchableOpacity>
-                  <Image
-                    source={{uri: Notification.image}}
-                    style={styles.avatar}
-                  />
-                </TouchableOpacity>
-                <View style={styles.content}>
-                  <View style={styles.mainContent}>
-                    <TouchableOpacity style={styles.text}>
-                      <Text style={styles.name}>{Notification.name}</Text>
-                    </TouchableOpacity>
-                    <View style={styles.text}>
-                      <Text>{Notification.text}</Text>
+              heading={
+                <TabHeading
+                  style={
+                    this.state.page === 0
+                      ? styles.activeTabStyle
+                      : styles.tabStyle
+                  }>
+                  <EvilIcons name="user" size={45} />
+                </TabHeading>
+              }>
+              <FlatList
+                style={styles.root}
+                data={this.state.friend_request}
+                keyExtractor={item => {
+                  return item.id;
+                }}
+                renderItem={item => {
+                  return (
+                    <View style={styles.container}>
+                      <TouchableOpacity>
+                        <Image
+                          source={{
+                            uri: item.item.profile_pic,
+                          }}
+                          style={styles.avatar}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.mainContent}>
+                          <TouchableOpacity style={styles.text}>
+                            <Text style={styles.name}>{item.item.name}</Text>
+                          </TouchableOpacity>
+                          <View style={{flexDirection: 'row'}}>
+                            <TouchableOpacity
+                              style={styles.text2}
+                              onPress={() => {
+                                this.state.friend_request && this.friends(item);
+                              }}>
+                              <Text
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'white',
+                                  alignSelf: 'center',
+                                  marginTop: 15,
+                                }}>
+                                Accept
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.text3}
+                              onPress={() => {
+                                item && this.friends(item);
+                              }}>
+                              <Text
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'white',
+                                  alignSelf: 'center',
+                                  marginTop: 15,
+                                }}>
+                                Reject
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                          <Text style={styles.timeAgo}>2 hours ago</Text>
+                        </View>
+                      </View>
                     </View>
-                    <Text style={styles.timeAgo}>2 hours ago</Text>
-                  </View>
-                </View>
-              </View>
-            );
-          }}
-        />
+                  );
+                }}
+              />
+            </Tab>
+            <Tab
+              tabStyle={{backgroundColor: 'white'}}
+              activeTabStyle={{backgroundColor: 'white'}}
+              heading={
+                <TabHeading
+                  style={
+                    this.state.page === 1
+                      ? styles.activeTabStyle
+                      : styles.tabStyle
+                  }>
+                  <FontAwesome name="users" size={40} />
+                </TabHeading>
+              }>
+              <FlatList
+                style={styles.root}
+                data={this.state.data}
+                extraData={this.state}
+                ItemSeparatorComponent={() => {
+                  return <View style={styles.separator} />;
+                }}
+                keyExtractor={item => {
+                  return item.id;
+                }}
+                renderItem={item => {
+                  const Notification = item.item;
+
+                  return (
+                    <View style={styles.container}>
+                      <TouchableOpacity>
+                        <Image
+                          source={{uri: Notification.image}}
+                          style={styles.avatar}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.mainContent}>
+                          <TouchableOpacity style={styles.text}>
+                            <Text style={styles.name}>{Notification.name}</Text>
+                          </TouchableOpacity>
+                          <View style={styles.text}>
+                            <Text>{Notification.text}</Text>
+                          </View>
+                          <Text style={styles.timeAgo}>2 hours ago</Text>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }}
+              />
+            </Tab>
+            <Tab
+              tabStyle={{backgroundColor: '#fff'}}
+              activeTabStyle={{backgroundColor: '#fff'}}
+              heading={
+                <TabHeading
+                  style={
+                    this.state.page === 2
+                      ? styles.activeTabStyle
+                      : styles.tabStyle
+                  }>
+                  <Foundation name="torsos-male-female" size={30} />
+                </TabHeading>
+              }
+            />
+            <Tab
+              tabStyle={{backgroundColor: '#fff'}}
+              activeTabStyle={{backgroundColor: '#fff'}}
+              heading={
+                <TabHeading
+                  style={
+                    this.state.page === 3
+                      ? styles.activeTabStyle
+                      : styles.tabStyle
+                  }>
+                  <MaterialIcons name="event" size={35} />
+                </TabHeading>
+              }>
+              <Text>Events</Text>
+            </Tab>
+          </Tabs>
+        </Container>
       </SafeAreaView>
     );
   }
@@ -332,4 +432,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#32cd32',
   },
+  tabStyle: {backgroundColor: 'transparent'},
+  activeTabStyle: {backgroundColor: '#32cd32'},
 });
