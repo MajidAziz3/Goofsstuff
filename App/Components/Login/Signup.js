@@ -67,6 +67,9 @@ class Signup extends Component {
       likes: [],
       profile_picture: 'https://cdn2.iconfinder.com/data/icons/website-icons/512/User_Avatar-512.png',
       gallery: [],
+      affirmation: false,
+      healthy: false,
+      kindness: false,
     };
   }
 
@@ -94,6 +97,9 @@ class Signup extends Component {
       pending_friends,
       favorite,
       family_member,
+      affirmation,
+      healthy,
+      kindness
     } = this.state;
     if (validator.isEmpty(full_name)) {
       nameInput.focus();
@@ -148,6 +154,9 @@ class Signup extends Component {
       pending_friends,
       favorite,
       family_member,
+      affirmation,
+      healthy,
+      kindness
     ).then(() => {
       this.props.navigation.navigate('Login');
     });
