@@ -1,8 +1,8 @@
 import firebase from 'firebase';
 import firestore from 'firebase/firestore';
-import {saveData} from './Utility';
-import {_storeData} from './AsyncStore/AsyncFunc';
-import {USER} from './GlobalConst';
+import { saveData } from './Utility';
+import { _storeData } from './AsyncStore/AsyncFunc';
+import { USER } from './GlobalConst';
 
 export async function signUp(
   full_name,
@@ -20,11 +20,14 @@ export async function signUp(
   pending_friends,
   favorite,
   family_member,
+  affirmation,
+  healthy,
+  kindness
 ) {
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
-    .then(function(user) {
+    .then(function (user) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -48,6 +51,9 @@ export async function signUp(
               location: location,
               profile_picture: profile_picture,
               gallery: gallery,
+              affirmation:affirmation,
+              healthy:healthy,
+              kindness:kindness
             }).then(res => {
               // console.log('res', res);
               return res;
@@ -56,7 +62,7 @@ export async function signUp(
         )
         .catch(err => alert(err));
     })
-    .catch(function(error) {
+    .catch(function (error) {
       alert(error.code + ': ' + error.message);
     });
 }
@@ -66,7 +72,7 @@ export async function signIn(email, password) {
   await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .catch(function(error) {
+    .catch(function (error) {
       success = false;
       alert(error.code + ': ' + error.message);
     });
