@@ -137,6 +137,11 @@ const CommunityStack = createStackNavigator({
   JobInfo: JobInfo,
 });
 
+const ChatStack = createStackNavigator({
+  ChatList: ChatList,
+  Chat: Chat,
+});
+
 const WatchStack = createStackNavigator({
   Watch: Watch,
   LearnMore: LearnMore,
@@ -251,8 +256,8 @@ const TabsNavigator = createBottomTabNavigator(
         ),
       },
     },
-    ChatList: {
-      screen: ChatList,
+    Messages: {
+      screen: ChatStack,
       navigationOptions: () => ({
         tabBarIcon: ({tintColor}) => (
           <Ionicons name="ios-chatboxes" color={tintColor} size={24} />
@@ -378,9 +383,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     AppWorking: {screen: AppWorking1},
     
     CommunityGuide: {screen: CommunityGuide},
-    Chat:{
-      screen:Chat
-    }
+    
   },
   {
     contentComponent: CustomDrawer,

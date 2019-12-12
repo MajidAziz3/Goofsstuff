@@ -582,7 +582,7 @@ export default class Forms extends Component {
               }}>
               <Text
                 style={{
-                  fontSize: responsiveFontSize(1.5),
+                  fontSize: responsiveFontSize(1.9),
                   // fontWeight: 'bold',
                   padding: 5,
                   color: '#000',
@@ -612,7 +612,7 @@ export default class Forms extends Component {
                 }}>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.5),
+                    fontSize: responsiveFontSize(1.8),
                     color: '#32cd32',
                     fontWeight:'bold',
                     left:5
@@ -833,7 +833,7 @@ export default class Forms extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                   width: '71%',
-                  height: '60%',
+                  height: responsiveHeight(5),
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
                   shadowOpacity: 0.2,
