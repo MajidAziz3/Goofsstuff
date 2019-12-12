@@ -184,13 +184,16 @@ export async function addToArray(collection, doc, array, value) {
     .collection(collection)
     .doc(doc);
 
-    console.log('DOCREF', docRef);
+  console.log('DOCREF', docRef);
   let docData = await docRef.get();
-  console.log('DOC DATA', docData.data())
+  console.log('DOC DATA', docData.data());
   if (docData.exists && docData.data()[array] != undefined) {
-    docRef.set({
-      [array]: firebase.firestore.FieldValue.arrayUnion(value),
-    },{merge:true});
+    docRef.set(
+      {
+        [array]: firebase.firestore.FieldValue.arrayUnion(value),
+      },
+      {merge: true},
+    );
   } else {
     saveData(collection, doc, {[array]: [value]});
   }
@@ -365,7 +368,7 @@ export async function uploadVisionImage(
   const uploadUri =
     Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
   const imageRef = firebase.storage().ref(imagePath);
-console.log('image REF',imageRef)
+  console.log('image REF', imageRef);
   let readingFile = await fs.readFile(uploadUri, 'base64');
   let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
@@ -375,7 +378,7 @@ console.log('image REF',imageRef)
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    (snapshot)=> {
+    snapshot => {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -390,20 +393,23 @@ console.log('image REF',imageRef)
           break;
       }
     },
-    (error) =>{
+    error => {
       _storeData('imageUploadProgress', '-1');
     },
-    ()=> {
+    () => {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) =>{
-        console.log(downloadURL)
-        console.log(databaseCollection,docRef,downloadURL)
-        await addToArray(databaseCollection, docRef, 'vision', downloadURL).then(
-          () => {
-            console.log('Task done')
-            _storeData('imageUploadProgress', '100');
-          },
-        );
+      uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
+        console.log(downloadURL);
+        console.log(databaseCollection, docRef, downloadURL);
+        await addToArray(
+          databaseCollection,
+          docRef,
+          'vision',
+          downloadURL,
+        ).then(() => {
+          console.log('Task done');
+          _storeData('imageUploadProgress', '100');
+        });
       });
     },
   );
@@ -458,10 +464,16 @@ export async function uploadUserImage(
     },
     function() {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(async(downloadURL) =>{
-          await saveData(databaseCollection, docRef, {profile_picture: downloadURL})
-          .then(() => {
-            _storeData('imageUploadProgress', '100');
+      uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
+        await firebase
+          .firestore()
+          .clearPersistence()
+          .then(async () => {
+            await saveData(databaseCollection, docRef, {
+              profile_picture: downloadURL,
+            }).then(() => {
+              _storeData('imageUploadProgress', '100');
+            });
           });
       });
     },
@@ -476,7 +488,24 @@ export async function uploadImageComment(
   name,
   databaseCollection,
   docRef,
+  comments,
+  userId,
+  username,
+  uploadingTime,
+  userPic,
 ) {
+  {
+    if (!imgUri) {
+      addToArray(databaseCollection, docRef, 'comments', {
+        comments: comments,
+        userId: userId,
+        userImage: userPic,
+        user_name: username,
+        time: uploadingTime,
+      });
+      return;
+    }
+  }
   console.log(imgUri, mime, imagePath, name, databaseCollection, docRef);
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
@@ -497,7 +526,7 @@ export async function uploadImageComment(
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    (snapshot)=> {
+    snapshot => {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -512,20 +541,26 @@ export async function uploadImageComment(
           break;
       }
     },
-    (error)=> {
+    error => {
       _storeData('imageUploadProgress', '-1');
     },
-    ()=> {
+    () => {
       console.log('HELLOOOs', docRef);
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log('database', databaseCollection, docRef);
-        addToArray(databaseCollection, docRef, 'comments', {
-          imageUrl: downloadURL,
-        }).then(() => {
-          _storeData('imageUploadProgress', '100');
-        });
-      });
+      uploadTask.snapshot.ref
+        .getDownloadURL()
+        .then(async function(downloadURL) {
+          
+              await addToArray(databaseCollection, docRef, 'comments', {
+                imageUrl: downloadURL,
+                comments: comments,
+                userId: userId,
+                userImage: userPic,
+                user_name: username,
+                time: uploadingTime,
+              });
+            });
+        // });
     },
   );
 }

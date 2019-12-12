@@ -69,6 +69,7 @@ export default class GoodNews extends Component {
       displayIMG: false,
       showImage: null,
       imageFooter: null,
+      loadingModal: true,
       data: [],
       datasource: [
         {
@@ -161,20 +162,71 @@ export default class GoodNews extends Component {
     await _retrieveData('user').then(
       async result =>
         await getData('users', result).then(
-          async res =>
-            await addToArray('Comments', item, 'comments', {
-              comments: this.state.comments_words,
-              post_id: item,
-              user_id: res.userId,
-              user_name: res.name,
-              time: this.state.uploading_time,
-              imageUrl: '',
-              userImage:res.profile_picture
-            }).then(() => {
-              setTimeout(async () => {
-                this.Upload_Image(item);
-              }, 1000);
-            }),
+          async res => {
+            let iteratorNum = 0;
+            await uploadImageComment(
+              this.state.ImageUrl,
+              this.state.imageType,
+              this.state.ImageName,
+              this.state.ImageName,
+              'Comments',
+              item,
+              this.state.comments_words,
+              res.userId,
+              res.name,
+              this.state.uploading_time,
+              res.profile_picture,
+            );
+            let that = this;
+
+            let refreshId = setInterval(function() {
+              iteratorNum += 1;
+              _retrieveData('imageUploadProgress').then(data => {
+                that.setState({uploadProgress: data});
+                if (Number(data) >= 100) {
+                  clearInterval(refreshId);
+                  alert('Uploaded', 'Profile is updated', [
+                    {text: 'OK', onPress: () => that.props.navigation.goBack()},
+                  ]);
+                }
+                if (data == '-1') {
+                  clearInterval(refreshId);
+                  alert('goes wrong', 'Something went wrong', [
+                    {text: 'OK', onPress: () => that.props.navigation.goBack()},
+                  ]);
+                }
+                if (iteratorNum == 120) {
+                  clearInterval(refreshId);
+                  alert(
+                    'To Long TIme',
+                    'Picture uploading taking too long. Please upload a low resolution picture',
+                    [
+                      {
+                        text: 'OK',
+                        onPress: () => that.props.navigation.goBack(),
+                      },
+                    ],
+                  );
+                }
+              });
+            }, 1000);
+          },
+
+          // await addToArray('Comments', item, 'comments', {
+          //   comments: this.state.comments_words,
+          //   post_id: item,
+          //   user_id: res.userId,
+          //   user_name: res.name,
+          //   time: this.state.uploading_time,
+          //   imageUrl: '',
+          //   userImage: res.profile_picture,
+          // }).then(() => {
+          //   setTimeout(async () => {
+          //     if (this.state.ImageUrl) {
+          //       this.Upload_Image(item);
+          //     }
+          //   }, 1000);
+          // })
         ),
     );
   };
@@ -205,7 +257,7 @@ export default class GoodNews extends Component {
       .onSnapshot(async () => {
         let data = await getData('Comments', item);
         console.log('data', data);
-        this.setState({comment_data: data, loading: false});
+        this.setState({comment_data: data, loadingModal: false});
       });
   }
   async showPost() {
@@ -252,45 +304,45 @@ export default class GoodNews extends Component {
     });
   };
 
-  async Upload_Image(item) {
-    let iteratorNum = 0;
-    await uploadImageComment(
-      this.state.ImageUrl,
-      this.state.imageType,
-      this.state.ImageName,
-      this.state.ImageName,
-      'Comments',
-      item,
-    );
-    let that = this;
+  // async Upload_Image(item) {
+  //   let iteratorNum = 0;
+  //   await uploadImageComment(
+  //     this.state.ImageUrl,
+  //     this.state.imageType,
+  //     this.state.ImageName,
+  //     this.state.ImageName,
+  //     'Comments',
+  //     item,
+  //   );
+  //   let that = this;
 
-    let refreshId = setInterval(function() {
-      iteratorNum += 1;
-      _retrieveData('imageUploadProgress').then(data => {
-        that.setState({uploadProgress: data});
-        if (Number(data) >= 100) {
-          clearInterval(refreshId);
-          alert('Uploaded', 'Profile is updated', [
-            {text: 'OK', onPress: () => that.props.navigation.goBack()},
-          ]);
-        }
-        if (data == '-1') {
-          clearInterval(refreshId);
-          alert('goes wrong', 'Something went wrong', [
-            {text: 'OK', onPress: () => that.props.navigation.goBack()},
-          ]);
-        }
-        if (iteratorNum == 120) {
-          clearInterval(refreshId);
-          alert(
-            'To Long TIme',
-            'Picture uploading taking too long. Please upload a low resolution picture',
-            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
-          );
-        }
-      });
-    }, 1000);
-  }
+  //   let refreshId = setInterval(function() {
+  //     iteratorNum += 1;
+  //     _retrieveData('imageUploadProgress').then(data => {
+  //       that.setState({uploadProgress: data});
+  //       if (Number(data) >= 100) {
+  //         clearInterval(refreshId);
+  //         alert('Uploaded', 'Profile is updated', [
+  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
+  //         ]);
+  //       }
+  //       if (data == '-1') {
+  //         clearInterval(refreshId);
+  //         alert('goes wrong', 'Something went wrong', [
+  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
+  //         ]);
+  //       }
+  //       if (iteratorNum == 120) {
+  //         clearInterval(refreshId);
+  //         alert(
+  //           'To Long TIme',
+  //           'Picture uploading taking too long. Please upload a low resolution picture',
+  //           [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+  //         );
+  //       }
+  //     });
+  //   }, 1000);
+  // }
 
   renderViewMore(onPress) {
     return (
@@ -340,60 +392,77 @@ export default class GoodNews extends Component {
                 this.setModalVisible();
               }}
             />
-            <FlatList
-              style={styles.root}
-              data={this.state.comment_data.comments}
-              ItemSeparatorComponent={() => {
-                return <View style={styles.separator} />;
-              }}
-              keyExtractor={item => item.user_id}
-              renderItem={({item}) => {
-                {
-                  // console.log(item.imageUrl);
-                }
-                return item.imageUrl ? (
-                  <View style={styles.container2}>
-                    <TouchableOpacity onPress={() => {}}>
-                      <Image
-                        style={styles.image}
-                        source={{
-                          uri: 'https://randomuser.me/api/portraits/men/94.jpg',
-                        }}
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.content}>
-                      <View style={styles.contentHeader}>
-                        <Text style={styles.name}>{item.user_name}</Text>
-                        <Text style={styles.time}>{item.time}</Text>
+            {this.state.loadingModal ? (
+              <ActivityIndicator
+                size={'large'}
+                color="#32cd32"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}
+              />
+            ) : (
+              <FlatList
+                style={styles.root}
+                data={this.state.comment_data.comments}
+                ItemSeparatorComponent={() => {
+                  return <View style={styles.separator} />;
+                }}
+                keyExtractor={item => item.user_id}
+                renderItem={({item}) => {
+                  {
+                    // console.log(item.imageUrl);
+                  }
+                  return item.imageUrl ? (
+                    <View style={styles.container2}>
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image
+                          style={styles.image}
+                          source={{
+                            uri: item.userImage,
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.contentHeader}>
+                          <Text style={styles.name}>{item.user_name}</Text>
+                          <Text style={styles.time}>{item.time}</Text>
+                        </View>
+                        <Text rkType="primary3 mediumLine">
+                          {item.comments}
+                        </Text>
+                        <Image
+                          style={styles.image}
+                          source={{uri: item.imageUrl}}
+                        />
                       </View>
-                      <Text rkType="primary3 mediumLine">{item.comments}</Text>
-                      <Image
-                        style={styles.image}
-                        source={{uri: item.imageUrl}}
-                      />
                     </View>
-                  </View>
-                ) : (
-                  <View style={styles.container2}>
-                    <TouchableOpacity onPress={() => {}}>
-                      <Image
-                        style={styles.image}
-                        source={{
-                          uri: 'https://randomuser.me/api/portraits/men/94.jpg',
-                        }}
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.content}>
-                      <View style={styles.contentHeader}>
-                        <Text style={styles.name}>{item.user_name}</Text>
-                        <Text style={styles.time}>{item.time}</Text>
+                  ) : (
+                    <View style={styles.container2}>
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image
+                          style={styles.image}
+                          source={{
+                            uri:
+                              'https://randomuser.me/api/portraits/men/94.jpg',
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.contentHeader}>
+                          <Text style={styles.name}>{item.user_name}</Text>
+                          <Text style={styles.time}>{item.time}</Text>
+                        </View>
+                        <Text rkType="primary3 mediumLine">
+                          {item.comments}
+                        </Text>
                       </View>
-                      <Text rkType="primary3 mediumLine">{item.comments}</Text>
                     </View>
-                  </View>
-                );
-              }}
-            />
+                  );
+                }}
+              />
+            )}
             <View
               style={{
                 marginBottom: responsiveHeight(2),
