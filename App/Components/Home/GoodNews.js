@@ -149,7 +149,7 @@ export default class GoodNews extends Component {
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      console.log('uuuuuuuuu', result);
+      // console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data: res,
@@ -158,7 +158,7 @@ export default class GoodNews extends Component {
   };
 
   CommentsPost = async item => {
-    console.log('datata', item);
+    // console.log('datata', item);
     await _retrieveData('user').then(
       async result =>
         await getData('users', result).then(
@@ -341,7 +341,7 @@ export default class GoodNews extends Component {
               }}
             />
 
-            {console.log(this.state.comment_data)}
+            {/* {console.log(this.state.comment_data)} */}
             <FlatList
               style={styles.root}
               data={this.state.comment_data.comments}
@@ -351,7 +351,7 @@ export default class GoodNews extends Component {
               keyExtractor={item => item.user_id}
               renderItem={({item}) => {
                 {
-                  console.log(item.imageUrl);
+                  // console.log(item.imageUrl);
                 }
                 return item.imageUrl ? (
                   <View style={styles.container2}>
@@ -701,7 +701,7 @@ export default class GoodNews extends Component {
                       backgroundColor: 'white',
                       marginBottom: responsiveHeight(2),
                     }}>
-                    {console.log('ITEMM:::', item)}
+                    {/* {console.log('ITEMM:::', item)} */}
                     <View
                       style={{
                         top: 2,
@@ -746,7 +746,7 @@ export default class GoodNews extends Component {
                             fontWeight: 'bold',
                           }}>
                           {item.user_name}
-                          {console.log('ITEM NAME', item.name)}
+                          {/* {console.log('ITEM NAME', item.name)} */}
                         </Text>
                       </View>
                       <View

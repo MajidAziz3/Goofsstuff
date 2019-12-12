@@ -134,7 +134,7 @@ class UserProfile extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('user').then(async item => {
-      console.log('refffffffff', item);
+      // console.log('refffffffff', item);
       await uploadUserImage(
         this.state.ImageUrl,
         this.state.imageType,
@@ -198,7 +198,7 @@ class UserProfile extends Component {
         let data = await getAllOfCollection('News');
         this.setState({post_data: data});
       });
-      console.log("POSTSSSS::", this.state.post_data)
+      // console.log("POSTSSSS::", this.state.post_data)
   }
 
   getVisionBoardData = async () => {
@@ -228,6 +228,13 @@ class UserProfile extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled photo picker')
+    } else if (response.error) {
+        console.log('ImagePickerManager Error: ', response.error)
+    } else if (response.customButton) {
+        // this.showCamera();
+    } else{
       let source = response;
       //let source = { uri: 'data:image/jpeg;base64,' + response.data };
       this.setState(
@@ -254,7 +261,9 @@ class UserProfile extends Component {
             );
           });
         },
+      
       );
+    }
     });
   };
 
@@ -353,7 +362,7 @@ class UserProfile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    {console.log("imggggg:", this.state.data_user.profile_picture)}
+                    {/* {console.log("imggggg:", this.state.data_user.profile_picture)} */}
 
                     <Thumbnail
                       large
@@ -937,7 +946,7 @@ class UserProfile extends Component {
                       backgroundColor: 'white',
                       marginBottom: responsiveHeight(2),
                     }}>
-                    {console.log('ITEMM:::', item)}
+                    {/* {console.log('ITEMM:::', item)} */}
                     <View
                       style={{
                         top: 2,
@@ -980,7 +989,7 @@ class UserProfile extends Component {
                             fontWeight: 'bold',
                           }}>
                           {item.user_name}
-                          {console.log('ITEM NAME', item.name)}
+                          {/* {console.log('ITEM NAME', item.name)} */}
                         </Text>
                       </View>
                       <View

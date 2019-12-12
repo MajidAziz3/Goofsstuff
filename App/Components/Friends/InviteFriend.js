@@ -129,7 +129,7 @@ export default class InviteFriends extends Component {
   pending_Request_check = async (request, username, profile_pic) => {
     const {diff, pending_request, data} = this.state;
 
-    console.log('ressssssssssssssss', diff);
+    // console.log('ressssssssssssssss', diff);
     // if (!pending_request.includes(request, username, profile_pic)) {
     //   pending_request.push(request);
     //   this.setState({
@@ -196,7 +196,7 @@ export default class InviteFriends extends Component {
   };
 
   render() {
-    console.log("haha",this.state.Contacts_data)
+    // console.log("haha",this.state.Contacts_data)
     return (
       <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
         <View style={{marginBottom: 10}}>

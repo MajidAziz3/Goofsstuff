@@ -132,8 +132,8 @@ export default class CommunityBoard extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Sport');
         // this.setState({sport_data: data, loading: false});
-        console.log(data);
-        console.log('\n');
+        // console.log(data);
+        // console.log('\n');
       });
   }
   async EventPost() {
@@ -143,8 +143,8 @@ export default class CommunityBoard extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Event');
         // this.setState({event_data: data, loading: false});
-        console.log(data);
-        console.log('\n');
+        // console.log(data);
+        // console.log('\n');
       });
   }
   async JobPost() {

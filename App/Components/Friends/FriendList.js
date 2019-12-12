@@ -111,7 +111,7 @@ export default class FriendsList extends Component {
   };
 
   renderItem = ({item}) => {
-    console.log('hy i m item', item);
+    // console.log('hy i m item', item);
     return (
       <View>
         {item ? (

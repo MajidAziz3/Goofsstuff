@@ -43,7 +43,7 @@ export default class Family extends Component {
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      console.log('uuuuuuuuu', result);
+      // console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data_user: res,

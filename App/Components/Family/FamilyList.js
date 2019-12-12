@@ -133,7 +133,7 @@ class FamilyList extends Component {
           uname: res.name
         });
       });
-  console.log(this.state.data_user)
+  // console.log(this.state.data_user)
     };
   
 
