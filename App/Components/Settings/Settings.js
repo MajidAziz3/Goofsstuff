@@ -450,7 +450,7 @@ export default class Settings extends Component {
 
                 <Modal animationType={"slide"} transparent={false} transparent={true}
                     visible={this.state.modalVisible}
-                    onRequestClose={() => { console.log("Modal has been closed.") }}
+                    onRequestClose={() => {  }}
 
                 >
 

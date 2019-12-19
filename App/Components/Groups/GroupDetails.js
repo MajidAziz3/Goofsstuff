@@ -265,7 +265,7 @@ class GroupDetails extends Component {
               size={25}
               color={'#32cd32'}
               style={styles.menu1}
-              onPress={() => this.props.navigation.navigate('EditGroup')}
+              onPress={() => this.props.navigation.navigate('EditGroup',{item:this.state.item})}
             />
           </View>
 

@@ -34,7 +34,6 @@ export default class AuthLoadingScreen extends Component {
   };
 
   render() {
-    console.log('vvvvv', this.state.value);
     return <View style={styles.container}>
     </View>;
   }

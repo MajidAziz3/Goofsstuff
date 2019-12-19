@@ -41,7 +41,6 @@ export default class CustomDrawer extends Component {
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data: res,

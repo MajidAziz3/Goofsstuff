@@ -104,10 +104,31 @@ export default class GoodNews extends Component {
       comments_data: [],
       ImageUrl: null,
       _id: null,
+      posts: null,
+      fav: [],
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    await firebase
+      .firestore()
+      .collection('GreatNewPost')
+      .onSnapshot(async () => {
+        getAllOfCollection('GreatNewPost').then(res => {
+          this.setState({posts: res.Favorite, loading: false});
+        });
+      });
+    await firebase
+      .firestore()
+      .collection('NewsFavorite')
+      .onSnapshot(async () => {
+        await _retrieveData('user').then(user => {
+          getData('NewsFavorite', user).then(res => {
+            console.log('fav', res);
+            this.setState({fav: res.Favorite, loading: false});
+          });
+        });
+      });
     this.userData();
     this.showPost();
 
@@ -142,14 +163,13 @@ export default class GoodNews extends Component {
       uploading_time:
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
-  }
+  };
   setModalVisible() {
     this.setState({modalVisible: !this.state.modalVisible});
   }
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      // console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data: res,
@@ -158,7 +178,6 @@ export default class GoodNews extends Component {
   };
 
   CommentsPost = async item => {
-    // console.log('datata', item);
     await _retrieveData('user').then(
       async result =>
         await getData('users', result).then(
@@ -241,13 +260,11 @@ export default class GoodNews extends Component {
   };
 
   favoritePost = async item => {
-    await _retrieveData('user').then(
-      async result =>
-        await addToArray('NewsFavorite', item, 'Favorite', {
-          user_id: result,
-          post_id: item,
-        }),
-    );
+    await _retrieveData('user').then(async itm => {
+      await addToArray('NewsFavorite', itm, 'Favorite', {
+        post_id: item,
+      });
+    });
   };
 
   async CommentPost(item) {
@@ -256,7 +273,6 @@ export default class GoodNews extends Component {
       .collection('Comments')
       .onSnapshot(async () => {
         let data = await getData('Comments', item);
-        console.log('data', data);
         this.setState({comment_data: data, loadingModal: false});
       });
   }
@@ -264,9 +280,11 @@ export default class GoodNews extends Component {
     firebase
       .firestore()
       .collection('News')
-      .onSnapshot(async () => {
-        let data = await getAllOfCollection('News');
-        this.setState({post_data: data, loading: false});
+      .onSnapshot(() => {
+        setTimeout(async () => {
+          let data = await getAllOfCollection('News');
+          this.setState({post_data: data, loading: false});
+        }, 400);
       });
   }
 
@@ -303,47 +321,6 @@ export default class GoodNews extends Component {
       );
     });
   };
-
-  // async Upload_Image(item) {
-  //   let iteratorNum = 0;
-  //   await uploadImageComment(
-  //     this.state.ImageUrl,
-  //     this.state.imageType,
-  //     this.state.ImageName,
-  //     this.state.ImageName,
-  //     'Comments',
-  //     item,
-  //   );
-  //   let that = this;
-
-  //   let refreshId = setInterval(function() {
-  //     iteratorNum += 1;
-  //     _retrieveData('imageUploadProgress').then(data => {
-  //       that.setState({uploadProgress: data});
-  //       if (Number(data) >= 100) {
-  //         clearInterval(refreshId);
-  //         alert('Uploaded', 'Profile is updated', [
-  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
-  //         ]);
-  //       }
-  //       if (data == '-1') {
-  //         clearInterval(refreshId);
-  //         alert('goes wrong', 'Something went wrong', [
-  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
-  //         ]);
-  //       }
-  //       if (iteratorNum == 120) {
-  //         clearInterval(refreshId);
-  //         alert(
-  //           'To Long TIme',
-  //           'Picture uploading taking too long. Please upload a low resolution picture',
-  //           [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
-  //         );
-  //       }
-  //     });
-  //   }, 1000);
-  // }
-
   renderViewMore(onPress) {
     return (
       <Text
@@ -373,6 +350,7 @@ export default class GoodNews extends Component {
   }
 
   render() {
+    console.disableYellowBox = true;
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     return (
@@ -411,9 +389,6 @@ export default class GoodNews extends Component {
                 }}
                 keyExtractor={item => item.user_id}
                 renderItem={({item}) => {
-                  {
-                    // console.log(item.imageUrl);
-                  }
                   return item.imageUrl ? (
                     <View style={styles.container2}>
                       <TouchableOpacity onPress={() => {}}>
@@ -570,12 +545,20 @@ export default class GoodNews extends Component {
                 <View
                   style={{width: '100%', height: '80%', flexDirection: 'row'}}>
                   <View style={{width: '20%', alignItems: 'center'}}>
-                    <Image
-                      source={{
-                        uri: 'https://randomuser.me/api/portraits/men/13.jpg',
-                      }}
-                      style={{width: 50, height: 50, borderRadius: 60, top: 5}}
-                    />
+                    {this.state.posts && (
+                      <Image
+                        source={{
+                          uri: 'https://randomuser.me/api/portraits/men/13.jpg',
+                          // this.state.posts[0].profile_image,
+                        }}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 60,
+                          top: 5,
+                        }}
+                      />
+                    )}
                   </View>
 
                   <View style={{width: '80%'}}>
@@ -585,14 +568,18 @@ export default class GoodNews extends Component {
                         height: '30%',
                         justifyContent: 'center',
                       }}>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(2.1),
-                          color: 'white',
-                          left: 0,
-                        }}>
-                        Mel Gibson just got a promotion!
-                      </Text>
+                      {this.state.posts && (
+                        <Text
+                          style={{
+                            fontSize: responsiveFontSize(2.1),
+                            color: 'white',
+                            left: 0,
+                          }}>
+                          {/* {this.state.posts[0].user_name} */}
+                          {'got promotion '}
+                          {/* {this.state.posts[0].description} */}
+                        </Text>
+                      )}
                     </View>
 
                     <View
@@ -749,8 +736,9 @@ export default class GoodNews extends Component {
               <FlatList
                 data={this.state.post_data}
                 keyExtractor={item => item.id}
-                renderItem={({item}) => (
+                renderItem={({item, index}) => (
                   <View
+                    key={index}
                     style={{
                       shadowColor: '#000',
                       shadowOffset: {width: 0, height: 2},
@@ -767,7 +755,6 @@ export default class GoodNews extends Component {
                       backgroundColor: 'white',
                       marginBottom: responsiveHeight(2),
                     }}>
-                    {/* {console.log('ITEMM:::', item)} */}
                     <View
                       style={{
                         top: 2,
@@ -810,7 +797,6 @@ export default class GoodNews extends Component {
                             fontWeight: 'bold',
                           }}>
                           {item.user_name}
-                          {/* {console.log('ITEM NAME', item.name)} */}
                         </Text>
                       </View>
                       <View
@@ -1049,24 +1035,78 @@ export default class GoodNews extends Component {
                           }}>
                           {/* {item.favorite.length} */}
                         </Text>
-                        <TouchableOpacity>
+                        {this.state.fav && this.state.fav.length > 0 ? (
+                          <TouchableOpacity key={index}>
+                            {console.log('hsahjds', parseInt(index))}
+                            {this.state.fav[index] != undefined ? (
+                              item.post_id === this.state.fav[index].post_id ? (
+                                <View key={index}>
+                                  <Ionicon
+                                    name={'md-heart'}
+                                    size={30}
+                                    color={'#32cd32'}
+                                    style={{top: 1}}
+                                    onPress={() => {
+                                      this.favoritePost(item.post_id);
+                                    }}
+                                  />
+                                </View>
+                              ) : (
+                                this.state.fav.map((itm, ind) => {
+                                  return item.post_id === itm.post_id ? (
+                                    <View key={index}>
+                                      {console.log(
+                                        item.post_id,
+                                        this.state.fav[index].post_id,
+                                      )}
+                                      <Ionicon
+                                        name={'md-heart'}
+                                        size={30}
+                                        color={'#32cd32'}
+                                        style={{top: 1}}
+                                        onPress={() => {
+                                          this.favoritePost(item.post_id);
+                                        }}
+                                      />
+                                    </View>
+                                  ) : (
+                                    <View key={index}>
+                                      <Ionicon
+                                        name={'md-heart-empty'}
+                                        size={30}
+                                        color={'#32cd32'}
+                                        style={{top: 1}}
+                                        onPress={() => {
+                                          this.favoritePost(item.post_id);
+                                        }}
+                                      />
+                                    </View>
+                                  );
+                                })
+                              )
+                            ) : (
+                              <Ionicon
+                                name={'md-heart-empty'}
+                                size={30}
+                                color={'#32cd32'}
+                                style={{top: 1}}
+                                onPress={() => {
+                                  this.favoritePost(item.post_id);
+                                }}
+                              />
+                            )}
+                          </TouchableOpacity>
+                        ) : (
                           <Ionicon
-                            name={
-                              this.state.hit_favorite
-                                ? 'md-heart'
-                                : 'md-heart-empty'
-                            }
+                            name={'md-heart-empty'}
                             size={30}
                             color={'#32cd32'}
                             style={{top: 1}}
                             onPress={() => {
                               this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
                             }}
                           />
-                        </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                   </View>

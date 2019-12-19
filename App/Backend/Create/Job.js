@@ -16,9 +16,11 @@ export async function Create_Job(
 ) {
   _retrieveData('user').then(result =>
     getData('Company_Profile', result).then(user => {
+      console.log('job',job_category)
+      // if (!event_sub_category.localeCompare('football'))
       saveDataWithoutDocId('Create_Job', {
         user_id: result,
-        user_name: user.user_name,
+        user_name: user.name,
         title: job_title,
         phone: phone_job,
         email: email_address_job,

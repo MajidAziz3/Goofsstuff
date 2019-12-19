@@ -141,8 +141,6 @@ export default class Watch extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Watch');
         this.setState({ post_data: data, loading: false, viewsData: data.Views });
-        console.log(data);
-        console.log('\n');
       });
 
     this.setState({ datasource: this.state.popular });
@@ -190,7 +188,6 @@ export default class Watch extends Component {
   };
 
   saveViews = async (item) => {
-    console.log(item)
     let finalViews = this.state.viewsData + this.state.Views;
     await saveData('Watch', item.post_id, { Views: finalViews })
   }
@@ -280,7 +277,6 @@ export default class Watch extends Component {
   }
 
   render() {
-    console.log('statebbbbbbbbbbbbbbbbbbb', this.state.post_data);
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     const myIcon = <Icon name="account" size={30} color="#900" />;
@@ -887,7 +883,6 @@ export default class Watch extends Component {
                     flexDirection: 'row',
                     marginBottom: 1,
                   }}>
-                    {console.log("My Video:", item.videoUrl)}
                   <VideoPlayer
                     source={{
                       uri: item.videoUrl,

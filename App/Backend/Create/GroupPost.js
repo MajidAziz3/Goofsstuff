@@ -8,7 +8,6 @@ export async function GroupPost(
   comment,
   like,
   favorite,
-  file,
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
@@ -17,7 +16,6 @@ export async function GroupPost(
         user_name: user.name,
         profile_image: user.profile_picture,
         description: description,
-        file: file,
         uploading_time: uploading_time,
         like: like,
         favorite: favorite,

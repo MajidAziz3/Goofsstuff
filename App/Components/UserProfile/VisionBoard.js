@@ -149,7 +149,6 @@ export default class Login extends React.Component {
     async Upload_Image() {
         let iteratorNum = 0;
         await _retrieveData('user').then(async item => {
-            console.log(this.state.uri)
             var fileName = this.state.uri.replace(/^.*[\\\/]/, '')
           await uploadVisionImage(
             this.state.uri,
@@ -306,10 +305,6 @@ export default class Login extends React.Component {
         this.setState({type:type})
         this._showLoading()
         if (this.state.markImage) {
-            console.log('55555555555555555555',this.state.image)
-            console.log('55555555555555555555',this.state.markImage)
-            console.log('55555555555555555555',type)
-            console.log('55555555555555555555',this.state.saveFormat)
             Marker.markImage({
                 src: this.state.image,
                 markerSrc: this.state.markImage,
@@ -325,19 +320,10 @@ export default class Login extends React.Component {
                     loading: false
                 })
             }).catch((err) => {
-                console.log('====================================')
-                console.log(err, 'err')
-                console.log('====================================')
                 alert(err)
                 this.setState({loading:false})
             })
         } else {
-            console.log("IIIIIIIIINNNNNNNNNNNN EEEEEEEEELLLLLLLLLLSSSSSSEEEEEEEEEEEE")
-            console.log('55555555555555555555',this.state.image)
-            console.log('55555555555555555555',this.state.markImage)
-            console.log('55555555555555555555',type)
-            console.log('55555555555555555555',this.state.saveFormat)
-            console.log('55555555555555555555',this.state.uploadText)
             Marker.markText({
                 src: this.state.image,
                 text: this.state.uploadText,
@@ -357,9 +343,6 @@ export default class Login extends React.Component {
                         loading: false
                     })
                 }).catch((err) => {
-                    console.log('====================================')
-                    console.log(err)
-                    console.log('====================================')
                     alert(err)
                     this.setState({loading:false})
                 })
@@ -385,9 +368,6 @@ export default class Login extends React.Component {
                     loading: false
                 })
             }).catch((err) => {
-                console.log('====================================')
-                console.log(err, 'err')
-                console.log('====================================')
             })
         } else {
             Marker.markText({
@@ -420,9 +400,6 @@ export default class Login extends React.Component {
                     loading: false
                 })
             }).catch((err) => {
-                console.log('====================================')
-                console.log(err)
-                console.log('====================================')
             })
         }
     }
@@ -447,16 +424,13 @@ export default class Login extends React.Component {
         }
         Picker.showImagePicker(options, (response) => {
             if (response.didCancel) {
-                console.log('User cancelled photo picker')
             } else if (response.error) {
-                console.log('ImagePickerManager Error: ', response.error)
             } else if (response.customButton) {
                 // this.showCamera();
             } else {
                 // You can display the image using either:
                 // const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
                 const uri = response.uri
-                console.log("IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",response)
                 this.setState({fileName:response.fileName})
                 if (type === 'image') {
                     this.setState({

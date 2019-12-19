@@ -20,7 +20,6 @@ export async function Community_Event(
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
-      // console.log('desired sadgjas', Event_Category, event_sub_category);
       if (Event_Category == 'Sport') {
       //   switch(event_sub_category){
       //     case 'Cricket':
@@ -143,7 +142,7 @@ export async function Community_Event(
       //                   });
       //   }
         if (!event_sub_category.localeCompare('football'))
-          addToArray('Sport', result, 'football', {
+          addToArray('Sport_football', result, 'football', {
             user_id: result,
             user_name: user.name,
             user_pic:user.profile_picture,
@@ -163,7 +162,7 @@ export async function Community_Event(
             joining_members: joining_members,
           });
           else if (!event_sub_category.localeCompare('Cricket'))
-          addToArray('Sport', result, 'cricket', {
+          addToArray('Sport_cricket', result, 'cricket', {
             user_id: result,
             user_name: user.name,
             user_pic:user.profile_picture,
@@ -183,7 +182,7 @@ export async function Community_Event(
             joining_members: joining_members,
           });
         else {
-          addToArray('Sport', result, 'BaseBall', {
+          addToArray('Sport_baseball', result, 'BaseBall', {
             user_id: result,
             user_name: user.name,
             user_pic:user.profile_picture,

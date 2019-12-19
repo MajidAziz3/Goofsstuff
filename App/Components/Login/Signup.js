@@ -11,7 +11,7 @@ import {
   TextInput,
   BackHandler,
   RecyclerViewBackedScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -60,22 +60,26 @@ class Signup extends Component {
       family_member: [],
       isChecked: false,
       isDateTimePickerVisible: false,
+      send_request:[],
       location: '',
       bio: '',
       groups: [],
       vission_board: null,
       likes: [],
-      profile_picture: 'https://cdn2.iconfinder.com/data/icons/website-icons/512/User_Avatar-512.png',
+      profile_picture:
+        'https://cdn2.iconfinder.com/data/icons/website-icons/512/User_Avatar-512.png',
       gallery: [],
       affirmation: false,
       healthy: false,
       kindness: false,
+      familyInvitation:[]
     };
   }
 
-  handleDatePicked = () => {
+  handleDatePicked = date => {
     this.setState({
       isDateTimePickerVisible: !this.state.isDateTimePickerVisible,
+      // Date_Of_Birth: date,
     });
   };
 
@@ -99,43 +103,44 @@ class Signup extends Component {
       family_member,
       affirmation,
       healthy,
-      kindness
+      kindness,
+      send_request,familyInvitation
     } = this.state;
-    if (validator.isEmpty(full_name)) {
-      nameInput.focus();
-      return;
-    }
-    if (!validator.isEmail(email)) {
-      emailInput.focus();
-      return;
-    }
-    if (password === '') {
-      passwordInput.focus();
-      return;
-    }
-    // if (Date_Of_Birth === '') {
-    //   alert('Please enter Date Of Birth');
+    // if (validator.isEmpty(full_name)) {
+    //   nameInput.focus();
+    //   return;
+    // }
+    // if (!validator.isEmail(email)) {
+    //   emailInput.focus();
+    //   return;
+    // }
+    // if (password === '') {
+    //   passwordInput.focus();
+    //   return;
+    // }
+    // // if (Date_Of_Birth === '') {
+    // //   alert('Please enter Date Of Birth');
+    // //   return;
+    // // }
+
+    // if (validator.isEmpty(conformed_password)) {
+    //   conformed_passwordInput.focus();
+    //   return;
+    // }
+    // if (conformed_password !== password) {
+    //   alert('Conformed Password not Matched');
     //   return;
     // }
 
-    if (validator.isEmpty(conformed_password)) {
-      conformed_passwordInput.focus();
-      return;
-    }
-    if (conformed_password !== password) {
-      alert('Conformed Password not Matched');
-      return;
-    }
+    // if (location === '') {
+    //   locationInput.focus();
+    //   return;
+    // }
 
-    if (location === '') {
-      locationInput.focus();
-      return;
-    }
-
-    if (bio === '') {
-      bioInput.focus();
-      return;
-    }
+    // if (bio === '') {
+    //   bioInput.focus();
+    //   return;
+    // }
 
     await signUp(
       full_name,
@@ -144,19 +149,18 @@ class Signup extends Component {
       location,
       likes,
       profile_picture,
-      gallery,
       groups,
-      vission_board,
-      password,
       Date_Of_Birth,
-      conformed_password,
+      password,
       friends,
       pending_friends,
       favorite,
       family_member,
       affirmation,
       healthy,
-      kindness
+      kindness,
+      send_request,
+      familyInvitation
     ).then(() => {
       this.props.navigation.navigate('Login');
     });
@@ -205,7 +209,6 @@ class Signup extends Component {
                 style={{height: '100%', width: '100%'}}
               />
             </View> */}
-            
 
             <View
               style={{
@@ -493,14 +496,14 @@ class Signup extends Component {
                   )}
                 </Text>
                 <DateTimePicker
-                  mode="date"
-                  format="YYYY-MM-DD"
+                  mode={'date'}
+                  format={'YYYY-MM-DD'}
                   isVisible={this.state.isDateTimePickerVisible}
-                  onConfirm={this.handleDatePicked}
+                  onConfirm={ this.handleDatePicked}
                   onCancel={this.handleDatePicked}
-                  onDateChange={Date_Of_Birth => {
-                    this.setState({Date_Of_Birth});
-                  }}
+                  // onDateChange={Date_Of_Birth => {
+                  //   this.setState({Date_Of_Birth});
+                  // }}
                 />
               </View>
             </View>
@@ -627,7 +630,7 @@ class Signup extends Component {
                 style={{
                   top: responsiveHeight(4),
                   left: 20,
-                  width: '70%'
+                  width: '70%',
                 }}>
                 I agree to the community guidelines, terms and conditions for
                 The Good Stuff App

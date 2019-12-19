@@ -127,7 +127,6 @@ class UserProfile extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('user').then(async item => {
-      console.log('refffffffff', item);
       await uploadUserImage(
         this.state.ImageUrl,
         this.state.imageType,
@@ -216,7 +215,6 @@ class UserProfile extends Component {
       );
     });
     // if (this.state.ImageUrl !== null) {
-    //   // console.log('hhhhhh,', this.state.ImageUrl);
     //   // setTimeout(async () => {
     //      this.Upload_Image();
     // //   }, 300);

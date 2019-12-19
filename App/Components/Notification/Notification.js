@@ -20,7 +20,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Foundation from 'react-native-vector-icons/Foundation';
+import EIcon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   Container,
@@ -95,55 +95,152 @@ export default class Notification extends Component {
       ],
       friend_request: null,
       page: 0,
+      loading: true,
+      data_user: null,
+      data: [],
     };
   }
 
   componentDidMount = async () => {
-    await _retrieveData('user').then(
-      async result =>
-        await firebase
-          .firestore()
-          .collection('friendRequest')
-          .onSnapshot(
-            async () =>
-              await getData('friendRequest', result).then(data => {
-                this.setState({
-                  friend_request: data.request,
-                });
-              }),
-          ),
-    );
+    await firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot(async () => {
+        await _retrieveData('user').then(async result => {
+          await getData('users', result).then(res =>
+            this.setState({
+              data_user: res,
+              friend_request: res.pending_friends,
+              userId: res.userId,
+              loading: false,
+              data: res.familyInvitation,
+            }),
+          );
+        });
+      });
   };
 
   friends = async itm => {
-    console.log('ddtttddttt', itm);
-    let data1 = await this.state.friend_request;
-    this.setState({friend_request: []});
-    console.log('Before Delete 2', data1);
-    let data2 = data1.filter(item => item.userId !== itm.item.userId);
+    console.log('item', itm);
+    // let data1 = await this.state.friend_request;
+    // this.setState({friend_request: []});
+    // let data2 = data1.filter(item => item.userId !== itm.item.userId);
 
-    await this.setState({friend_request: data2});
+    // await this.setState({friend_request: data2});
+
+    let data1 = this.state.friend_request;
+    this.setState({friend_request: []});
+    let data2 = [];
+    new Promise((resolve, reject) => {
+      let i = 0;
+      //   });
+      data1.forEach(item => {
+        i++;
+        if (item.userId !== itm.item.userId) {
+          data2.push(item);
+          resolve();
+        }
+      });
+    }).then(result => {
+      this.setState({friend_request: data2});
+    });
 
     await _retrieveData('user').then(async result => {
       await firebase
         .firestore()
-        .collection('friendRequest')
+        .collection('users')
         .doc(result)
-        .update({request: this.state.friend_request});
-      await getData('users', result).then(
-        async check =>
-          await addToArray('friends', itm.userId, 'request', {
-            userId: result,
-            name: check.name,
-            profile_pic: check.profile_picture,
-          }).then(async () => {
-            await addToArray('friends', result, 'request', {
-              userId: item.userId,
-              name: item.name,
-              profile_pic: item.profile_pic,
-            });
-          }),
-      );
+        .update({
+          pending_friends: this.state.friend_request,
+        });
+      await getData('users', result).then(async check => {
+        await firebase
+          .firestore()
+          .collection('users')
+          .doc(itm.item.userId)
+          .update({
+            friends: firebase.firestore.FieldValue.arrayUnion({
+              userId: check.userId,
+              name: check.name,
+              profile_picture: check.profile_picture,
+              bio: check.bio,
+            }),
+          });
+        await firebase
+          .firestore()
+          .collection('users')
+          .doc(result)
+          .update({
+            friends: firebase.firestore.FieldValue.arrayUnion({
+              userId: itm.item.userId,
+              name: itm.item.name,
+              profile_picture: itm.item.profile_picture,
+              bio: itm.item.bio,
+            }),
+          });
+      });
+    });
+  };
+
+  familyInvitation = async itm => {
+    console.log('item', itm);
+    // let data1 = await this.state.friend_request;
+    // this.setState({friend_request: []});
+    // let data2 = data1.filter(item => item.userId !== itm.item.userId);
+
+    // await this.setState({friend_request: data2});
+
+    let data1 = this.state.data;
+    this.setState({data: []});
+    let data2 = [];
+    new Promise((resolve, reject) => {
+      let i = 0;
+      //   });
+      data1.forEach(item => {
+        i++;
+        if (item.userId !== itm.item.userId) {
+          data2.push(item);
+          resolve();
+        }
+      });
+    }).then(result => {
+      this.setState({data: data2});
+    });
+
+    await _retrieveData('user').then(async result => {
+      await firebase
+        .firestore()
+        .collection('users')
+        .doc(result)
+        .update({
+          familyInvitation: this.state.data,
+        });
+      await getData('users', result).then(async check => {
+        await firebase
+          .firestore()
+          .collection('users')
+          .doc(itm.item.userId)
+          .update({
+            family_member: firebase.firestore.FieldValue.arrayUnion({
+              userId: check.userId,
+              name: check.name,
+              profile_picture: check.profile_picture,
+              bio: check.bio,
+            }),
+          });
+        await firebase
+          .firestore()
+          .collection('users')
+          .doc(result)
+          .update({
+            family_member: firebase.firestore.FieldValue.arrayUnion({
+              userId: itm.item.userId,
+              name: itm.item.name,
+              profile_picture: itm.item.profile_picture,
+              bio: itm.item.bio,
+            }),
+          });
+      });
     });
   };
 
@@ -159,18 +256,30 @@ export default class Notification extends Component {
             onPress={() => this.props.navigation.openDrawer()}
             style={styles.menu}
           />
-          <Image
-            source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
-            style={styles.menu1}
-          />
+          {!this.state.data_user ||
+          this.state.data_user.profile_picture == null ? (
+            <EIcon
+              name="user"
+              size={30}
+              color="#d0d0d0dd"
+              style={styles.menu1}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: this.state.data_user.profile_picture,
+              }}
+              style={styles.menu1}
+            />
+          )}
         </View>
         <Container>
           <Tabs
             initialPage={0}
             swipeEnable={false}
-            tabBarInactiveTextColor='gray'
-            tabBarActiveTextColor='#32cd32'
-            tabBarUnderlineStyle={{ height: 4, backgroundColor: '#32cd32' }}
+            tabBarInactiveTextColor="gray"
+            tabBarActiveTextColor="#32cd32"
+            tabBarUnderlineStyle={{height: 4, backgroundColor: '#32cd32'}}
             onChangeTab={({i}) => this.setState({page: i})}
             renderTabBar={() => (
               <ScrollableTab style={{backgroundColor: '#fff'}} />
@@ -203,7 +312,7 @@ export default class Notification extends Component {
                       <TouchableOpacity>
                         <Image
                           source={{
-                            uri: item.item.profile_pic,
+                            uri: item.item.profile_picture,
                           }}
                           style={styles.avatar}
                         />
@@ -232,7 +341,7 @@ export default class Notification extends Component {
                             <TouchableOpacity
                               style={styles.text3}
                               onPress={() => {
-                                item && this.friends(item);
+                                alert('rejected');
                               }}>
                               <Text
                                 style={{
@@ -263,7 +372,7 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <FontAwesome5 name="users" size={26} color={'gray'}/>
+                  <FontAwesome5 name="users" size={26} color={'gray'} />
                 </TabHeading>
               }>
               <FlatList
@@ -313,10 +422,71 @@ export default class Notification extends Component {
                       ? styles.activeTabStyle
                       : styles.tabStyle
                   }>
-                  <MCI name="home-heart" size={34} color={'gray'}/>
+                  <MCI name="home-heart" size={34} color={'gray'} />
                 </TabHeading>
-              }
-            />
+              }>
+              <FlatList
+                style={styles.root}
+                data={this.state.data}
+                keyExtractor={item => {
+                  return item.id;
+                }}
+                renderItem={item => {
+                  return (
+                    <View style={styles.container}>
+                      <TouchableOpacity>
+                        <Image
+                          source={{
+                            uri: item.item.profile_picture,
+                          }}
+                          style={styles.avatar}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.mainContent}>
+                          <TouchableOpacity style={styles.text}>
+                            <Text style={styles.name}>{item.item.name}</Text>
+                          </TouchableOpacity>
+                          <View style={{flexDirection: 'row'}}>
+                            <TouchableOpacity
+                              style={styles.text2}
+                              onPress={() => {
+                                this.state.data && this.familyInvitation(item);
+                              }}>
+                              <Text
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'white',
+                                  alignSelf: 'center',
+                                  marginTop: 15,
+                                }}>
+                                Accept
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.text3}
+                              onPress={() => {
+                                alert('rejected');
+                              }}>
+                              <Text
+                                style={{
+                                  textAlign: 'center',
+                                  color: 'white',
+                                  alignSelf: 'center',
+                                  marginTop: 15,
+                                }}>
+                                Reject
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                          <Text style={styles.timeAgo}>2 hours ago</Text>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }}
+              />
+            </Tab>
             <Tab
               tabStyle={{backgroundColor: '#fff'}}
               activeTabStyle={{backgroundColor: '#fff'}}

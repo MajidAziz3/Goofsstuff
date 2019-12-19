@@ -4,7 +4,6 @@ export async function _storeData(key, value) {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (error) {
-    console.log('Storage error: ' + error);
   }
 }
 
@@ -12,20 +11,16 @@ export async function _storeMultipleData(array) {
   try {
     const value = await AsyncStorage.multiSet(array);
   } catch (error) {
-    console.log('Error in storing multiple data: ' + error);
   }
 }
 
 export async function _retrieveData(key) {
   try {
-    console.log('value', key);
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      console.log('i m value', value);
       return value;
     }
   } catch (error) {
-    console.log('Error in retrieving: ' + error);
   }
 }
 
@@ -42,7 +37,6 @@ export async function _retrieveMultipleData() {
       return values;
     }
   } catch (error) {
-    console.log('Error in retrieving: ' + error);
   }
 }
 
@@ -50,6 +44,5 @@ export async function _removeAll(keys) {
   try {
     const value = await AsyncStorage.multiRemove(_keys);
   } catch (error) {
-    console.log('Error in removing: ' + error);
   }
 }
