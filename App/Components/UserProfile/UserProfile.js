@@ -13,7 +13,8 @@ import {
   ActivityIndicator,
   BackHandler,
   RecyclerViewBackedScrollView,
-  SafeAreaView
+  SafeAreaView,
+  Modal
 } from 'react-native';
 import firebase from 'firebase';
 import { Left, Thumbnail } from 'native-base';
@@ -31,52 +32,16 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { getData, uploadImage, uploadUserImage, getAllOfCollection } from '../../Backend/Utility';
+import { getData, uploadImage, uploadUserImage, getAllOfCollection, addToArray } from '../../Backend/Utility';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 import ImageResizer from 'react-native-image-resizer';
 import ViewMoreText from 'react-native-view-more-text';
 import VideoPlayer from 'react-native-video-controls';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import { signUp } from '../../Backend/Auths';
+import { string } from 'prop-types';
 ///ProfileScreen 2 5th Screen
-const images = [
-  {
-    source: {
-      uri: 'https://picsum.photos/id/1060/536/354?blur=2',
-    },
-    title: 'Paris',
-    width: 806,
-    height: 720,
-  },
-];
-const uri = 'https://randomuser.me/api/portraits/men/36.jpg';
-const imageList = [
-  {
-    src:
-      'https://scontent.cdninstagram.com/vp/3fc240dca41408d36cc23f504fe1174e/5C66EC32/t51.2885-15/e35/s320x320/43817886_246662336018913_6991265436514516630_n.jpg',
-    width: 320,
-    height: 320,
-  },
-  {
-    src:
-      'https://scontent.cdninstagram.com/vp/f1d729fe57fa4ddc7c18fa346609cdb8/5C838862/t51.2885-15/e35/s320x320/44348158_2491449144206376_3633417851169311676_n.jpg',
-    width: 320,
-    height: 167,
-  },
-  {
-    src:
-      'https://scontent.cdninstagram.com/vp/b0f56148b7f7d06ff186a51853888b2f/5C84ACC0/t51.2885-15/e35/s320x320/44724241_2191160064490130_1438494317224719529_n.jpg',
-    width: 320,
-    height: 240,
-  },
-  {
-    src:
-      'https://scontent.cdninstagram.com/vp/dcda7878c4a828f0c850b73dc5c6587d/5C728976/t51.2885-15/e35/p320x320/43158355_534503580355624_1875160473904621159_n.jpg',
-    width: 320,
-    height: 400,
-  },
 
-];
 class UserProfile extends Component {
   static navigationOptions = {
     header: null,
@@ -97,37 +62,13 @@ class UserProfile extends Component {
       VisionBoard: [],
       Gallery: [],
       userId: '',
-      post_data:[],
+      comment_data: [],
+      post_data: [],
       timeAgo: 0,
-      datasource: [
-        {
-          name: 'Woody Allen',
-          imageName: 'https://randomuser.me/api/portraits/men/1.jpg',
-        },
+      postDate: '',
+      modalVisible: false,
+      postTime: '',
 
-        {
-          name: 'David Jhon ',
-          imageName: 'https://randomuser.me/api/portraits/men/79.jpg',
-        },
-        {
-          name: 'Mel Gibson',
-          imageName: 'https://randomuser.me/api/portraits/men/13.jpg',
-        },
-
-        {
-          name: 'Ben Kingsley',
-          imageName: 'https://randomuser.me/api/portraits/men/45.jpg',
-        },
-
-        {
-          name: ' Adrien Brody ',
-          imageName: 'https://randomuser.me/api/portraits/men/62.jpg',
-        },
-        {
-          name: 'Ben Stiller',
-          imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
-        },
-      ],
     };
   }
 
@@ -189,6 +130,9 @@ class UserProfile extends Component {
     this.getGalleryData();
     this.showPost();
   };
+  setModalVisible() {
+    this.setState({ modalVisible: !this.state.modalVisible });
+  }
 
   async showPost() {
     firebase
@@ -196,9 +140,9 @@ class UserProfile extends Component {
       .collection('News')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('News');
-        this.setState({post_data: data});
+        this.setState({ post_data: data });
       });
-      // console.log("POSTSSSS::", this.state.post_data)
+    // console.log("POSTSSSS::", this.state.post_data)
   }
 
   getVisionBoardData = async () => {
@@ -230,61 +174,85 @@ class UserProfile extends Component {
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
         console.log('User cancelled photo picker')
-    } else if (response.error) {
+      } else if (response.error) {
         console.log('ImagePickerManager Error: ', response.error)
-    } else if (response.customButton) {
+      } else if (response.customButton) {
         // this.showCamera();
-    } else{
-      let source = response;
-      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
-      this.setState(
-        {
-          photo: source.uri,
-          imageType: source.type,
-        },
-        async () => {
-          await ImageResizer.createResizedImage(
-            this.state.photo,
-            Dimensions.get('window').width,
-            Dimensions.get('window').height / 3,
-            'JPEG',
-            50,
-          ).then(resizedImage => {
-            this.setState(
-              {
-                ImageName: resizedImage.name,
-                ImageUrl: resizedImage.uri,
-              },
-              () => {
-                this.Upload_Image();
-              },
-            );
-          });
-        },
-      
-      );
-    }
+      } else {
+        let source = response;
+        //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState(
+          {
+            photo: source.uri,
+            imageType: source.type,
+          },
+          async () => {
+            await ImageResizer.createResizedImage(
+              this.state.photo,
+              Dimensions.get('window').width,
+              Dimensions.get('window').height / 3,
+              'JPEG',
+              50,
+            ).then(resizedImage => {
+              this.setState(
+                {
+                  ImageName: resizedImage.name,
+                  ImageUrl: resizedImage.uri,
+                },
+                () => {
+                  this.Upload_Image();
+                },
+              );
+            });
+          },
+
+        );
+      }
     });
   };
 
-  calculateTime (date1){
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
+  likePost = async item => {
+    await _retrieveData('user').then(
+      async result =>
+        await addToArray('NewsLike', item, 'like', {
+          user_id: result,
+          post_id: item,
+        }),
+    );
+  };
 
-      var uploading_time = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+  favoritePost = async item => {
+    await _retrieveData('user').then(
+      async result =>
+        await addToArray('NewsFavorite', item, 'Favorite', {
+          user_id: result,
+          post_id: item,
+        }),
+    );
+  };
+
+  async CommentPost(item) {
+    firebase
+      .firestore()
+      .collection('Comments')
+      .onSnapshot(async () => {
+        let data = await getData('Comments', item);
+        console.log('data', data);
+        this.setState({ comment_data: data, loadingModal: false });
+      });
+  }
+
+  calculateTime(time) {
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) { // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
 
 
-    var diff = Math.round(uploading_time-date1);
-
-    console.log("DI11112222211:", uploading_time)
-    console.log("DI111111:", date1)
-    console.log("DIFFFFFFFEEE:", diff)
-    return diff
-    
   }
 
   renderViewMore(onPress) {
@@ -326,6 +294,145 @@ class UserProfile extends Component {
           />
         ) : (
             <View style={{ flex: 1 }}>
+              <Modal
+                animationType="slide"
+                transparent={false}
+                visible={this.state.modalVisible}>
+                <SafeAreaView style={{ flex: 1 }}>
+                  <FA
+                    name="cross"
+                    size={30}
+                    color={'#32cd32'}
+                    style={styles.modalcross}
+                    onPress={() => {
+                      this.setModalVisible();
+                    }}
+                  />
+                  {this.state.loadingModal ? (
+                    <ActivityIndicator
+                      size={'large'}
+                      color="#32cd32"
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flex: 1,
+                      }}
+                    />
+                  ) : (
+                      <FlatList
+                        style={styles.root}
+                        data={this.state.comment_data.comments}
+                        ItemSeparatorComponent={() => {
+                          return <View style={styles.separator} />;
+                        }}
+                        keyExtractor={item => item.user_id}
+                        renderItem={({ item }) => {
+                          {
+                            // console.log(item.imageUrl);
+                          }
+                          return item.imageUrl ? (
+                            <View style={styles.container2}>
+                              <TouchableOpacity onPress={() => { }}>
+                                <Image
+                                  style={styles.image}
+                                  source={{
+                                    uri: item.userImage,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                              <View style={styles.content}>
+                                <View style={styles.contentHeader}>
+                                  <Text style={styles.name}>{item.user_name}</Text>
+                                  <Text style={styles.time}>{item.time}</Text>
+                                </View>
+                                <Text rkType="primary3 mediumLine">
+                                  {item.comments}
+                                </Text>
+                                <Image
+                                  style={styles.image}
+                                  source={{ uri: item.imageUrl }}
+                                />
+                              </View>
+                            </View>
+                          ) : (
+                              <View style={styles.container2}>
+                                <TouchableOpacity onPress={() => { }}>
+                                  <Image
+                                    style={styles.image}
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/94.jpg',
+                                    }}
+                                  />
+                                </TouchableOpacity>
+                                <View style={styles.content}>
+                                  <View style={styles.contentHeader}>
+                                    <Text style={styles.name}>{item.user_name}</Text>
+                                    <Text style={styles.time}>{item.time}</Text>
+                                  </View>
+                                  <Text rkType="primary3 mediumLine">
+                                    {item.comments}
+                                  </Text>
+                                </View>
+                              </View>
+                            );
+                        }}
+                      />
+                    )}
+                  <View
+                    style={{
+                      marginBottom: responsiveHeight(2),
+                      backgroundColor: 'white',
+                      flexDirection: 'row',
+                      padding: 1,
+                      marginHorizontal: 20,
+                      // alignItems:'center',
+                    }}>
+                    <View
+                      style={{
+                        fontSize: 12,
+                        paddingHorizontal: 20,
+                        padding: 0,
+                        height: '90%',
+                        backgroundColor: '#dee3e1',
+                        width: '80%',
+                        borderRadius: 50,
+                        flexDirection: 'row',
+                      }}>
+                      <TextInput
+                        value={this.state.comments_words}
+                        onChangeText={values =>
+                          this.setState({ comments_words: values })
+                        }
+                        placeholder="Type something">
+                        {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                      </TextInput>
+                      <Ionicon
+                        name="ios-camera"
+                        size={30}
+                        style={{ right: 15, position: 'absolute', top: 5 }}
+                        onPress={this.handleChoosePhoto}
+                      />
+                    </View>
+                    {/* </View> */}
+                    <View
+                      style={{
+                        width: '20%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Icon
+                        name="send-circle-outline"
+                        size={30}
+                        color="#32cd32"
+                        onPress={() => {
+                          this.CommentsPost(this.state._id);
+                        }}
+                      />
+                    </View>
+                  </View>
+                </SafeAreaView>
+              </Modal>
               <View style={{ marginBottom: 10 }}>
                 <Text style={styles.welcome}>Profile</Text>
                 <Ionicon
@@ -854,12 +961,12 @@ class UserProfile extends Component {
                             paddingVertical: 5,
                             flexDirection: 'row',
                             backgroundColor: 'white',
-                            
+
                             justifyContent: 'center',
                             height: responsiveHeight(10),
                             marginTop: responsiveHeight(4)
                           }}>
-                            <Text>There nothing in your Vision Board!</Text>
+                          <Text>There nothing in your Vision Board!</Text>
                         </View>
                       )}
 
@@ -878,381 +985,380 @@ class UserProfile extends Component {
                   </Text>
                   </View>
                   {this.state.Gallery ? (
-                      <FlatList
-                        data={this.state.Gallery.gallery}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item, index }) => (
-                          <View
-                            style={{
-                              paddingVertical: 5,
-                              flexDirection: 'row',
-                              backgroundColor: 'white',
-                              flexWrap: 'wrap',
-                              justifyContent: 'space-evenly',
-                            }}>
-                            <TouchableOpacity
-                              style={{
-                                height: responsiveHeight(16),
-                                width: responsiveHeight(16.5),
-                              }}
-                              onPress={() =>
-                                this.props.navigation.navigate('MoreGallery')
-                              }>
-                              <Image
-                                source={{
-                                  uri: item,
-                                }}
-                                style={{ height: '100%', width: '100%' }}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        )}
-                      />
-                    ) : (
+                    <FlatList
+                      data={this.state.Gallery.gallery}
+                      keyExtractor={item => item.id}
+                      renderItem={({ item, index }) => (
                         <View
                           style={{
                             paddingVertical: 5,
                             flexDirection: 'row',
                             backgroundColor: 'white',
-                            
-                            justifyContent: 'center',
-                            height: responsiveHeight(10),
-                            marginTop: responsiveHeight(4)
+                            flexWrap: 'wrap',
+                            justifyContent: 'space-evenly',
                           }}>
-                            <Text>There nothing in your Gallery!</Text>
+                          <TouchableOpacity
+                            style={{
+                              height: responsiveHeight(16),
+                              width: responsiveHeight(16.5),
+                            }}
+                            onPress={() =>
+                              this.props.navigation.navigate('MoreGallery')
+                            }>
+                            <Image
+                              source={{
+                                uri: item,
+                              }}
+                              style={{ height: '100%', width: '100%' }}
+                            />
+                          </TouchableOpacity>
                         </View>
                       )}
+                    />
+                  ) : (
+                      <View
+                        style={{
+                          paddingVertical: 5,
+                          flexDirection: 'row',
+                          backgroundColor: 'white',
+
+                          justifyContent: 'center',
+                          height: responsiveHeight(10),
+                          marginTop: responsiveHeight(4)
+                        }}>
+                        <Text>There nothing in your Gallery!</Text>
+                      </View>
+                    )}
                 </View>
 
 
                 <FlatList
-                data={this.state.post_data}
-                keyExtractor={item => item.id}
-                renderItem={({item}) => (
-                  <View
-                    style={{
-                      shadowColor: '#000',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.5,
-                      shadowRadius: 2,
-                      elevation: 2,
-                      backgroundColor: '#eee',
-                      width: '100%',
-
-                      borderRadius: 25,
-                      paddingVertical: 0,
-                      paddingHorizontal:
-                        item.imageUrl || item.videoUrl ? 10 : 10,
-                      backgroundColor: 'white',
-                      marginBottom: responsiveHeight(2),
-                    }}>
-                    {/* {console.log('ITEMM:::', item)} */}
+                  data={this.state.post_data}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => (
                     <View
                       style={{
-                        top: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.5,
+                        shadowRadius: 2,
+                        elevation: 2,
+                        backgroundColor: '#eee',
+                        width: '100%',
+
                         borderRadius: 25,
+                        paddingVertical: 0,
+                        paddingHorizontal:
+                          item.imageUrl || item.videoUrl ? 10 : 10,
                         backgroundColor: 'white',
-                        width: '98%',
-                        height: 60,
-                        flexDirection: 'row',
-                        marginBottom: 1,
+                        marginBottom: responsiveHeight(2),
                       }}>
+                      {/* {console.log('ITEMM:::', item)} */}
                       <View
                         style={{
-                          backgroundColor: 'white',
+                          top: 2,
                           borderRadius: 25,
-                          width: 60,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          padding: 5,
+                          backgroundColor: 'white',
+                          width: '98%',
                           height: 60,
+                          flexDirection: 'row',
+                          marginBottom: 1,
                         }}>
+                        <View
+                          style={{
+                            backgroundColor: 'white',
+                            borderRadius: 25,
+                            width: 60,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            padding: 5,
+                            height: 60,
+                          }}>
                           <Image
                             source={{
                               uri:
-                              item.profile_image,
+                                item.profile_image,
                             }}
-                            style={{width: 60, height: 60, borderRadius: 60}}
+                            style={{ width: 50, height: 50, borderRadius: 50 }}
                           />
-                        
-                      </View>
 
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'flex-start',
-                          width: '60%',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: responsiveFontSize(3),
-                            fontWeight: 'bold',
-                          }}>
-                          {item.user_name}
-                          {/* {console.log('ITEM NAME', item.name)} */}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          width: '15%',
-                          justifyContent: 'center',
-                        }}>
-                        <Text
-                          style={{
-                            fontSize: responsiveFontSize(1.5),
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                          }}>
-                            {this.calculateTime(item.uploading_time)}
-                        </Text>
-                      </View>
-                    </View>
+                        </View>
 
-                    <View
-                      style={{
-                        width: '99%',
-                        paddingHorizontal: 20,
-                        marginBottom: responsiveHeight(2),
-                        backgroundColor: 'white',
-                        marginBottom: 3,
-                      }}>
-                      {/* <ScrollView> */}
-                      <ViewMoreText
-                        numberOfLines={3}
-                        renderViewMore={this.renderViewMore}
-                        renderViewLess={this.renderViewLess}
-                        textStyle={{
-                          fontSize: responsiveFontSize(2.1),
-                          fontWeight: '600',
-                          color: '#7e7a7a',
-                          flexWrap: 'wrap',
-                        }}>
-                        <Text>{item.description}</Text>
-                      </ViewMoreText>
-                    </View>
-                    <View
-                      style={{
-                        width: '100%',
-                        height:
-                          item.imageUrl || item.videoUrl
-                            ? responsiveHeight(30)
-                            : null,
-                      }}>
-                      {item.imageUrl ? (
                         <View
                           style={{
                             justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: 'white',
-                            width: '99%',
-                            height: '100%',
-                            flexDirection: 'row',
-                            marginBottom: 1,
+                            alignItems: 'flex-start',
+                            width: '60%',
+                            flexDirection: 'column',
+                            marginLeft: responsiveWidth(2)
                           }}>
-                          {this.state.showImage && this.state.imageFooter && (
-                            <ImageView
-                              images={[
-                                {
-                                  source: {
-                                    uri: this.state.showImage,
-                                  },
+                          <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text>
+                          <Text
+                            style={{
+                              fontSize: responsiveFontSize(3),
+                              fontWeight: 'bold',
+                            }}>
+                            {item.user_name}
+                            {/* {console.log('ITEM NAME', item.name)} */}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: responsiveFontSize(1.5),
+                              color: '#7e7a7a',
+                            }}>
+                            {date[0]} at {this.calculateTime(date[1])}
+                            {/* {console.log('ITEM NAME', item.name)} */}
+                          </Text>
+                        </View>
 
-                                  width: 1200,
-                                  height: 800,
-                                },
-                              ]}
-                              isVisible={this.state.displayIMG}
-                              isSwipeCloseEnabled={false}
-                              onClose={() => {
-                                this.setState({displayIMG: false}, () => {
-                                  this.setState({showImage: null}, () => {
-                                    this.setState({itemFooter: null});
+                      </View>
+
+                      <View
+                        style={{
+                          width: '99%',
+                          paddingHorizontal: 20,
+                          marginBottom: responsiveHeight(2),
+                          backgroundColor: 'white',
+                          marginBottom: 3,
+                          marginTop: responsiveHeight(2)
+                        }}>
+                        {/* <ScrollView> */}
+                        <ViewMoreText
+                          numberOfLines={3}
+                          renderViewMore={this.renderViewMore}
+                          renderViewLess={this.renderViewLess}
+                          textStyle={{
+                            fontSize: responsiveFontSize(2.1),
+                            fontWeight: '600',
+                            color: '#7e7a7a',
+                            flexWrap: 'wrap',
+                          }}>
+                          <Text>{item.description}</Text>
+                        </ViewMoreText>
+                      </View>
+                      <View
+                        style={{
+                          width: '100%',
+                          height:
+                            item.imageUrl || item.videoUrl
+                              ? responsiveHeight(30)
+                              : null,
+                        }}>
+                        {item.imageUrl ? (
+                          <View
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: 'white',
+                              width: '99%',
+                              height: '100%',
+                              flexDirection: 'row',
+                              marginBottom: 1,
+                            }}>
+                            {this.state.showImage && this.state.imageFooter && (
+                              <ImageView
+                                images={[
+                                  {
+                                    source: {
+                                      uri: this.state.showImage,
+                                    },
+
+                                    width: 1200,
+                                    height: 800,
+                                  },
+                                ]}
+                                isVisible={this.state.displayIMG}
+                                isSwipeCloseEnabled={false}
+                                onClose={() => {
+                                  this.setState({ displayIMG: false }, () => {
+                                    this.setState({ showImage: null }, () => {
+                                      this.setState({ itemFooter: null });
+                                    });
                                   });
+                                }}
+                                renderFooter={currentImage => (
+                                  <View
+                                    style={{
+                                      marginBottom: responsiveHeight(4),
+                                      alignItems: 'center',
+                                    }}>
+                                    <Text style={{ fontSize: 20, color: 'white' }}>
+                                      {this.state.imageFooter}
+                                    </Text>
+                                  </View>
+                                )}
+                              />
+                            )}
+
+                            <TouchableOpacity
+                              style={{
+                                height: responsiveHeight(30),
+                                width: responsiveHeight(40),
+                              }}
+                              onPress={() => {
+                                this.setState({ displayIMG: true }, () => {
+                                  this.setState(
+                                    { showImage: item.imageUrl },
+                                    () => {
+                                      this.setState({
+                                        imageFooter: item.description,
+                                      });
+                                    },
+                                  );
+                                });
+                              }}>
+                              <Image
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                }}
+                                source={{ uri: item.imageUrl }}
+                                resizeMode={'cover'}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        ) : item.videoUrl ? (
+                          <View
+                            style={{
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: 'white',
+                              width: '99%',
+                              height: '100%',
+                              flexDirection: 'row',
+                              marginBottom: 1,
+                            }}>
+                            <VideoPlayer
+                              source={{
+                                uri: item.videoUrl,
+                              }}
+                              navigator={this.props.navigator}
+                              disableBack={true}
+                              disableVolume={true}
+                              disableFullscreen={true}
+                              paused={true}
+                            />
+                          </View>
+                        ) : null}
+                      </View>
+                      <View style={styles.separator} />
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          paddingHorizontal: 0,
+                          backgroundColor: 'white',
+
+                          // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
+                          // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
+                          marginHorizontal: 10,
+                          marginVertical: 10,
+                          alignItems: 'center',
+                          justifyContent: 'space-evenly',
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}>
+                          <TouchableOpacity>
+                            <FontAwesome
+                              name="comment-o"
+                              size={30}
+                              color="#32cd32"
+                              onPress={() => {
+                                this.setModalVisible();
+                                this.setState({ _id: item.post_id })
+                              }}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              top: 5,
+                              color: '#32cd32',
+                              fontSize: responsiveFontSize(1.6),
+                            }}>
+                            0{/* {item.comments.length} */}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          <TouchableOpacity>
+                            <AIcon
+                              name={this.state.hit_like ? 'like1' : 'like2'}
+                              size={28}
+                              color={'#32cd32'}
+                              onPress={() => {
+                                this.likePost(item.post_id);
+                                this.setState({
+                                  hit_like: !this.state.hit_like,
                                 });
                               }}
-                              renderFooter={currentImage => (
-                                <View
-                                  style={{
-                                    marginBottom: responsiveHeight(4),
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text style={{fontSize: 20, color: 'white'}}>
-                                    {this.state.imageFooter}
-                                  </Text>
-                                </View>
-                              )}
                             />
-                          )}
-
-                          <TouchableOpacity
+                          </TouchableOpacity>
+                          <Text
                             style={{
-                              height: responsiveHeight(30),
-                              width: responsiveHeight(40),
-                            }}
-                            onPress={() => {
-                              this.setState({displayIMG: true}, () => {
-                                this.setState(
-                                  {showImage: item.imageUrl},
-                                  () => {
-                                    this.setState({
-                                      imageFooter: item.description,
-                                    });
-                                  },
-                                );
-                              });
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              alignItems: 'center',
+                              color: '#32cd32',
+
+                              fontSize: responsiveFontSize(1.6),
                             }}>
-                            <Image
-                              style={{
-                                width: '100%',
-                                height: '100%',
+                            {/* {item.like.length} */}0
+                        </Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+
+                            justifyContent: 'center',
+                            alignItems: 'flex-end',
+                          }}>
+                          <Text
+                            style={{
+                              marginHorizontal: 10,
+                              fontWeight: '400',
+                              color: '#7e7a7a',
+                              fontSize: responsiveFontSize(1.6),
+                            }}>
+                            {/* {item.favorite.length} */}
+                          </Text>
+                          <TouchableOpacity>
+                            <Ionicon
+                              name={
+                                this.state.hit_favorite
+                                  ? 'md-heart'
+                                  : 'md-heart-empty'
+                              }
+                              size={30}
+                              color={'#32cd32'}
+                              style={{ top: 1 }}
+                              onPress={() => {
+                                this.favoritePost(item.post_id);
+                                this.setState({
+                                  hit_favorite: !this.state.hit_favorite,
+                                });
                               }}
-                              source={{uri: item.imageUrl}}
-                              resizeMode={'cover'}
                             />
                           </TouchableOpacity>
                         </View>
-                      ) : item.videoUrl ? (
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: 'white',
-                            width: '99%',
-                            height: '100%',
-                            flexDirection: 'row',
-                            marginBottom: 1,
-                          }}>
-                          <VideoPlayer
-                            source={{
-                              uri: item.videoUrl,
-                            }}
-                            navigator={this.props.navigator}
-                            disableBack={true}
-                            disableVolume={true}
-                            disableFullscreen={true}
-                            paused={true}
-                          />
-                        </View>
-                      ) : null}
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        paddingHorizontal: 0,
-                        backgroundColor: 'white',
-
-                        // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
-                        // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
-                        marginHorizontal: 10,
-                        marginVertical: 10,
-                        alignItems: 'center',
-                        justifyContent: 'space-evenly',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}>
-                        <TouchableOpacity>
-                          <FontAwesome
-                            name="comment-o"
-                            size={30}
-                            color="#32cd32"
-                            onPress={() => {
-                              this.setModalVisible();
-                              this.setState({_id:item.post_id})
-                            }}
-                          />
-                        </TouchableOpacity>
-                        <Text
-                          style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            top: 5,
-                            color: '#32cd32',
-                            fontSize: responsiveFontSize(1.6),
-                          }}>
-                          0{/* {item.comments.length} */}
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        <TouchableOpacity>
-                          <AIcon
-                            name={this.state.hit_like ? 'like1' : 'like2'}
-                            size={28}
-                            color={'#32cd32'}
-                            onPress={() => {
-                              this.likePost(item.post_id);
-                              this.setState({
-                                hit_like: !this.state.hit_like,
-                              });
-                            }}
-                          />
-                        </TouchableOpacity>
-                        <Text
-                          style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            alignItems: 'center',
-                            color: '#32cd32',
-
-                            fontSize: responsiveFontSize(1.6),
-                          }}>
-                          {/* {item.like.length} */}0
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-
-                          justifyContent: 'center',
-                          alignItems: 'flex-end',
-                        }}>
-                        <Text
-                          style={{
-                            marginHorizontal: 10,
-                            fontWeight: '400',
-                            color: '#7e7a7a',
-                            fontSize: responsiveFontSize(1.6),
-                          }}>
-                          {/* {item.favorite.length} */}
-                        </Text>
-                        <TouchableOpacity>
-                          <Ionicon
-                            name={
-                              this.state.hit_favorite
-                                ? 'md-heart'
-                                : 'md-heart-empty'
-                            }
-                            size={30}
-                            color={'#32cd32'}
-                            style={{top: 1}}
-                            onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}
-                          />
-                        </TouchableOpacity>
                       </View>
                     </View>
-                  </View>
-                )}
-              />
+                  )}
+                />
 
 
-                
+
               </ScrollView>
             </View>
           )}
@@ -1292,6 +1398,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 7,
+  },
+
+  separator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
+    marginTop: responsiveHeight(3)
   },
 });
 
