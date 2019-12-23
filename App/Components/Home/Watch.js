@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,8 +14,8 @@ import {
   Modal,
   TouchableHighlight,
 } from 'react-native';
-import {Thumbnail, Item} from 'native-base';
-import {jsxAttribute} from '@babel/types';
+import { Thumbnail, Item } from 'native-base';
+import { jsxAttribute } from '@babel/types';
 import firebase from 'firebase';
 import {
   responsiveHeight,
@@ -37,7 +37,7 @@ import {
 } from '../../Backend/Utility';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
-import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
@@ -147,8 +147,8 @@ export default class Watch extends Component {
       .onSnapshot(() => {
         setTimeout(async () => {
           let data = await getAllOfCollection('Watch');
-          this.setState({post_data: data, loading: false}, async () => {
-            const {post_data} = this.state;
+          this.setState({ post_data: data, loading: false }, async () => {
+            const { post_data } = this.state;
             await _retrieveData('user').then(async user_id => {
               await getData('watchLike', user_id).then(data => {
                 post_data.map(dt => {
@@ -168,30 +168,30 @@ export default class Watch extends Component {
                   });
                 });
               });
-              this.setState({post_data}, () => {});
+              this.setState({ post_data }, () => { });
             });
           });
         }, 400);
       });
 
-    this.setState({datasource: this.state.popular});
-    this.setState({datasource2: this.state.popular});
-    const {addListener} = this.props.navigation;
-    const {isDisplayed} = this.state;
+    this.setState({ datasource: this.state.popular });
+    this.setState({ datasource2: this.state.popular });
+    const { addListener } = this.props.navigation;
+    const { isDisplayed } = this.state;
     const self = this;
 
     this.listeners = [
       addListener('didFocus', () => {
         if (self.state.isDisplayed !== true) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
-          self.setState({isDisplayed: true});
+          self.setState({ isDisplayed: true });
         }
       }),
       addListener('willBlur', () => {
         if (self.state.isDisplayed !== false) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
 
-          self.setState({isDisplayed: false});
+          self.setState({ isDisplayed: false });
         }
       }),
     ];
@@ -204,7 +204,7 @@ export default class Watch extends Component {
           if (res.like.length > 0) {
             res.like.map(async (id, index) => {
               if (id.post_id === item) {
-                await this.setState({hit_like: false});
+                await this.setState({ hit_like: false });
                 await deleteArray('watchLike', result, 'like', index);
                 await deleteArray('Watch', item, 'like', index);
                 await deleteArray('users', result, 'likes', index);
@@ -216,7 +216,7 @@ export default class Watch extends Component {
                   await addToArray('Watch', item, 'like', {
                     post_id: item,
                   });
-                  await addToArray('users', result, 'likes', {post_id: item});
+                  await addToArray('users', result, 'likes', { post_id: item });
                 }
                 return;
               }
@@ -229,7 +229,7 @@ export default class Watch extends Component {
             await addToArray('Watch', item, 'like', {
               post_id: item,
             });
-            await addToArray('users', result, 'likes', {post_id: item});
+            await addToArray('users', result, 'likes', { post_id: item });
           }
         } else {
           await addToArray('watchLike', result, 'like', {
@@ -238,15 +238,28 @@ export default class Watch extends Component {
           await addToArray('Watch', item, 'like', {
             post_id: item,
           });
-          await addToArray('users', result, 'likes', {post_id: item});
+          await addToArray('users', result, 'likes', { post_id: item });
         }
       });
     });
   };
 
+  calculateTime(time) {
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) { // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
+
+
+  }
+
   saveViews = async item => {
     let finalViews = this.state.viewsData + this.state.Views;
-    await saveData('Watch', item.post_id, {Views: finalViews});
+    await saveData('Watch', item.post_id, { Views: finalViews });
   };
 
   favoritePost = async item => {
@@ -256,7 +269,7 @@ export default class Watch extends Component {
           if (res.favorite.length > 0) {
             res.favorite.map(async (id, index) => {
               if (id.post_id === item) {
-                await this.setState({hit_favorite: false});
+                await this.setState({ hit_favorite: false });
                 await deleteArray('watchFavorite', result, 'favorite', index);
                 await deleteArray('Watch', item, 'favorite', index);
                 await deleteArray('users', result, 'favorite', index);
@@ -382,7 +395,7 @@ export default class Watch extends Component {
   }
 
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   }
 
   render() {
@@ -400,7 +413,7 @@ export default class Watch extends Component {
           style={styles.menu}
         />
         <Image
-          source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
+          source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }}
           style={styles.menu1}
         />
 
@@ -426,7 +439,7 @@ export default class Watch extends Component {
           <View
             style={{
               shadowColor: '#000',
-              shadowOffset: {width: 0, height: 2},
+              shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.5,
               shadowRadius: 2,
               elevation: 5,
@@ -559,7 +572,7 @@ export default class Watch extends Component {
                     color="#32cd32"
                     onPress={() => {
                       this.setModalVisible();
-                      this.setState({_id: item.post_id});
+                      this.setState({ _id: item.post_id });
                       this.CommentPost(item.post_id);
                     }}
                   />
@@ -633,7 +646,7 @@ export default class Watch extends Component {
           </View>
 
           <TouchableOpacity
-            style={{height: responsiveHeight(5), backgroundColor: 'white'}}
+            style={{ height: responsiveHeight(5), backgroundColor: 'white' }}
             onPress={() => {
               this.props.navigation.navigate('LearnMore');
             }}>
@@ -648,7 +661,7 @@ export default class Watch extends Component {
             </Text>
           </TouchableOpacity>
           <View
-            style={{height: responsiveHeight(10), backgroundColor: 'white'}}>
+            style={{ height: responsiveHeight(10), backgroundColor: 'white' }}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -762,7 +775,7 @@ export default class Watch extends Component {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <View>
                   <View
                     style={{
@@ -771,7 +784,7 @@ export default class Watch extends Component {
                       width: responsiveWidth(20),
                     }}>
                     <Thumbnail
-                      source={{uri: item.imageName}}
+                      source={{ uri: item.imageName }}
                       style={{
                         width: responsiveHeight(7),
                         height: responsiveHeight(7),
@@ -823,7 +836,7 @@ export default class Watch extends Component {
     </View> */}
           </View>
 
-          <View style={{height: responsiveHeight(10), backgroundColor: 'red'}}>
+          <View style={{ height: responsiveHeight(10), backgroundColor: 'red' }}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -926,12 +939,12 @@ export default class Watch extends Component {
           <FlatList
             data={this.state.post_data}
             keyExtractor={item => item.id}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <View
                 key={index}
                 style={{
                   shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 2},
+                  shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.5,
                   shadowRadius: 2,
                   elevation: 5,
@@ -961,39 +974,35 @@ export default class Watch extends Component {
                       alignItems: 'center',
                       left: 10,
                     }}>
-                    <Thumbnail small source={{uri: item.imageName}} />
+                    <Thumbnail small source={{ uri: item.imageName }} />
                   </View>
                   <View
                     style={{
                       justifyContent: 'center',
                       alignItems: 'flex-start',
-                      width: '70%',
-                      left: 10,
+                      width: '60%',
+                      flexDirection: 'column',
+                      marginLeft: responsiveWidth(2)
                     }}>
+                    <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text>
                     <Text
                       style={{
-                        fontSize: responsiveFontSize(2.5),
+                        fontSize: responsiveFontSize(3),
                         fontWeight: 'bold',
                       }}>
                       {item.user_name}
+                      {/* {console.log('ITEM NAME', item.name)} */}
                     </Text>
-                  </View>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      width: '15%',
-                      justifyContent: 'center',
-                    }}>
                     <Text
                       style={{
                         fontSize: responsiveFontSize(1.5),
-                        fontWeight: '400',
                         color: '#7e7a7a',
-                        right: 5,
                       }}>
-                      asad
+                      {date[0]} at {this.calculateTime(date[1])}
+                      {/* {console.log('ITEM NAME', item.name)} */}
                     </Text>
                   </View>
+
                 </View>
                 <View
                   style={{
@@ -1014,11 +1023,15 @@ export default class Watch extends Component {
                     disableVolume={true}
                     disableFullscreen={true}
                     paused={true}
-                    // onPlay={()=>  this.setState({ Views: 1 })}
-                    // onPause={()=> this.setState({ Views: 0 })}
-                    // onEnd={()=> this.saveViews(item)}
+                  // onPlay={()=>  this.setState({ Views: 1 })}
+                  // onPause={()=> this.setState({ Views: 0 })}
+                  // onEnd={()=> this.saveViews(item)}
                   />
+                  
                 </View>
+                
+
+                
 
                 <View
                   style={{
@@ -1029,28 +1042,6 @@ export default class Watch extends Component {
                     borderRadius: 25,
                     justifyContent: 'space-evenly',
                   }}>
-                  {/* <View
-                    style={{
-                      left: 15,
-                      backgroundColor: 'white',
-                      flexDirection: 'row',
-                      width: '25%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity>
-                      <Icon name="bookmark" size={20} color="#7e7a7a" />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        marginHorizontal: 2,
-                        fontSize: responsiveFontSize(1.8),
-                        fontWeight: '400',
-                        color: '#7e7a7a',
-                      }}>
-                      {item.label.length}
-                    </Text>
-                  </View> */}
                   <View
                     style={{
                       backgroundColor: 'white',
@@ -1059,6 +1050,7 @@ export default class Watch extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
+                      
                     <TouchableOpacity>
                       <FontAwesome
                         name="comment-o"
@@ -1066,7 +1058,7 @@ export default class Watch extends Component {
                         color="#32cd32"
                         onPress={() => {
                           this.setModalVisible();
-                          this.setState({_id: item.post_id});
+                          this.setState({ _id: item.post_id });
                           this.CommentPost(item.post_id);
                         }}
                       />
@@ -1120,7 +1112,7 @@ export default class Watch extends Component {
                         name={item.isfavorite ? 'md-heart' : 'md-heart-empty'}
                         size={30}
                         color={'#32cd32'}
-                        style={{top: 1}}
+                        style={{ top: 1 }}
                         onPress={() => {
                           this.favoritePost(item.post_id);
                         }}
@@ -1191,5 +1183,9 @@ const styles = StyleSheet.create({
   },
   container1: {
     marginTop: responsiveHeight(8.5),
+  },
+  separator: {
+    height: 1,
+    backgroundColor: 'black',
   },
 });
