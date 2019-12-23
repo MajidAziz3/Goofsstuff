@@ -199,7 +199,12 @@ export default class GoodNews extends Component {
           });
         }, 1000);
       });
-      await addToArray('News', item, 'comments', {post_id: item});
+      await addToArray('News', item, 'comments', {
+        post_id: item,
+        date: this.state.uploading_time,
+        userId: result,
+        words: this.state.comments_words,
+      });
     });
   };
 
@@ -209,7 +214,7 @@ export default class GoodNews extends Component {
         if (res) {
           if (res.like.length > 0) {
             res.like.map(async (id, index) => {
-              if (id.post_id === item) {
+              if (id.post_id === item && result == id.user_id) {
                 await this.setState({hit_like: false});
                 await deleteArray('NewsLike', result, 'like', index);
                 await deleteArray('News', item, 'like', index);
@@ -218,11 +223,16 @@ export default class GoodNews extends Component {
                 if (this.state.hit_like === true) {
                   await addToArray('NewsLike', result, 'like', {
                     post_id: item,
+                    user_id: result,
                   });
                   await addToArray('News', item, 'like', {
                     post_id: item,
+                    user_id: result,
                   });
-                  await addToArray('users', result, 'likes', {post_id: item});
+                  await addToArray('users', result, 'likes', {
+                    post_id: item,
+                    user_id: result,
+                  });
                 }
                 return;
               }
@@ -231,20 +241,30 @@ export default class GoodNews extends Component {
           } else {
             await addToArray('NewsLike', result, 'like', {
               post_id: item,
+              user_id: result,
             });
             await addToArray('News', item, 'like', {
               post_id: item,
+              user_id: result,
             });
-            await addToArray('users', result, 'likes', {post_id: item});
+            await addToArray('users', result, 'likes', {
+              post_id: item,
+              user_id: result,
+            });
           }
         } else {
           await addToArray('NewsLike', result, 'like', {
             post_id: item,
+            user_id: result,
           });
           await addToArray('News', item, 'like', {
             post_id: item,
+            user_id: result,
           });
-          await addToArray('users', result, 'likes', {post_id: item});
+          await addToArray('users', result, 'likes', {
+            post_id: item,
+            user_id: result,
+          });
         }
       });
     });
@@ -315,7 +335,8 @@ export default class GoodNews extends Component {
               await getData('NewsLike', user_id).then(data => {
                 post_data.map(dt => {
                   data.like.map(ft => {
-                    if (ft.post_id === dt.post_id) {
+                    if (ft.post_id === dt.post_id && ft.user_id === user_id) {
+                      console.log('dsssssfkafkds', ft.post_id === dt.post_id);
                       dt.islike = true;
                     }
                   });
@@ -438,6 +459,7 @@ export default class GoodNews extends Component {
                 }}
                 keyExtractor={item => item.user_id}
                 renderItem={({item}) => {
+                  console.log('itemm', item);
                   return item.imageUrl ? (
                     <View style={styles.container2}>
                       <TouchableOpacity onPress={() => {}}>
@@ -468,8 +490,7 @@ export default class GoodNews extends Component {
                         <Image
                           style={styles.image}
                           source={{
-                            uri:
-                              'https://randomuser.me/api/portraits/men/94.jpg',
+                            uri: item.userImage,
                           }}
                         />
                       </TouchableOpacity>
@@ -531,9 +552,31 @@ export default class GoodNews extends Component {
                 }}>
                 <Icon
                   name="send-circle-outline"
-                  size={30}
+                  size={40}
                   color="#32cd32"
                   onPress={() => {
+                    var that = this;
+                    var date = new Date().getDate(); //Current Date
+                    var month = new Date().getMonth() + 1; //Current Month
+                    var year = new Date().getFullYear(); //Current Year
+                    var hours = new Date().getHours(); //Current Hours
+                    var min = new Date().getMinutes(); //Current Minutes
+                    var sec = new Date().getSeconds(); //Current Seconds
+                    that.setState({
+                      //Setting the value of the date time
+                      uploading_time:
+                        date +
+                        '/' +
+                        month +
+                        '/' +
+                        year +
+                        ' ' +
+                        hours +
+                        ':' +
+                        min +
+                        ':' +
+                        sec,
+                    });
                     this.CommentsPost(this.state._id);
                   }}
                 />

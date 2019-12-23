@@ -336,7 +336,8 @@ export async function uploadJobImage(
     function() {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log(imgUri,
+        console.log(
+          imgUri,
           imagePath,
           name,
           databaseCollection,
@@ -351,7 +352,9 @@ export async function uploadJobImage(
           uploading_time,
           company_name,
           location,
-          user_name,'titel')
+          user_name,
+          'titel',
+        );
         addToArray(databaseCollection, docRef, job_category, {
           imageUrl: downloadURL,
           userId: docRef,
@@ -719,18 +722,31 @@ export async function uploadImageComment(
   uploadingTime,
   userPic,
 ) {
-  {
-    if (!imgUri) {
-      addToArray(databaseCollection, docRef, 'comments', {
-        comments: comments,
-        userId: userId,
-        userImage: userPic,
-        user_name: username,
-        time: uploadingTime,
-      });
-      return;
-    }
+  console.log(
+    'image',
+    imgUri,
+    (mime = 'image/jpeg'),
+    imagePath,
+    name,
+    databaseCollection,
+    docRef,
+    comments,
+    userId,
+    username,
+    uploadingTime,
+    userPic,
+  );
+  if (!imgUri) {
+    addToArray(databaseCollection, docRef, 'comments', {
+      comments: comments,
+      userId: userId,
+      userImage: userPic,
+      user_name: username,
+      time: uploadingTime,
+    });
+    return;
   }
+
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
