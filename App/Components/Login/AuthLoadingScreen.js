@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 import { connectFirebase } from '../../Backend/Connection/FirebaseConnection';
@@ -12,25 +12,15 @@ export default class AuthLoadingScreen extends Component {
     };
   }
   componentDidMount = async () => {
-    await _retrieveData('user').then(user =>
-      this.setState({
-        value: user,
-      }),
-    );
-
-    connectFirebase();
-    if (Platform.OS === 'android'){
+    if (Platform.OS === 'android') {
       SplashScreen.close({
         animationType: SplashScreen.animationType.scale,
         duration: 850,
         delay: 500,
       });
     }
-    if (this.state.value == ''||this.state.value==undefined) {
-       this.props.navigation.navigate('MainAuth');
-    } else {
-     this.props.navigation.navigate('App');
-    }
+    this.props.navigation.navigate('Animation');
+
   };
 
   render() {

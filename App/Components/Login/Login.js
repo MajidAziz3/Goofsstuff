@@ -86,7 +86,7 @@ class Login extends Component {
             }}>
             <Image
               source={require('../../Assets/goodstuff.png')}
-              style={{height: '80%', width: '100%'}}
+              style={{ height: '80%', width: '80%', alignSelf: 'center' }}
             />
           </View>
           <View

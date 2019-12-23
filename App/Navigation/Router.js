@@ -88,8 +88,10 @@ import MoreGallery from '../Components/UserProfile/MoreGallery';
 import TCI from '../Components/Login/TermsandConditionIni';
 import House1Ini from '../Components/Login/House1Ini';
 import AppUser from '../Components/Friends/AppUser';
+import Animation from '../Components/Login/Animation'
 
 var width = Dimensions.get('window').width;
+console.disableYellowBox = true;
 
 const FriendStack = createStackNavigator({
   FriendsList: FriendsList,
@@ -98,6 +100,7 @@ const FriendStack = createStackNavigator({
   Chat: Chat,
 });
 const AuthStack = createStackNavigator({
+  Animation:Animation,
   Login: Login,
   Signup: Signup,
   MainAuth: MainAuth,
