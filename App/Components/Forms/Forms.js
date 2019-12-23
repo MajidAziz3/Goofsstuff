@@ -43,6 +43,8 @@ import {
   uploadImage,
   uploadVideo,
   uploadCommunityImage,
+  uploadJobImage,
+  getData,
 } from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -137,7 +139,7 @@ export default class Forms extends Component {
       company_atteched: false,
       ImageUrl: '',
 
-      job_category: '',
+      job_category: 'job_iT',
       img: '',
       job_title: '',
       email_address_job: '',
@@ -175,6 +177,72 @@ export default class Forms extends Component {
       }
     });
   };
+
+  async Upload_job() {
+    const {
+      job_category,
+      job_title,
+      email_address_job,
+      job_description,
+      job_compensation,
+      about_job,
+      phone_job,
+      uploading_time,
+      company_name,
+    } = this.state;
+    let iteratorNum = 0;
+      _retrieveData('user').then(result =>
+        getData('Company_Profile', result).then(async user => {
+          await uploadJobImage(
+            this.state.ImageUrl,
+            this.state.imageType,
+            this.state.ImageName,
+            this.state.ImageName,
+            'Jobs',
+            result,
+            job_category,
+            job_title,
+            email_address_job,
+            job_description,
+            job_compensation,
+            about_job,
+            phone_job,
+            uploading_time,
+            company_name,
+            user.location,
+            user.user_name,
+          );
+        }),
+      );
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
 
   upload_Video_Watch = async () => {
     var parts = this.state.videoName.split('/');
@@ -519,7 +587,7 @@ export default class Forms extends Component {
 
       return (
         <View>
-          <ScrollView style={{marginBottom:30}}>
+          <ScrollView style={{marginBottom: 30}}>
             <View
               style={{
                 backgroundColor: 'white',
@@ -2160,21 +2228,24 @@ export default class Forms extends Component {
                       borderRadius: 5,
                     }}>
                     <Picker
-                      selectedValue={this.state.category}
-                      onValueChange={this.updateCategory}
+                      selectedValue={this.state.job_category}
+                      // onValueChange={this.updateCategory}
+                      onValueChange={(value, itemIndex) =>
+                        this.setState({job_category: value})
+                      }
                       style={{height: '100%', width: '100%', color: '#7e7a7a'}}
                       // onValueChange={(itemValue, itemIndex) =>
                       //     this.setState({ language: itemValue })}
                     >
-                      <Picker.Item label="IT Section" value="Sport" />
+                      <Picker.Item label="IT Section" value="Job_iT" />
                       <Picker.Item
                         label="Finance Department"
-                        value="Finance Department"
+                        value="job_FinanceDepartment"
                       />
 
-                      <Picker.Item label="Marketing" value="Marketing" />
+                      <Picker.Item label="Marketing" value="job_Marketing" />
 
-                      <Picker.Item label="Office Work" value="Office Work" />
+                      <Picker.Item label="Office Work" value="job_OfficeWork" />
                     </Picker>
                   </View>
                 </View>
@@ -2698,20 +2769,7 @@ export default class Forms extends Component {
                   width: '100%',
                   borderRadius: 15,
                 }}
-                onPress={() =>
-                  Create_Job(
-                    job_category,
-                    img,
-                    job_title,
-                    email_address_job,
-                    job_description,
-                    job_compensation,
-                    about_job,
-                    phone_job,
-                    uploading_time,
-                    company_name,
-                  )
-                }>
+                onPress={() => this.Upload_job()}>
                 <View
                   style={{
                     width: '40%',

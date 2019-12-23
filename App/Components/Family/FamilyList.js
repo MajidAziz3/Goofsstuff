@@ -126,7 +126,7 @@ class FamilyList extends Component {
       like: [],
       favorite: [],
       view: [],
-      familyName: 'tester',
+      familyName: '',
     };
   }
 
@@ -313,7 +313,7 @@ class FamilyList extends Component {
             data.profile_picture,
             familyName,
             view,
-            like,
+            like, 
             favorite,
             uploading_time,
             description,

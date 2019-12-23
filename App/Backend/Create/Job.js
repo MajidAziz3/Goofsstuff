@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import {_retrieveData} from '../AsyncStore/AsyncFunc';
-import {getData, saveDataWithoutDocId} from '../Utility';
+import {getData, saveDataWithoutDocId, addToArray} from '../Utility';
 
 export async function Create_Job(
   job_category,
@@ -16,23 +16,25 @@ export async function Create_Job(
 ) {
   _retrieveData('user').then(result =>
     getData('Company_Profile', result).then(user => {
-      console.log('job',job_category)
-      // if (!event_sub_category.localeCompare('football'))
-      saveDataWithoutDocId('Create_Job', {
-        user_id: result,
-        user_name: user.name,
-        title: job_title,
-        phone: phone_job,
-        email: email_address_job,
-        category: job_category,
-        img: img,
-        description: job_description,
-        company_name: company_name,
-        job_compensation: job_compensation,
-        about_job: about_job,
-        date: uploading_time,
-        location: user.location,
-      });
+      if (user) {
+        addToArray('Create_Job', result, job_category, {
+          user_id: result,
+          user_name: user.user_name,
+          title: job_title,
+          phone: phone_job,
+          email: email_address_job,
+          category: job_category,
+          img: img,
+          description: job_description,
+          company_name: company_name,
+          job_compensation: job_compensation,
+          about_job: about_job,
+          date: uploading_time,
+          location: user.location,
+        });
+      } else {
+        alert('please for job you have to add company first');
+      }
     }),
   );
 }

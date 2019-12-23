@@ -35,6 +35,8 @@ export async function Watch(
         favorite: watch_favorit,
         comments: watch_comments,
         label: lebal,
+        islike: false,
+        isfavorite: false,
       });
     }),
   );

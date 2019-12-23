@@ -260,6 +260,120 @@ export async function uploadCommunityImage(
   );
 }
 
+export async function deleteArray(collection, doc, array, index) {
+  let docRef = await firebase
+    .firestore()
+    .collection(collection)
+    .doc(doc);
+  let docData = await docRef.get();
+
+  if (docData.exists && docData.data()[array][index] != undefined) {
+    docRef.update({
+      [array]: firebase.firestore.FieldValue.arrayRemove(
+        docData.data()[array][index],
+      ),
+    });
+  }
+}
+
+export async function uploadJobImage(
+  imgUri,
+  //  mime = 'video/mp4',
+  mime = 'image/jpeg',
+  imagePath,
+  name,
+  databaseCollection,
+  docRef,
+  job_category,
+  job_title,
+  email_address_job,
+  job_description,
+  job_compensation,
+  about_job,
+  phone_job,
+  uploading_time,
+  company_name,
+  location,
+  user_name,
+) {
+  //blob
+  const Blob = RNFetchBlob.polyfill.Blob;
+  const fs = RNFetchBlob.fs;
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  window.Blob = Blob;
+
+  const uploadUri =
+    Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
+  const imageRef = firebase.storage().ref(imagePath);
+
+  let readingFile = await fs.readFile(uploadUri, 'base64');
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
+
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
+
+  // let progress = 0;
+  //Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    firebase.storage.TaskEvent.STATE_CHANGED,
+    function(snapshot) {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress < 30) progress += 10;
+      else if (progress >= 30) progress += 5;
+      else if (progress >= 85) progress += 1;
+      else if (progress >= 95) progress += 0.1;
+
+      _storeData('imageUploadProgress', progress.toString());
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED:
+          break;
+        case firebase.storage.TaskState.RUNNING:
+          break;
+      }
+    },
+    function(error) {
+      _storeData('imageUploadProgress', '-1');
+    },
+    function() {
+      // Upload completed successfully, now we can get the download URL
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        console.log(imgUri,
+          imagePath,
+          name,
+          databaseCollection,
+          docRef,
+          job_category,
+          job_title,
+          email_address_job,
+          job_description,
+          job_compensation,
+          about_job,
+          phone_job,
+          uploading_time,
+          company_name,
+          location,
+          user_name,'titel')
+        addToArray(databaseCollection, docRef, job_category, {
+          imageUrl: downloadURL,
+          userId: docRef,
+          category: job_category,
+          description: job_description,
+          location: location,
+          title: job_title,
+          user_name: user_name,
+          email: email_address_job,
+          phone: phone_job,
+          date: uploading_time,
+          compensation: job_compensation,
+          company_name: company_name,
+          about_job: about_job,
+        }).then(() => {
+          _storeData('imageUploadProgress', '100');
+        });
+      });
+    },
+  );
+}
+
 export async function uploadGroupImage(
   imgUri,
   //  mime = 'video/mp4',
@@ -312,7 +426,6 @@ export async function uploadGroupImage(
       _storeData('imageUploadProgress', '-1');
     },
     function() {
-      console.log('result', docRef, group_admins);
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         addToArray(databaseCollection, docRef, 'group', {
@@ -446,7 +559,6 @@ export async function uploadFamilyPostImage(
     () => {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-        console.log('coming');
         addToArray(databaseCollection, docRef, 'family', {
           name: username,
           profile_picture: userprofile_picture,
@@ -576,7 +688,6 @@ export async function uploadUserImage(
     function() {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
-        console.log('dsk', databaseCollection, docRef, downloadURL);
         await firebase
           .firestore()
           .collection(databaseCollection)
@@ -732,7 +843,6 @@ export async function uploadFamilyVideo(
     },
     function() {
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log('download', downloadURL);
         addToArray(databaseCollection, docRef, 'family', {
           name: username,
           profile_picture: userprofile_picture,

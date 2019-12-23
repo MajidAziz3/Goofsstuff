@@ -26,6 +26,8 @@ export async function News(
         like: like,
         favorite: favorite,
         comments: comments,
+        islike: false,
+        isfavorite: false,
       });
     }),
   );
