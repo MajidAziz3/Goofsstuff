@@ -42,6 +42,7 @@ import {
   addToArray,
   uploadImage,
   uploadImageComment,
+  deleteArray,
 } from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import VideoPlayer from 'react-native-video-controls';
@@ -58,8 +59,8 @@ export default class GoodNews extends Component {
       isDisplayed: false,
       isDateTimePickerVisible: false,
       post_data: [],
-      hit_like: false,
-      hit_favorite: false,
+      hit_like: true,
+      hit_favorite: true,
       loading: true,
       modalVisible: false,
       comment_data: [],
@@ -71,43 +72,34 @@ export default class GoodNews extends Component {
       imageFooter: null,
       loadingModal: true,
       data: [],
-      datasource: [
-        {
-          name: 'Woody Allen',
-          imageName: 'https://randomuser.me/api/portraits/men/1.jpg',
-        },
-
-        {
-          name: 'David Jhon ',
-          imageName: 'https://randomuser.me/api/portraits/men/79.jpg',
-        },
-        {
-          name: 'Mel Gibson',
-          imageName: 'https://randomuser.me/api/portraits/men/13.jpg',
-        },
-
-        {
-          name: 'Ben Kingsley',
-          imageName: 'https://randomuser.me/api/portraits/men/45.jpg',
-        },
-
-        {
-          name: ' Adrien Brody ',
-          imageName: 'https://randomuser.me/api/portraits/men/62.jpg',
-        },
-        {
-          name: 'Ben Stiller',
-          imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
-        },
-      ],
       uploading_time: '',
       comments_data: [],
       ImageUrl: null,
       _id: null,
+      posts: null,
+      fav: [],
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    await firebase
+      .firestore()
+      .collection('GreatNewPost')
+      .onSnapshot(async () => {
+        getAllOfCollection('GreatNewPost').then(res => {
+          this.setState({posts: res.Favorite, loading: false});
+        });
+      });
+    await firebase
+      .firestore()
+      .collection('NewsFavorite')
+      .onSnapshot(async () => {
+        await _retrieveData('user').then(user => {
+          getData('NewsFavorite', user).then(res => {
+            this.setState({fav: res.Favorite, loading: false});
+          });
+        });
+      });
     this.userData();
     this.showPost();
 
@@ -142,14 +134,13 @@ export default class GoodNews extends Component {
       uploading_time:
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
-  }
+  };
   setModalVisible() {
     this.setState({modalVisible: !this.state.modalVisible});
   }
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      // console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data: res,
@@ -158,96 +149,168 @@ export default class GoodNews extends Component {
   };
 
   CommentsPost = async item => {
-    // console.log('datata', item);
-    await _retrieveData('user').then(
-      async result =>
-        await getData('users', result).then(
-          async res => {
-            let iteratorNum = 0;
-            await uploadImageComment(
-              this.state.ImageUrl,
-              this.state.imageType,
-              this.state.ImageName,
-              this.state.ImageName,
-              'Comments',
-              item,
-              this.state.comments_words,
-              res.userId,
-              res.name,
-              this.state.uploading_time,
-              res.profile_picture,
-            );
-            let that = this;
+    await _retrieveData('user').then(async result => {
+      await getData('users', result).then(async res => {
+        let iteratorNum = 0;
+        await uploadImageComment(
+          this.state.ImageUrl,
+          this.state.imageType,
+          this.state.ImageName,
+          this.state.ImageName,
+          'Comments',
+          item,
+          this.state.comments_words,
+          res.userId,
+          res.name,
+          this.state.uploading_time,
+          res.profile_picture,
+        );
+        let that = this;
 
-            let refreshId = setInterval(function() {
-              iteratorNum += 1;
-              _retrieveData('imageUploadProgress').then(data => {
-                that.setState({uploadProgress: data});
-                if (Number(data) >= 100) {
-                  clearInterval(refreshId);
-                  alert('Uploaded', 'Profile is updated', [
-                    {text: 'OK', onPress: () => that.props.navigation.goBack()},
-                  ]);
-                }
-                if (data == '-1') {
-                  clearInterval(refreshId);
-                  alert('goes wrong', 'Something went wrong', [
-                    {text: 'OK', onPress: () => that.props.navigation.goBack()},
-                  ]);
-                }
-                if (iteratorNum == 120) {
-                  clearInterval(refreshId);
-                  alert(
-                    'To Long TIme',
-                    'Picture uploading taking too long. Please upload a low resolution picture',
-                    [
-                      {
-                        text: 'OK',
-                        onPress: () => that.props.navigation.goBack(),
-                      },
-                    ],
-                  );
-                }
-              });
-            }, 1000);
-          },
-
-          // await addToArray('Comments', item, 'comments', {
-          //   comments: this.state.comments_words,
-          //   post_id: item,
-          //   user_id: res.userId,
-          //   user_name: res.name,
-          //   time: this.state.uploading_time,
-          //   imageUrl: '',
-          //   userImage: res.profile_picture,
-          // }).then(() => {
-          //   setTimeout(async () => {
-          //     if (this.state.ImageUrl) {
-          //       this.Upload_Image(item);
-          //     }
-          //   }, 1000);
-          // })
-        ),
-    );
+        let refreshId = setInterval(function() {
+          iteratorNum += 1;
+          _retrieveData('imageUploadProgress').then(data => {
+            that.setState({uploadProgress: data});
+            if (Number(data) >= 100) {
+              clearInterval(refreshId);
+              alert('Uploaded', 'Profile is updated', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (data == '-1') {
+              clearInterval(refreshId);
+              alert('goes wrong', 'Something went wrong', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (iteratorNum == 120) {
+              clearInterval(refreshId);
+              alert(
+                'To Long TIme',
+                'Picture uploading taking too long. Please upload a low resolution picture',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => that.props.navigation.goBack(),
+                  },
+                ],
+              );
+            }
+          });
+        }, 1000);
+      });
+      await addToArray('News', item, 'comments', {
+        post_id: item,
+        date: this.state.uploading_time,
+        userId: result,
+        words: this.state.comments_words,
+      });
+    });
   };
-  likePost = async item => {
-    await _retrieveData('user').then(
-      async result =>
-        await addToArray('NewsLike', item, 'like', {
-          user_id: result,
-          post_id: item,
-        }),
-    );
+
+  likePost = async (item, ind) => {
+    await _retrieveData('user').then(async result => {
+      await getData('News', item).then(async res => {
+        if (res) {
+          if (res.like.length > 0) {
+            res.like.map(async (id, index) => {
+              if (id.post_id === item && result == id.user_id) {
+                await this.setState({hit_like: false});
+                await deleteArray('NewsLike', result, 'like', index);
+                await deleteArray('News', item, 'like', index);
+                await deleteArray('users', result, 'likes', index);
+              } else {
+                if (this.state.hit_like === true) {
+                  await addToArray('NewsLike', result, 'like', {
+                    post_id: item,
+                    user_id: result,
+                  });
+                  await addToArray('News', item, 'like', {
+                    post_id: item,
+                    user_id: result,
+                  });
+                  await addToArray('users', result, 'likes', {
+                    post_id: item,
+                    user_id: result,
+                  });
+                }
+                return;
+              }
+            });
+            return;
+          } else {
+            await addToArray('NewsLike', result, 'like', {
+              post_id: item,
+              user_id: result,
+            });
+            await addToArray('News', item, 'like', {
+              post_id: item,
+              user_id: result,
+            });
+            await addToArray('users', result, 'likes', {
+              post_id: item,
+              user_id: result,
+            });
+          }
+        } else {
+          await addToArray('NewsLike', result, 'like', {
+            post_id: item,
+            user_id: result,
+          });
+          await addToArray('News', item, 'like', {
+            post_id: item,
+            user_id: result,
+          });
+          await addToArray('users', result, 'likes', {
+            post_id: item,
+            user_id: result,
+          });
+        }
+      });
+    });
   };
 
   favoritePost = async item => {
-    await _retrieveData('user').then(
-      async result =>
-        await addToArray('NewsFavorite', item, 'Favorite', {
-          user_id: result,
-          post_id: item,
-        }),
-    );
+    await _retrieveData('user').then(async result => {
+      await getData('News', item).then(async res => {
+        if (res) {
+          if (res.favorite.length > 0) {
+            res.favorite.map(async (id, index) => {
+              if (id.post_id === item) {
+                await this.setState({hit_favorite: false});
+                await deleteArray('NewsFavorite', result, 'favorite', index);
+                await deleteArray('News', item, 'favorite', index);
+              } else {
+                if (this.state.hit_favorite === true) {
+                  await addToArray('NewsFavorite', result, 'favorite', {
+                    post_id: item,
+                  });
+                  await addToArray('News', item, 'favorite', {
+                    post_id: item,
+                  });
+                }
+                return;
+              }
+            });
+            return;
+          } else {
+            await addToArray('NewsFavorite', result, 'favorite', {
+              post_id: item,
+            });
+            await addToArray('News', item, 'favorite', {
+              post_id: item,
+            });
+          }
+        } else {
+          await addToArray('NewsFavorite', result, 'favorite', {
+            post_id: item,
+          });
+          await addToArray('News', item, 'favorite', {
+            post_id: item,
+          });
+        }
+      });
+    });
   };
 
   async CommentPost(item) {
@@ -256,7 +319,6 @@ export default class GoodNews extends Component {
       .collection('Comments')
       .onSnapshot(async () => {
         let data = await getData('Comments', item);
-        console.log('data', data);
         this.setState({comment_data: data, loadingModal: false});
       });
   }
@@ -264,9 +326,35 @@ export default class GoodNews extends Component {
     firebase
       .firestore()
       .collection('News')
-      .onSnapshot(async () => {
-        let data = await getAllOfCollection('News');
-        this.setState({post_data: data, loading: false});
+      .onSnapshot(() => {
+        setTimeout(async () => {
+          let data = await getAllOfCollection('News');
+          this.setState({post_data: data, loading: false}, async () => {
+            const {post_data} = this.state;
+            await _retrieveData('user').then(async user_id => {
+              await getData('NewsLike', user_id).then(data => {
+                post_data.map(dt => {
+                  data.like.map(ft => {
+                    if (ft.post_id === dt.post_id && ft.user_id === user_id) {
+                      console.log('dsssssfkafkds', ft.post_id === dt.post_id);
+                      dt.islike = true;
+                    }
+                  });
+                });
+              });
+              await getData('NewsFavorite', user_id).then(data => {
+                post_data.map(dt => {
+                  data.favorite.map(ft => {
+                    if (ft.post_id === dt.post_id) {
+                      dt.isfavorite = true;
+                    }
+                  });
+                });
+              });
+              this.setState({post_data});
+            });
+          });
+        }, 400);
       });
   }
 
@@ -303,47 +391,6 @@ export default class GoodNews extends Component {
       );
     });
   };
-
-  // async Upload_Image(item) {
-  //   let iteratorNum = 0;
-  //   await uploadImageComment(
-  //     this.state.ImageUrl,
-  //     this.state.imageType,
-  //     this.state.ImageName,
-  //     this.state.ImageName,
-  //     'Comments',
-  //     item,
-  //   );
-  //   let that = this;
-
-  //   let refreshId = setInterval(function() {
-  //     iteratorNum += 1;
-  //     _retrieveData('imageUploadProgress').then(data => {
-  //       that.setState({uploadProgress: data});
-  //       if (Number(data) >= 100) {
-  //         clearInterval(refreshId);
-  //         alert('Uploaded', 'Profile is updated', [
-  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
-  //         ]);
-  //       }
-  //       if (data == '-1') {
-  //         clearInterval(refreshId);
-  //         alert('goes wrong', 'Something went wrong', [
-  //           {text: 'OK', onPress: () => that.props.navigation.goBack()},
-  //         ]);
-  //       }
-  //       if (iteratorNum == 120) {
-  //         clearInterval(refreshId);
-  //         alert(
-  //           'To Long TIme',
-  //           'Picture uploading taking too long. Please upload a low resolution picture',
-  //           [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
-  //         );
-  //       }
-  //     });
-  //   }, 1000);
-  // }
-
   renderViewMore(onPress) {
     return (
       <Text
@@ -373,6 +420,7 @@ export default class GoodNews extends Component {
   }
 
   render() {
+    console.disableYellowBox = true;
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     return (
@@ -411,9 +459,7 @@ export default class GoodNews extends Component {
                 }}
                 keyExtractor={item => item.user_id}
                 renderItem={({item}) => {
-                  {
-                    // console.log(item.imageUrl);
-                  }
+                  console.log('itemm', item);
                   return item.imageUrl ? (
                     <View style={styles.container2}>
                       <TouchableOpacity onPress={() => {}}>
@@ -444,8 +490,7 @@ export default class GoodNews extends Component {
                         <Image
                           style={styles.image}
                           source={{
-                            uri:
-                              'https://randomuser.me/api/portraits/men/94.jpg',
+                            uri: item.userImage,
                           }}
                         />
                       </TouchableOpacity>
@@ -507,9 +552,31 @@ export default class GoodNews extends Component {
                 }}>
                 <Icon
                   name="send-circle-outline"
-                  size={30}
+                  size={40}
                   color="#32cd32"
                   onPress={() => {
+                    var that = this;
+                    var date = new Date().getDate(); //Current Date
+                    var month = new Date().getMonth() + 1; //Current Month
+                    var year = new Date().getFullYear(); //Current Year
+                    var hours = new Date().getHours(); //Current Hours
+                    var min = new Date().getMinutes(); //Current Minutes
+                    var sec = new Date().getSeconds(); //Current Seconds
+                    that.setState({
+                      //Setting the value of the date time
+                      uploading_time:
+                        date +
+                        '/' +
+                        month +
+                        '/' +
+                        year +
+                        ' ' +
+                        hours +
+                        ':' +
+                        min +
+                        ':' +
+                        sec,
+                    });
                     this.CommentsPost(this.state._id);
                   }}
                 />
@@ -570,12 +637,20 @@ export default class GoodNews extends Component {
                 <View
                   style={{width: '100%', height: '80%', flexDirection: 'row'}}>
                   <View style={{width: '20%', alignItems: 'center'}}>
-                    <Image
-                      source={{
-                        uri: 'https://randomuser.me/api/portraits/men/13.jpg',
-                      }}
-                      style={{width: 50, height: 50, borderRadius: 60, top: 5}}
-                    />
+                    {this.state.posts && (
+                      <Image
+                        source={{
+                          uri: 'https://randomuser.me/api/portraits/men/13.jpg',
+                          // this.state.posts[0].profile_image,
+                        }}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 60,
+                          top: 5,
+                        }}
+                      />
+                    )}
                   </View>
 
                   <View style={{width: '80%'}}>
@@ -585,14 +660,18 @@ export default class GoodNews extends Component {
                         height: '30%',
                         justifyContent: 'center',
                       }}>
-                      <Text
-                        style={{
-                          fontSize: responsiveFontSize(2.1),
-                          color: 'white',
-                          left: 0,
-                        }}>
-                        Mel Gibson just got a promotion!
-                      </Text>
+                      {this.state.posts && (
+                        <Text
+                          style={{
+                            fontSize: responsiveFontSize(2.1),
+                            color: 'white',
+                            left: 0,
+                          }}>
+                          {/* {this.state.posts[0].user_name} */}
+                          {'got promotion '}
+                          {/* {this.state.posts[0].description} */}
+                        </Text>
+                      )}
                     </View>
 
                     <View
@@ -701,12 +780,7 @@ export default class GoodNews extends Component {
                             name="like"
                             size={25}
                             color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                            onPress={() => {
-                              // this.likePost(item.post_id);
-                              // this.setState({
-                              //   hit_like: !this.state.hit_like,
-                              // });
-                            }}
+                            onPress={() => {}}
                           />
                         </TouchableOpacity>
                         <Text
@@ -749,8 +823,9 @@ export default class GoodNews extends Component {
               <FlatList
                 data={this.state.post_data}
                 keyExtractor={item => item.id}
-                renderItem={({item}) => (
+                renderItem={({item, index}) => (
                   <View
+                    key={index}
                     style={{
                       shadowColor: '#000',
                       shadowOffset: {width: 0, height: 2},
@@ -767,7 +842,6 @@ export default class GoodNews extends Component {
                       backgroundColor: 'white',
                       marginBottom: responsiveHeight(2),
                     }}>
-                    {/* {console.log('ITEMM:::', item)} */}
                     <View
                       style={{
                         top: 2,
@@ -810,7 +884,6 @@ export default class GoodNews extends Component {
                             fontWeight: 'bold',
                           }}>
                           {item.user_name}
-                          {/* {console.log('ITEM NAME', item.name)} */}
                         </Text>
                       </View>
                       <View
@@ -996,7 +1069,7 @@ export default class GoodNews extends Component {
                             color: '#32cd32',
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          0{/* {item.comments.length} */}
+                          {item.comments.length}
                         </Text>
                       </View>
                       <View
@@ -1009,14 +1082,11 @@ export default class GoodNews extends Component {
                         }}>
                         <TouchableOpacity>
                           <AIcon
-                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            name={item.islike ? 'like1' : 'like2'}
                             size={28}
                             color={'#32cd32'}
                             onPress={() => {
-                              this.likePost(item.post_id);
-                              this.setState({
-                                hit_like: !this.state.hit_like,
-                              });
+                              this.likePost(item.post_id, index);
                             }}
                           />
                         </TouchableOpacity>
@@ -1029,7 +1099,7 @@ export default class GoodNews extends Component {
 
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {/* {item.like.length} */}0
+                          {item.like.length}
                         </Text>
                       </View>
                       <View
@@ -1040,6 +1110,21 @@ export default class GoodNews extends Component {
                           justifyContent: 'center',
                           alignItems: 'flex-end',
                         }}>
+                        <TouchableOpacity key={index}>
+                          <View key={index}>
+                            <Ionicon
+                              name={
+                                item.isfavorite ? 'md-heart' : 'md-heart-empty'
+                              }
+                              size={30}
+                              color={'#32cd32'}
+                              style={{top: 1}}
+                              onPress={() => {
+                                this.favoritePost(item.post_id);
+                              }}
+                            />
+                          </View>
+                        </TouchableOpacity>
                         <Text
                           style={{
                             marginHorizontal: 10,
@@ -1047,26 +1132,8 @@ export default class GoodNews extends Component {
                             color: '#7e7a7a',
                             fontSize: responsiveFontSize(1.6),
                           }}>
-                          {/* {item.favorite.length} */}
+                          {item.favorite.length}
                         </Text>
-                        <TouchableOpacity>
-                          <Ionicon
-                            name={
-                              this.state.hit_favorite
-                                ? 'md-heart'
-                                : 'md-heart-empty'
-                            }
-                            size={30}
-                            color={'#32cd32'}
-                            style={{top: 1}}
-                            onPress={() => {
-                              this.favoritePost(item.post_id);
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}
-                          />
-                        </TouchableOpacity>
                       </View>
                     </View>
                   </View>

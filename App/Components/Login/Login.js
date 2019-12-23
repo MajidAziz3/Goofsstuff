@@ -7,7 +7,7 @@ import {
   StatusBar,
   Image,
   TextInput,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {Left, Thumbnail, Input} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,7 +24,7 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import validator from 'validator';
-import { signinUser } from '../../Backend/Authentication/SigninUser';
+import {signinUser} from '../../Backend/Authentication/SigninUser';
 
 ///Login 5th Screen
 const uri = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
@@ -45,14 +45,14 @@ class Login extends Component {
 
   chackValidation = async () => {
     const {email, password} = this.state;
-    if (!validator.isEmail(email)) {
-      emailInput.focus();
-      return ;
-    }
-    if (password === '') {
-      passwordInput.focus();
-      return;
-    }
+    // if (!validator.isEmail(email)) {
+    //   emailInput.focus();
+    //   return;
+    // }
+    // if (password === '') {
+    //   passwordInput.focus();
+    //   return;
+    // }
     await signinUser(email, password).then(result => {
       if (result == undefined) {
         this.props.navigation.navigate('App');
@@ -64,6 +64,7 @@ class Login extends Component {
 
   render() {
     const {email, password} = this.state;
+    console.log('email', email, password);
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#32cd32" barStyle="light-content" />
@@ -176,7 +177,7 @@ class Login extends Component {
                     height: '100%',
                     padding: 5,
                     fontSize: responsiveFontSize(1.6),
-                    color: 'black'
+                    color: 'black',
                   }}
                   onChangeText={email => this.setState({email})}
                   require

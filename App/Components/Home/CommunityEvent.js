@@ -86,14 +86,10 @@ class CommunityEvent extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-      // console.log('Response = ', response);
 
       if (response.didCancel) {
-        console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        // console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
         //let source = response;
@@ -108,7 +104,6 @@ class CommunityEvent extends Component {
   };
 
   render() {
-    // console.log("dssssssssssssss",this.state.event_data,this.state.sport_data)
     return (
       <SafeAreaView
         style={{

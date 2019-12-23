@@ -12,7 +12,7 @@ import {
   ScrollView,
   Modal,
   TouchableHighlight,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {Thumbnail, Button} from 'native-base';
 import Icon from 'react-native-vector-icons/EvilIcons';
@@ -31,7 +31,7 @@ import {
 import {placeholder, nullLiteralTypeAnnotation} from '@babel/types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Create_Group} from '../../Backend/Create/Group';
-import {uploadImage} from '../../Backend/Utility';
+import {uploadImage, addToArray, uploadGroupImage} from '../../Backend/Utility';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 
 export default class AddGroup extends Component {
@@ -54,23 +54,29 @@ export default class AddGroup extends Component {
       group_name: '',
       group_location: '',
       group_description: '',
-      group_member:[],
+      group_member: [],
       group_admins: [],
       photo: null,
       imageType: null,
       ImageName: null,
       ImageUrl: null,
+      item: this.props.navigation.state.params.item,
+      items: this.props.navigation.state.params.items,
     };
   }
   toggleModal(visible) {
     this.setState({modalVisible: visible});
   }
+  getMembers = () => {
+    console.log(this.props.getMember, 'datattattatta');
+  };
 
   updateCategory = category => {
     this.setState({category: category});
   };
 
   handleChoosePhoto = () => {
+    this.getMembers();
     var options = {
       title: 'Select Image',
       storageOptions: {
@@ -105,15 +111,34 @@ export default class AddGroup extends Component {
   };
 
   async Upload_Image() {
+    const {
+      group_admins,
+      group_member,
+      group_description,
+      group_location,
+      group_name,
+      items,
+    } = this.state;
+    console.log('items', this.state.items);
     let iteratorNum = 0;
     await _retrieveData('user').then(async item => {
-      await uploadImage(
+      let data = group_admins;
+      data.push(item);
+      let dataa = group_member;
+      dataa.push(items);
+      this.setState({group_admins: data, group_member: dataa});
+      await uploadGroupImage(
         this.state.ImageUrl,
         this.state.imageType,
         this.state.ImageName,
         this.state.ImageName,
         'Create_Group',
         item,
+        group_admins,
+        group_member,
+        group_description,
+        group_location,
+        group_name,
       );
     });
     let that = this;
@@ -476,7 +501,11 @@ export default class AddGroup extends Component {
                 </Text>
 
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('AddUserlist')}
+                  onPress={() =>
+                    this.props.navigation.navigate('AddUserlist', {
+                      item: this.state.item,
+                    })
+                  }
                   style={{left: responsiveWidth(25)}}>
                   <FIcon name="plus" size={20} color="#60ce28" />
                 </TouchableOpacity>
@@ -506,96 +535,6 @@ export default class AddGroup extends Component {
                     }}
                   />
                 </View>
-
-                <View
-                  style={{
-                    width: '80%',
-                    justifyContent: 'center',
-                    paddingHorizontal: 10,
-                    borderBottomWidth: 0.1,
-                  }}>
-                  <Text
-                    style={{
-                      fontWeight: '600',
-                      color: '#222',
-                      fontSize: responsiveFontSize(2.4),
-                      width: 170,
-                    }}
-                    numberOfLines={1}>
-                    Mark Doe
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: 'white',
-                  height: '25%',
-                  width: responsiveWidth(100),
-                }}>
-                <View
-                  style={{
-                    width: '20%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={{
-                      uri: 'https://randomuser.me/api/portraits/men/85.jpg',
-                    }}
-                    style={{
-                      borderRadius: responsiveHeight(8),
-                      width: responsiveHeight(8),
-                      height: responsiveHeight(8),
-                    }}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    width: '80%',
-                    justifyContent: 'center',
-                    paddingHorizontal: 10,
-                    borderBottomWidth: 0.1,
-                  }}>
-                  <Text
-                    style={{
-                      fontWeight: '600',
-                      color: '#222',
-                      fontSize: responsiveFontSize(2.4),
-                      width: 170,
-                    }}
-                    numberOfLines={1}>
-                    Mark Doe
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  backgroundColor: 'white',
-                  height: '25%',
-                  width: responsiveWidth(100),
-                }}>
-                <View
-                  style={{
-                    width: '20%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={{
-                      uri: 'https://randomuser.me/api/portraits/men/85.jpg',
-                    }}
-                    style={{
-                      borderRadius: responsiveHeight(8),
-                      width: responsiveHeight(8),
-                      height: responsiveHeight(8),
-                    }}
-                  />
-                </View>
-
                 <View
                   style={{
                     width: '80%',
@@ -634,22 +573,7 @@ export default class AddGroup extends Component {
             }}>
             <TouchableOpacity
               onPress={() => {
-                _retrieveData('user').then(result => {
-                  let data = group_admins;
-                  data.push(result);
-                  this.setState({group_admins: data,group_member:data});
-                  Create_Group(
-                    group_name,
-                    group_location,
-                    group_description,
-                    group_member,
-                    group_admins,
-                  ).then(() => {
-                    setTimeout(async () => {
-                      await this.Upload_Image();
-                    }, 3000);
-                  });
-                });
+                this.Upload_Image();
               }}>
               <Text style={{fontSize: responsiveFontSize(2), color: '#ff0000'}}>
                 Create

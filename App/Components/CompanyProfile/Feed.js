@@ -106,8 +106,6 @@ class Feed extends Component {
           .onSnapshot(async () => {
             let data = await getData('Company_Profile', result);
             this.setState({post_data: data, loading: false});
-            // console.log(data);
-            // console.log('\n');
           }),
     );
 
@@ -123,7 +121,7 @@ class Feed extends Component {
       uploading_time:
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
-     firebase
+    firebase
       .firestore()
       .collection('CompanyPost')
       .onSnapshot(async () => {
@@ -172,7 +170,6 @@ class Feed extends Component {
         'CompanyPost',
         item,
       );
-      // console.log('i m here');
     });
     let that = this;
 
@@ -245,7 +242,6 @@ class Feed extends Component {
   async Upload_Image() {
     let iteratorNum = 0;
     await _retrieveData('ref').then(async item => {
-      // console.log('refffffffff', item);
       await uploadImage(
         this.state.ImageUrl,
         this.state.imageType,
@@ -314,7 +310,6 @@ class Feed extends Component {
   }
 
   render() {
-    // console.log('dhhajhdhahjdah', this.state.posts);
     const {
       description,
       uploading_time,
@@ -516,23 +511,27 @@ class Feed extends Component {
                             justifyContent: 'space-evenly',
                             left: 0,
                           }}>
-                          <Text
-                            style={{
-                              fontSize: responsiveFontSize(2),
-                              color: '#40d240',
-                              fontWeight: 'bold',
-                              marginBottom: 10,
-                            }}>
-                            {post_data.rating.length}
-                          </Text>
-                          <TouchableOpacity>
-                            <ETIcon
-                              name="star"
-                              size={30}
-                              color="#32cd32"
-                              style={{}}
-                            />
-                          </TouchableOpacity>
+                          {post_data.rating ? (
+                            <View>
+                              <Text
+                                style={{
+                                  fontSize: responsiveFontSize(2),
+                                  color: '#40d240',
+                                  fontWeight: 'bold',
+                                  marginBottom: 10,
+                                }}>
+                                {post_data.rating.length}
+                              </Text>
+                              <TouchableOpacity>
+                                <ETIcon
+                                  name="star"
+                                  size={30}
+                                  color="#32cd32"
+                                  style={{}}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          ) : null}
                         </View>
                       </TouchableOpacity>
                     </View>

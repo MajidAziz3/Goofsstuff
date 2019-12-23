@@ -40,7 +40,6 @@ export default class Chat extends Component {
 
   componentWillMount() {
     this.getMessages();
-    // console.log(this.state.friendID);
   }
 
   async getMessages() {
@@ -88,8 +87,6 @@ export default class Chat extends Component {
   }
 
   render() {
-    // console.log("receiver",this.state.friendID);
-    // console.log("sender",this.state.current_user);
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.welcome}>{this.state.friendName}</Text>

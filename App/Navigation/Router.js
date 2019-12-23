@@ -77,7 +77,7 @@ import CommunityEvent from '../Components/Home/CommunityEvent';
 import JobInfo from '../Components/Home/JobInfo';
 import AppWorking from '../Components/Login/AppWorking';
 import CommunityGuide from '../Components/Login/CommunityGuide';
-import VisionBoard from '../Components/UserProfile/VisionBoard'
+import VisionBoard from '../Components/UserProfile/VisionBoard';
 import AppWorking1 from '../Components/Login/AppWorking1';
 import House1 from '../Components/Login/House1';
 import FriendsProfile from '../Components/UserProfile/FriendsProfile';
@@ -85,25 +85,24 @@ import LearnMore from '../Components/Home/LearnMore';
 import MoreVisionBoard from '../Components/UserProfile/MoreVisionBoard';
 import MoreGallery from '../Components/UserProfile/MoreGallery';
 
-import TCI from '../Components/Login/TermsandConditionIni'
+import TCI from '../Components/Login/TermsandConditionIni';
 import House1Ini from '../Components/Login/House1Ini';
+import AppUser from '../Components/Friends/AppUser';
 
 var width = Dimensions.get('window').width;
 
-console.disableYellowBox = true;
-
 const FriendStack = createStackNavigator({
-  FriendsList:FriendsList,
-  FriendsProfile:FriendsProfile,
-  Chat:Chat
+  FriendsList: FriendsList,
+  FriendsProfile: FriendsProfile,
+  AppUser: AppUser,
+  Chat: Chat,
 });
 const AuthStack = createStackNavigator({
   Login: Login,
   Signup: Signup,
   MainAuth: MainAuth,
-  TCI:TCI,
-  House1Ini:House1Ini
-  
+  TCI: TCI,
+  House1Ini: House1Ini,
 });
 const FamilyStack = createStackNavigator({
   FamilyList: FamilyList,
@@ -115,7 +114,7 @@ const UserProfileStack = createStackNavigator({
   UserGallery: UserGallery,
   Family: Family,
   VisionBoard: VisionBoard,
-  MoreVisionBoard:MoreVisionBoard,
+  MoreVisionBoard: MoreVisionBoard,
   MoreGallery: MoreGallery,
 });
 const CompanyStack = createStackNavigator({
@@ -146,20 +145,19 @@ const WatchStack = createStackNavigator({
   Watch: Watch,
   LearnMore: LearnMore,
 });
-WatchStack .navigationOptions = ({ navigation }) => {
-
+WatchStack.navigationOptions = ({navigation}) => {
   let tabBarVisible = true;
 
-  let routeName = navigation.state.routes[navigation.state.index].routeName
+  let routeName = navigation.state.routes[navigation.state.index].routeName;
 
-  if ( routeName == 'LearnMore' ) {
-      tabBarVisible = false
+  if (routeName == 'LearnMore') {
+    tabBarVisible = false;
   }
 
   return {
-      tabBarVisible,
-  }
-}
+    tabBarVisible,
+  };
+};
 
 const HomeTabs = createMaterialTopTabNavigator(
   {
@@ -381,9 +379,8 @@ const AppDrawerNavigator = createDrawerNavigator(
     TermsandCondition: {screen: TermsandCondition},
     House: {screen: House1},
     AppWorking: {screen: AppWorking1},
-    
+
     CommunityGuide: {screen: CommunityGuide},
-    
   },
   {
     contentComponent: CustomDrawer,
