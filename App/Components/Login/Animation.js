@@ -8,6 +8,13 @@ import { connectFirebase } from '../../Backend/Connection/FirebaseConnection';
 
 
 export default class Animation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          flag: false,
+        };
+      }
+
     static navigationOptions = {
         header: null,
     };
@@ -19,6 +26,7 @@ export default class Animation extends Component {
         );
 
         connectFirebase();
+
         if (Platform.OS === 'android') {
             SplashScreen.close({
                 animationType: SplashScreen.animationType.scale,
@@ -28,20 +36,29 @@ export default class Animation extends Component {
         }
 
 
-        setTimeout(() => {
-            if (this.state.value == '' || this.state.value == undefined) {
+
+        if (this.state.value == '' || this.state.value == undefined) {
+            this.setState({flag: true})
+            setTimeout(() => {
+                
                 this.props.navigation.navigate('MainAuth');
-            } else {
-                this.props.navigation.navigate('App');
-            }
-        }, 7000);
+            }, 8000);
+        } else {
+            this.setState({flag: false})
+            this.props.navigation.navigate('App');
+
+        }
+
     }
 
     render() {
         return (
             <View style={styles.container}>
-
-                <Image source={img} />
+                {this.state.flag ? (
+                    <Image source={img} />
+                ):(
+                    <View/>
+                )}
             </View>
         );
     }
