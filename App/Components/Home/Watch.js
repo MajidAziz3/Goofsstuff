@@ -1123,6 +1123,7 @@ export default class Watch extends Component {
                           style={{
                             fontSize: responsiveFontSize(1.5),
                             color: '#7e7a7a',
+                            marginTop: 3
                           }}>
                           {date[0]} at {this.calculateTime(date[1])}
                           {/* {console.log('ITEM NAME', item.name)} */}
@@ -1138,6 +1139,7 @@ export default class Watch extends Component {
                         height: '70%',
                         flexDirection: 'row',
                         marginBottom: 1,
+                        marginTop: 5
                       }}>
                       <VideoPlayer
                         source={{
