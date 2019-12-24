@@ -1,15 +1,23 @@
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, SafeAreaView, Image, ActivityIndicator } from 'react-native';
+import React, {Component} from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import firebase from 'firebase';
-import { GiftedChat } from 'react-native-gifted-chat';
-import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
-import { addToArray, getData } from '../../Backend/Utility';
+import {GiftedChat} from 'react-native-gifted-chat';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import {addToArray, getData} from '../../Backend/Utility';
 import FA from 'react-native-vector-icons/FontAwesome';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import EIcon from 'react-native-vector-icons/Entypo';
 import FIcon from 'react-native-vector-icons/FontAwesome5';
 import MTIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SearchBar } from 'react-native-elements';
+import {SearchBar} from 'react-native-elements';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {
   responsiveHeight,
@@ -34,7 +42,7 @@ export default class Chat extends Component {
   }
   componentDidMount = async () => {
     await _retrieveData('user').then(result =>
-      this.setState({ current_user: result }),
+      this.setState({current_user: result}),
     );
   };
 
@@ -48,7 +56,7 @@ export default class Chat extends Component {
       this.state.current_user,
       this.state.friendID,
     );
-    if (messages) await this.setState({ messages: messages });
+    if (messages) await this.setState({messages: messages});
     else return 0;
     let that = this;
 
@@ -56,13 +64,11 @@ export default class Chat extends Component {
       .firestore()
       .collection('chats')
       .doc(this.state.current_user)
-      .onSnapshot(function (doc) {
-        that.setState({ messages: doc.data()[this.state.friendID].reverse() });
+      .onSnapshot(function(doc) {
+        that.setState({messages: doc.data()[this.state.friendID].reverse()});
       });
   }
   async onSend(messages = []) {
-
-   
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
@@ -82,13 +88,24 @@ export default class Chat extends Component {
     );
     messages[0].user._id = 1;
 
-    await addToArray('users',this.state.current_user,'chatted',this.state.friendID);
-    await addToArray('users',this.state.friendID,'chatted',this.state.current_user);
+    await addToArray(
+      'users',
+      this.state.current_user,
+      'chatted',
+      this.state.friendID,
+    );
+    await addToArray(
+      'users',
+      this.state.friendID,
+      'chatted',
+      this.state.current_user,
+    );
   }
 
   render() {
+    console.log('this', this.state.current_user,this.state.friendID);
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <Text style={styles.welcome}>{this.state.friendName}</Text>
         <FA
           name="chevron-left"
@@ -98,7 +115,7 @@ export default class Chat extends Component {
           style={styles.menu}
         />
         <Image
-          source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }}
+          source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
           style={styles.menu1}
         />
         <GiftedChat
@@ -141,12 +158,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   menu: {
-    
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(2.6),
     marginLeft: '4%',
-    position: 'absolute'
-
-},
+    position: 'absolute',
+  },
 });

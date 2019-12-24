@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,9 +13,11 @@ import {
   Image,
   Modal,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
-import { Thumbnail, Item } from 'native-base';
-import { jsxAttribute } from '@babel/types';
+import {Thumbnail, Item} from 'native-base';
+import {jsxAttribute} from '@babel/types';
+import FA from 'react-native-vector-icons/Entypo';
 import firebase from 'firebase';
 import {
   responsiveHeight,
@@ -34,10 +36,11 @@ import {
   saveData,
   getData,
   deleteArray,
+  uploadImageComment,
 } from '../../Backend/Utility';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
-import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 
 const height = Dimensions.get('screen').height / 3;
 const width = Dimensions.get('screen').width;
@@ -66,6 +69,14 @@ export default class Watch extends Component {
       viewsData: 0,
       Views: 0,
       hit_favorite: true,
+      comment_data: [],
+      loadingModal: true,
+      photo: null,
+      ImageName: null,
+      imageType: null,
+      ImageUrl: null,
+      modalVisible: false,
+      uploading_time: '',
       popular: [
         {
           name: 'Harrison Ford',
@@ -140,6 +151,100 @@ export default class Watch extends Component {
       hit_like: true,
     };
   }
+
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+  CommentsPost = async item => {
+    await _retrieveData('user').then(async result => {
+      await getData('users', result).then(async res => {
+        let iteratorNum = 0;
+        await uploadImageComment(
+          this.state.ImageUrl,
+          this.state.imageType,
+          this.state.ImageName,
+          this.state.ImageName,
+          'watchComments',
+          item,
+          this.state.comments_words,
+          res.userId,
+          res.name,
+          this.state.uploading_time,
+          res.profile_picture,
+        );
+        let that = this;
+
+        let refreshId = setInterval(function() {
+          iteratorNum += 1;
+          _retrieveData('imageUploadProgress').then(data => {
+            that.setState({uploadProgress: data});
+            if (Number(data) >= 100) {
+              clearInterval(refreshId);
+              alert('Uploaded', 'Profile is updated', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (data == '-1') {
+              clearInterval(refreshId);
+              alert('goes wrong', 'Something went wrong', [
+                {text: 'OK', onPress: () => that.props.navigation.goBack()},
+              ]);
+            }
+            if (iteratorNum == 120) {
+              clearInterval(refreshId);
+              alert(
+                'To Long TIme',
+                'Picture uploading taking too long. Please upload a low resolution picture',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => that.props.navigation.goBack(),
+                  },
+                ],
+              );
+            }
+          });
+        }, 1000);
+      });
+      await addToArray('Watch', item, 'comments', {
+        post_id: item,
+        date: this.state.uploading_time,
+        userId: result,
+        words: this.state.comments_words,
+      });
+    });
+  };
+
   componentDidMount = async () => {
     firebase
       .firestore()
@@ -147,8 +252,8 @@ export default class Watch extends Component {
       .onSnapshot(() => {
         setTimeout(async () => {
           let data = await getAllOfCollection('Watch');
-          this.setState({ post_data: data, loading: false }, async () => {
-            const { post_data } = this.state;
+          this.setState({post_data: data, loading: false}, async () => {
+            const {post_data} = this.state;
             await _retrieveData('user').then(async user_id => {
               await getData('watchLike', user_id).then(data => {
                 post_data.map(dt => {
@@ -168,34 +273,49 @@ export default class Watch extends Component {
                   });
                 });
               });
-              this.setState({ post_data }, () => { });
+              this.setState({post_data}, () => {});
             });
           });
         }, 400);
       });
 
-    this.setState({ datasource: this.state.popular });
-    this.setState({ datasource2: this.state.popular });
-    const { addListener } = this.props.navigation;
-    const { isDisplayed } = this.state;
+    this.setState({datasource: this.state.popular});
+    this.setState({datasource2: this.state.popular});
+    const {addListener} = this.props.navigation;
+    const {isDisplayed} = this.state;
     const self = this;
 
     this.listeners = [
       addListener('didFocus', () => {
         if (self.state.isDisplayed !== true) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
-          self.setState({ isDisplayed: true });
+          self.setState({isDisplayed: true});
         }
       }),
       addListener('willBlur', () => {
         if (self.state.isDisplayed !== false) {
           GlobalConst.STORAGE_KEYS.ScreenType = '2';
 
-          self.setState({ isDisplayed: false });
+          self.setState({isDisplayed: false});
         }
       }),
     ];
+    var that = this;
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    that.setState({
+      //Setting the value of the date time
+      uploading_time:
+        date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+    });
   };
+  setModalVisible() {
+    this.setState({modalVisible: !this.state.modalVisible});
+  }
 
   likePost = async (item, ind) => {
     await _retrieveData('user').then(async result => {
@@ -204,7 +324,7 @@ export default class Watch extends Component {
           if (res.like.length > 0) {
             res.like.map(async (id, index) => {
               if (id.post_id === item) {
-                await this.setState({ hit_like: false });
+                await this.setState({hit_like: false});
                 await deleteArray('watchLike', result, 'like', index);
                 await deleteArray('Watch', item, 'like', index);
                 await deleteArray('users', result, 'likes', index);
@@ -216,7 +336,7 @@ export default class Watch extends Component {
                   await addToArray('Watch', item, 'like', {
                     post_id: item,
                   });
-                  await addToArray('users', result, 'likes', { post_id: item });
+                  await addToArray('users', result, 'likes', {post_id: item});
                 }
                 return;
               }
@@ -229,7 +349,7 @@ export default class Watch extends Component {
             await addToArray('Watch', item, 'like', {
               post_id: item,
             });
-            await addToArray('users', result, 'likes', { post_id: item });
+            await addToArray('users', result, 'likes', {post_id: item});
           }
         } else {
           await addToArray('watchLike', result, 'like', {
@@ -238,29 +358,40 @@ export default class Watch extends Component {
           await addToArray('Watch', item, 'like', {
             post_id: item,
           });
-          await addToArray('users', result, 'likes', { post_id: item });
+          await addToArray('users', result, 'likes', {post_id: item});
         }
       });
     });
   };
 
   calculateTime(time) {
-    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-    if (time.length > 1) { // If time format correct
+    if (time.length > 1) {
+      // If time format correct
       time = time.slice(1); // Remove full string match value
       time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
       time[0] = +time[0] % 12 || 12; // Adjust hours
     }
     return time.join(''); // return adjusted time or original string
-
-
   }
 
   saveViews = async item => {
     let finalViews = this.state.viewsData + this.state.Views;
-    await saveData('Watch', item.post_id, { Views: finalViews });
+    await saveData('Watch', item.post_id, {Views: finalViews});
   };
+
+  async CommentPost(item) {
+    firebase
+      .firestore()
+      .collection('Comments')
+      .onSnapshot(async () => {
+        let data = await getData('Comments', item);
+        this.setState({comment_data: data, loadingModal: false});
+      });
+  }
 
   favoritePost = async item => {
     await _retrieveData('user').then(async result => {
@@ -269,7 +400,7 @@ export default class Watch extends Component {
           if (res.favorite.length > 0) {
             res.favorite.map(async (id, index) => {
               if (id.post_id === item) {
-                await this.setState({ hit_favorite: false });
+                await this.setState({hit_favorite: false});
                 await deleteArray('watchFavorite', result, 'favorite', index);
                 await deleteArray('Watch', item, 'favorite', index);
                 await deleteArray('users', result, 'favorite', index);
@@ -395,7 +526,7 @@ export default class Watch extends Component {
   }
 
   setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+    this.setState({modalVisible: visible});
   }
 
   render() {
@@ -405,6 +536,164 @@ export default class Watch extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.welcome}>Watch</Text>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}>
+          <SafeAreaView style={{flex: 1}}>
+            <FA
+              name="cross"
+              size={30}
+              color={'#32cd32'}
+              style={styles.modalcross}
+              onPress={() => {
+                this.setModalVisible();
+              }}
+            />
+            {this.state.loadingModal ? (
+              <ActivityIndicator
+                size={'large'}
+                color="#32cd32"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flex: 1,
+                }}
+              />
+            ) : (
+              <FlatList
+                style={styles.root}
+                data={this.state.comment_data.comments}
+                ItemSeparatorComponent={() => {
+                  return <View style={styles.separator} />;
+                }}
+                keyExtractor={item => item.user_id}
+                renderItem={({item}) => {
+                  console.log('itemm', item);
+                  return item.imageUrl ? (
+                    <View style={styles.container2}>
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image
+                          style={styles.image}
+                          source={{
+                            uri: item.userImage,
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.contentHeader}>
+                          <Text style={styles.name}>{item.user_name}</Text>
+                          <Text style={styles.time}>{item.time}</Text>
+                        </View>
+                        <Text rkType="primary3 mediumLine">
+                          {item.comments}
+                        </Text>
+                        <Image
+                          style={styles.image}
+                          source={{uri: item.imageUrl}}
+                        />
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={styles.container2}>
+                      <TouchableOpacity onPress={() => {}}>
+                        <Image
+                          style={styles.image}
+                          source={{
+                            uri: item.userImage,
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.content}>
+                        <View style={styles.contentHeader}>
+                          <Text style={styles.name}>{item.user_name}</Text>
+                          <Text style={styles.time}>{item.time}</Text>
+                        </View>
+                        <Text rkType="primary3 mediumLine">
+                          {item.comments}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }}
+              />
+            )}
+            <View
+              style={{
+                marginBottom: responsiveHeight(2),
+                backgroundColor: 'white',
+                flexDirection: 'row',
+                padding: 1,
+                marginHorizontal: 20,
+                // alignItems:'center',
+              }}>
+              <View
+                style={{
+                  fontSize: 12,
+                  paddingHorizontal: 20,
+                  padding: 0,
+                  height: '90%',
+                  backgroundColor: '#dee3e1',
+                  width: '80%',
+                  borderRadius: 50,
+                  flexDirection: 'row',
+                }}>
+                <TextInput
+                  value={this.state.comments_words}
+                  onChangeText={values =>
+                    this.setState({comments_words: values})
+                  }
+                  placeholder="Type something">
+                  {/* <TextInput style={{ marginHorizontal: 10, alignSelf: 'flex-start' }} placeholder='type something'placeholderStyle={{ fontFamily: "AnotherFont", borderColor: 'red',alignSelf:'center' }} > */}
+                </TextInput>
+                <Ionicon
+                  name="ios-camera"
+                  size={30}
+                  style={{right: 15, position: 'absolute', top: 5}}
+                  onPress={this.handleChoosePhoto}
+                />
+              </View>
+              {/* </View> */}
+              <View
+                style={{
+                  width: '20%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  name="send-circle-outline"
+                  size={40}
+                  color="#32cd32"
+                  onPress={() => {
+                    var that = this;
+                    var date = new Date().getDate(); //Current Date
+                    var month = new Date().getMonth() + 1; //Current Month
+                    var year = new Date().getFullYear(); //Current Year
+                    var hours = new Date().getHours(); //Current Hours
+                    var min = new Date().getMinutes(); //Current Minutes
+                    var sec = new Date().getSeconds(); //Current Seconds
+                    that.setState({
+                      //Setting the value of the date time
+                      uploading_time:
+                        date +
+                        '/' +
+                        month +
+                        '/' +
+                        year +
+                        ' ' +
+                        hours +
+                        ':' +
+                        min +
+                        ':' +
+                        sec,
+                    });
+                    this.CommentsPost(this.state._id);
+                  }}
+                />
+              </View>
+            </View>
+          </SafeAreaView>
+        </Modal>
         <Ionicon
           name="ios-menu"
           size={35}
@@ -413,7 +702,7 @@ export default class Watch extends Component {
           style={styles.menu}
         />
         <Image
-          source={{ uri: 'https://randomuser.me/api/portraits/men/85.jpg' }}
+          source={{uri: 'https://randomuser.me/api/portraits/men/85.jpg'}}
           style={styles.menu1}
         />
 
@@ -439,7 +728,7 @@ export default class Watch extends Component {
           <View
             style={{
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
+              shadowOffset: {width: 0, height: 2},
               shadowOpacity: 0.5,
               shadowRadius: 2,
               elevation: 5,
@@ -572,7 +861,7 @@ export default class Watch extends Component {
                     color="#32cd32"
                     onPress={() => {
                       this.setModalVisible();
-                      this.setState({ _id: item.post_id });
+                      this.setState({_id: item.post_id});
                       this.CommentPost(item.post_id);
                     }}
                   />
@@ -595,16 +884,16 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                   <AIcon
-                            name={this.state.hit_like ? 'like1' : 'like2'}
-                            size={28}
-                            color={'#32cd32'}
-                            onPress={() => {
-                              this.setState({
-                                hit_like: !this.state.hit_like,
-                              });
-                            }}
-                          />
+                  <AIcon
+                    name={this.state.hit_like ? 'like1' : 'like2'}
+                    size={28}
+                    color={'#32cd32'}
+                    onPress={() => {
+                      this.setState({
+                        hit_like: !this.state.hit_like,
+                      });
+                    }}
+                  />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -651,7 +940,7 @@ export default class Watch extends Component {
           </View>
 
           <TouchableOpacity
-            style={{ height: responsiveHeight(5), backgroundColor: 'white' }}
+            style={{height: responsiveHeight(5), backgroundColor: 'white'}}
             onPress={() => {
               this.props.navigation.navigate('LearnMore');
             }}>
@@ -666,7 +955,7 @@ export default class Watch extends Component {
             </Text>
           </TouchableOpacity>
           <View
-            style={{ height: responsiveHeight(10), backgroundColor: 'white' }}>
+            style={{height: responsiveHeight(10), backgroundColor: 'white'}}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -780,7 +1069,7 @@ export default class Watch extends Component {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               keyExtractor={item => item.id}
-              renderItem={({ item, index }) => (
+              renderItem={({item, index}) => (
                 <View>
                   <View
                     style={{
@@ -789,7 +1078,7 @@ export default class Watch extends Component {
                       width: responsiveWidth(20),
                     }}>
                     <Thumbnail
-                      source={{ uri: item.imageName }}
+                      source={{uri: item.imageName}}
                       style={{
                         width: responsiveHeight(7),
                         height: responsiveHeight(7),
@@ -841,7 +1130,7 @@ export default class Watch extends Component {
     </View> */}
           </View>
 
-          <View style={{ height: responsiveHeight(10), backgroundColor: 'red' }}>
+          <View style={{height: responsiveHeight(10), backgroundColor: 'red'}}>
             <View
               style={{
                 paddingHorizontal: 10,
@@ -944,12 +1233,12 @@ export default class Watch extends Component {
           <FlatList
             data={this.state.post_data}
             keyExtractor={item => item.id}
-            renderItem={({ item, index }) => (
+            renderItem={({item, index}) => (
               <View
                 key={index}
                 style={{
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
+                  shadowOffset: {width: 0, height: 2},
                   shadowOpacity: 0.5,
                   shadowRadius: 2,
                   elevation: 5,
@@ -979,7 +1268,7 @@ export default class Watch extends Component {
                       alignItems: 'center',
                       left: 10,
                     }}>
-                    <Thumbnail small source={{ uri: item.imageName }} />
+                    <Thumbnail small source={{uri: item.imageName}} />
                   </View>
                   <View
                     style={{
@@ -987,9 +1276,11 @@ export default class Watch extends Component {
                       alignItems: 'flex-start',
                       width: '60%',
                       flexDirection: 'column',
-                      marginLeft: responsiveWidth(2)
+                      marginLeft: responsiveWidth(2),
                     }}>
-                    <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text>
+                    <Text style={{fontSize: 1, color: 'white'}}>
+                      {(date = item.uploading_time.split(' '))}
+                    </Text>
                     <Text
                       style={{
                         fontSize: responsiveFontSize(3),
@@ -1007,7 +1298,6 @@ export default class Watch extends Component {
                       {/* {console.log('ITEM NAME', item.name)} */}
                     </Text>
                   </View>
-
                 </View>
                 <View
                   style={{
@@ -1028,15 +1318,11 @@ export default class Watch extends Component {
                     disableVolume={true}
                     disableFullscreen={true}
                     paused={true}
-                  // onPlay={()=>  this.setState({ Views: 1 })}
-                  // onPause={()=> this.setState({ Views: 0 })}
-                  // onEnd={()=> this.saveViews(item)}
+                    // onPlay={()=>  this.setState({ Views: 1 })}
+                    // onPause={()=> this.setState({ Views: 0 })}
+                    // onEnd={()=> this.saveViews(item)}
                   />
-                  
                 </View>
-                
-
-                
 
                 <View
                   style={{
@@ -1049,13 +1335,10 @@ export default class Watch extends Component {
                   }}>
                   <View
                     style={{
-                      backgroundColor: 'white',
                       flexDirection: 'row',
-                      width: '25%',
-                      justifyContent: 'center',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                      
                     <TouchableOpacity>
                       <FontAwesome
                         name="comment-o"
@@ -1063,17 +1346,18 @@ export default class Watch extends Component {
                         color="#32cd32"
                         onPress={() => {
                           this.setModalVisible();
-                          this.setState({ _id: item.post_id });
+                          this.setState({_id: item.post_id});
                           this.CommentPost(item.post_id);
                         }}
                       />
                     </TouchableOpacity>
                     <Text
                       style={{
-                        marginHorizontal: 2,
-                        fontSize: responsiveFontSize(1.8),
+                        marginHorizontal: 10,
                         fontWeight: '400',
-                        color: '#7e7a7a',
+                        top: 5,
+                        color: '#32cd32',
+                        fontSize: responsiveFontSize(1.6),
                       }}>
                       {item.comments.length}
                     </Text>
@@ -1117,7 +1401,7 @@ export default class Watch extends Component {
                         name={item.isfavorite ? 'md-heart' : 'md-heart-empty'}
                         size={30}
                         color={'#32cd32'}
-                        style={{ top: 1 }}
+                        style={{top: 1}}
                         onPress={() => {
                           this.favoritePost(item.post_id);
                         }}

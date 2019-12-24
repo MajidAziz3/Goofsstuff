@@ -55,8 +55,8 @@ class ChatList extends Component {
     let friends = [];
     let chatted = [];
     await _retrieveData('user').then(async (id) => {
-      await getData('friends', id).then(result => {
-        this.setState({ data: result.request }, () => {
+      await getData('users', id).then(result => {
+        this.setState({ data: result.friends }, () => {
           if (this.state.data != null) {
             this.state.data.map(async (item) => {
               await getData('users', item.userId).then((friend) => {
