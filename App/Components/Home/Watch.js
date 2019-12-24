@@ -81,7 +81,7 @@ export default class Watch extends Component {
       speaker: [],
       hit_like: true,
       speaker1: [],
-      speakerID: ''
+      speakerID: [],
     };
   }
 
@@ -248,11 +248,13 @@ export default class Watch extends Component {
 
     let data1 = await getAllOfCollection('users');
     this.setState({ speaker: data1 });
+    let sID = [];
 
     let data12 = this.state.post_data;
-    let data123 = [];
-    data123.push(data12[0])
-    this.setState({ speaker1: data123, speakerID: data123[0].user_id, loading: false })
+    let data123 = data12[0];
+    let data321 = [];
+    data321.push(data12[0])
+    this.setState({speaker1: data321, loading: false })
 
     console.log("'NEW DATAA>>>>>>", this.state.speakerID)
   };
@@ -898,9 +900,7 @@ export default class Watch extends Component {
               <TouchableOpacity
                 style={{ height: responsiveHeight(5), backgroundColor: 'white' }}
                 onPress={() => {
-                  this.props.navigation.navigate('LearnMore', {
-                    user_id: this.state.speakerID,
-                  });
+                  this.props.navigation.navigate('LearnMore');
                 }}>
                 <Text
                   style={{
@@ -1029,32 +1029,38 @@ export default class Watch extends Component {
                   keyExtractor={item => item.id}
                   renderItem={({ item, index }) => (
                     <View>
-                      <View
-                        style={{
-                          backgroundColor: 'white',
-                          height: responsiveHeight(10),
-                          width: responsiveWidth(20),
-                        }}>
-                        <Thumbnail
-                          source={{ uri: item.profile_picture }}
+                      <TouchableOpacity onPress={() => {
+                        this.props.navigation.navigate('LearnMore', {
+                          user_id: item.userId
+                        });
+                      }}>
+                        <View
                           style={{
-                            width: responsiveHeight(7),
-                            height: responsiveHeight(7),
-                            alignSelf: 'center',
-                          }}
-                        />
-                        <Text
-                          style={{
-                            fontWeight: '400',
-                            color: '#5e5d5d',
-                            fontSize: responsiveFontSize(1.5),
-                            textAlign: 'center',
-                            textTransform: 'capitalize',
-                          }}
-                          numberOfLines={2}>
-                          {item.name}
-                        </Text>
-                      </View>
+                            backgroundColor: 'white',
+                            height: responsiveHeight(10),
+                            width: responsiveWidth(20),
+                          }}>
+                          <Thumbnail
+                            source={{ uri: item.profile_picture }}
+                            style={{
+                              width: responsiveHeight(7),
+                              height: responsiveHeight(7),
+                              alignSelf: 'center',
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontWeight: '400',
+                              color: '#5e5d5d',
+                              fontSize: responsiveFontSize(1.5),
+                              textAlign: 'center',
+                              textTransform: 'capitalize',
+                            }}
+                            numberOfLines={2}>
+                            {item.name}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                   )}
                 />

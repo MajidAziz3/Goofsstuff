@@ -27,7 +27,7 @@ export default class LearnMore extends Component {
             loading: true,
             video: false,
             data_user: '',
-            user_id: this.props.navigation.state.params.user_id,
+            user_id: 'CxSBC6nqDrWGWLxk9DfyJ1VWhOR2',
             speakerData: [],
             speakerWatch: [],
         }
