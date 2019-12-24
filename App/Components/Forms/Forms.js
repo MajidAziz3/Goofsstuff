@@ -600,15 +600,14 @@ export default class Forms extends Component {
               style={{
                 marginTop: 15,
                 backgroundColor: 'white',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                borderRadius:10,
+                elevation:5,
               }}>
               <View
                 style={{
                   backgroundColor: 'white',
-                 
-                  width: '100%',
+                 left:5,
+                  width: '90%',
                 }}>
                 <Text
                   style={{
@@ -622,7 +621,7 @@ export default class Forms extends Component {
                   displayed with your video.
                 </Text>
               </View>
-            </View>
+            
 
             <View
               style={{
@@ -645,7 +644,7 @@ export default class Forms extends Component {
                     fontSize: responsiveFontSize(1.8),
                     // fontWeight: 'bold',
                     // padding: 5,
-                    
+                    left:3.5,
                     color: '#000',
 
                     
@@ -762,7 +761,7 @@ export default class Forms extends Component {
                     // fontWeight: 'bold',
                     // padding: 5,
                     color: '#000',
-
+                    left:3.5
                   }}>
                   Email Address
                 </Text>
@@ -799,11 +798,11 @@ export default class Forms extends Component {
 
             <View
               style={{
-                marginTop: 0,
+                marginTop: 20,
                 backgroundColor: 'white',
                 height: '10%',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                
                 alignItems: 'center',
               }}>
               <TouchableOpacity
@@ -825,14 +824,14 @@ export default class Forms extends Component {
               <TextInput
                 value={location}
                 onChangeText={location => this.setState({location})}
-                placeholder="Location"
+                placeholder="Type your location"
                 style={{
                   fontSize: 12,
                   padding: 5,
                   borderRadius: 10,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  width: '71%',
+                  width: '65%',
                   height: responsiveHeight(5),
                   shadowColor: 'black',
                   shadowOffset: {width: 0, height: 1},
@@ -841,7 +840,7 @@ export default class Forms extends Component {
                   elevation: 2,
                   backgroundColor: 'white',
                 }}></TextInput>
-              <View style={{backgroundColor: 'white', width: '29%',left:0.8}}>
+              <View style={{backgroundColor: 'white',left:23}}>
                 <CheckBox
                   checked={locationFlage}
                   checkedIcon="check"
@@ -864,7 +863,7 @@ export default class Forms extends Component {
                 />
               </View>
             </View>
-
+</View>
             <View
               style={{
                 borderRadius: 10,
@@ -880,7 +879,7 @@ export default class Forms extends Component {
                 value={vedio_post}
                 onChangeText={vedio_post => this.setState({vedio_post})}
                 multiline={true}
-                numberOfLines={4}
+                numberOfLines={3}
                 style={{
                   textAlignVertical: 'top',
                   fontSize: responsiveFontSize(2),

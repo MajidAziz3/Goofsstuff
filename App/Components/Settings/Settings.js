@@ -110,30 +110,32 @@ export default class Settings extends Component {
                 <ScrollView style={styles.container1}>
                     <View style={styles.bodyContainer}>
 
-                        <View style={{ padding: 5, marginBottom: 5, backgroundColor: 'white', width: '100%', height: '30%', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 3, borderRadius: 5 }}>
+                        <View style={{ padding: 5, marginBottom: 5, backgroundColor: 'white', width: '100%', height: '25%', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 3, borderRadius: 5 }}>
 
                             <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row', }}>
 
-                                <View style={{ paddingHorizontal: 5, width: '30%', height: '100%', justifyContent: 'center', }}>
+                                <View style={{ paddingHorizontal: 5, width: '30%', height: '100%', justifyContent: 'center',top:5 }}>
                                     <Text style={{ fontSize: responsiveFontSize(2), color: '#000000', }}>
                                         Username
                                 </Text>
                                 </View>
-
-                                <Text style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>{this.state.data_user.email} </Text>
-
+                                <View style={{ marginTop: 12,justifyContent: 'center', backgroundColor: 'white', width: '65%',  shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
+                                <Text style={{ fontSize: 16,left:10,fontWeight:'bold',color:'black'}}>{this.state.data_user.email} </Text>
+                                </View>
 
                             </View>
-                            <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row', }}>
+                            <View style={{ backgroundColor: 'white', height: '33%', flexDirection: 'row',top:15 }}>
 
-                                <View style={{ paddingHorizontal: 5, width: '30%', height: '100%', justifyContent: 'center', }}>
+                                <View style={{ paddingHorizontal: 5, width: '30%', height: '100%', justifyContent: 'center',top:5 }}>
                                     <Text style={{ fontSize: responsiveFontSize(2), color: '#000000', }}>
                                         Display Name
                                 </Text>
                                 </View>
+                                <View style={{ marginTop: 12,justifyContent: 'center', backgroundColor: 'white', width: '65%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>
 
-                                <Text style={{ fontSize: 12, marginTop: 10, padding: 5, justifyContent: 'center', backgroundColor: 'white', width: '65%', height: '80%', shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 1.41, elevation: 5, borderRadius: 10 }}>{this.state.data_user.name} </Text>
 
+                                <Text style={{fontSize: 16,left:10,fontWeight:'bold',color:'black' }}>{this.state.data_user.name} </Text>
+</View>
 
                             </View>
 
@@ -301,7 +303,7 @@ export default class Settings extends Component {
                             />
 
                         </View>
-                        <View style={{ backgroundColor: 'white', top: 0, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <View style={{ backgroundColor: 'white', top: 5, height: responsiveHeight(6), width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Text style={{ marginHorizontal: 8, fontSize: responsiveFontSize(1.8), color: '#000000', }}>
                                 {'Daily Healthy Self Notification'}
                             </Text>
@@ -492,7 +494,7 @@ export default class Settings extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#ffffff',
     },
     container1: {
         marginTop: 10,
@@ -525,7 +527,7 @@ const styles = StyleSheet.create({
     bodyContainer: {
         backgroundColor: 'white',
         borderRadius: 10,
-        height: responsiveHeight(100),
+        height: responsiveHeight(95),
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 10,

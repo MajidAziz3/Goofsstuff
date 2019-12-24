@@ -26,7 +26,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import FA from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalConst from '../../Backend/GlobalConst';
 import { getAllOfCollection, addToArray, saveData } from '../../Backend/Utility';
 import Video from 'react-native-video';
@@ -366,7 +366,7 @@ export default class Watch extends Component {
                     fontSize: responsiveFontSize(2.5),
                     fontWeight: 'bold',
                   }}>
-                  Jhon Sno
+                  Jhon Snow
                 </Text>
               </View>
               <View
@@ -449,7 +449,12 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                  <Icon name="account" size={20} color="#7e7a7a" />
+                <FontAwesome
+                            name="comment-o"
+                            size={30}
+                            color="#32cd32"
+                           
+                          />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -469,11 +474,16 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                  <EIcon
-                    name="like"
-                    size={25}
-                    color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                  />
+                   <AIcon
+                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            size={28}
+                            color={'#32cd32'}
+                            onPress={() => {
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              });
+                            }}
+                          />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -493,12 +503,21 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                  <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                    this.favoritePost(item.post_id);
-                    this.setState({
-                      hit_favorite: !this.state.hit_favorite,
-                    });
-                  }} />
+                <Ionicon
+                            name={
+                              this.state.hit_favorite
+                                ? 'md-heart'
+                                : 'md-heart-empty'
+                            }
+                            size={30}
+                            color={'#32cd32'}
+                            style={{top: 1}}
+                            onPress={() => {
+                              
+                              this.setState({
+                                hit_favorite: !this.state.hit_favorite,
+                              });
+                            }}/>
                 </TouchableOpacity>
 
                 <Text
@@ -649,7 +668,7 @@ export default class Watch extends Component {
                   <View
                     style={{
                       backgroundColor: 'white',
-                      height: responsiveHeight(12),
+                      height: responsiveHeight(10),
                       width: responsiveWidth(20),
                     }}>
                     <Thumbnail
@@ -672,7 +691,7 @@ export default class Watch extends Component {
                       {item.name}
                     </Text>
                   </View>
-                  <View
+                  {/* <View
                     style={{
                       backgroundColor: 'white',
                       height: responsiveHeight(3),
@@ -690,7 +709,7 @@ export default class Watch extends Component {
                       numberOfLines={2}>
                       {'Title'}
                     </Text>
-                  </View>
+                  </View> */}
                 </View>
               )}
             />
@@ -873,7 +892,7 @@ export default class Watch extends Component {
                         color: '#7e7a7a',
                         right: 5,
                       }}>
-                      asad
+                      8h ago
                     </Text>
                   </View>
                 </View>
@@ -944,7 +963,12 @@ export default class Watch extends Component {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity>
-                      <Icon name="account" size={20} color="#7e7a7a" />
+                    <FontAwesome
+                            name="comment-o"
+                            size={30}
+                            color="#32cd32"
+                           
+                          />
                     </TouchableOpacity>
                     <Text
                       style={{
@@ -964,17 +988,16 @@ export default class Watch extends Component {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity>
-                      <EIcon
-                        name="like"
-                        size={25}
-                        color={this.state.hit_like ? '#32cd32' : '#7e7a7a'}
-                        onPress={() => {
-                          this.likePost(item.post_id);
-                          this.setState({
-                            hit_like: !this.state.hit_like,
-                          });
-                        }}
-                      />
+                    <AIcon
+                            name={this.state.hit_like ? 'like1' : 'like2'}
+                            size={28}
+                            color={'#32cd32'}
+                            onPress={() => {
+                              this.setState({
+                                hit_like: !this.state.hit_like,
+                              });
+                            }}
+                          />
                     </TouchableOpacity>
                     <Text
                       style={{
@@ -994,12 +1017,21 @@ export default class Watch extends Component {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity>
-                      <AIcon name="heart" size={20} color={this.state.hit_favorite ? '#32cd32' : null} onPress={() => {
-                        this.favoritePost(item.post_id);
-                        this.setState({
-                          hit_favorite: !this.state.hit_favorite,
-                        });
-                      }} />
+                    <Ionicon
+                            name={
+                              this.state.hit_favorite
+                                ? 'md-heart'
+                                : 'md-heart-empty'
+                            }
+                            size={30}
+                            color={'#32cd32'}
+                            style={{top: 1}}
+                            onPress={() => {
+                              
+                              this.setState({
+                                hit_favorite: !this.state.hit_favorite,
+                              });
+                            }}/>
                     </TouchableOpacity>
 
                     <Text

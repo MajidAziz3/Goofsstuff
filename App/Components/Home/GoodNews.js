@@ -794,7 +794,7 @@ export default class GoodNews extends Component {
                           source={{
                             uri: item.profile_image,
                           }}
-                          style={{width: 60, height: 60, borderRadius: 60}}
+                          style={{width: 50, height: 50, borderRadius: 50}}
                         />
                       </View>
 
@@ -806,8 +806,10 @@ export default class GoodNews extends Component {
                         }}>
                         <Text
                           style={{
-                            fontSize: responsiveFontSize(3),
+                            left:10,
+                            fontSize: responsiveFontSize(2.7),
                             fontWeight: 'bold',
+                            color:'black'
                           }}>
                           {item.user_name}
                           {/* {console.log('ITEM NAME', item.name)} */}
@@ -821,6 +823,7 @@ export default class GoodNews extends Component {
                         }}>
                         <Text
                           style={{
+                            left:10,
                             fontSize: responsiveFontSize(1.5),
                             fontWeight: '400',
                             color: '#7e7a7a',
@@ -854,6 +857,7 @@ export default class GoodNews extends Component {
                     </View>
                     <View
                       style={{
+                        marginTop:5,
                         width: '100%',
                         height:
                           item.imageUrl || item.videoUrl
