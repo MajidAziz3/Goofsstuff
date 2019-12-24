@@ -386,9 +386,9 @@ export default class Watch extends Component {
   async CommentPost(item) {
     firebase
       .firestore()
-      .collection('Comments')
+      .collection('watchComments')
       .onSnapshot(async () => {
-        let data = await getData('Comments', item);
+        let data = await getData('watchComments', item);
         this.setState({comment_data: data, loadingModal: false});
       });
   }
@@ -1440,6 +1440,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 7,
   },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
+  },
+  image: {
+    width: 45,
+    height: 45,
+    borderRadius: 20,
+    marginLeft: 20,
+  },
+  time: {
+    fontSize: 11,
+    color: '#808080',
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
+    marginTop: responsiveHeight(3)
+  },
   menu: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
@@ -1452,6 +1484,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(0.8),
     marginLeft: '4%',
+  },
+  container2: {
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   backgroundVideo: {
     justifyContent: 'center',
@@ -1476,5 +1515,9 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: 'black',
+  },
+  root: {
+    backgroundColor: '#ffffff',
+    marginTop: 10,
   },
 });
