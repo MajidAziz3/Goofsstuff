@@ -123,6 +123,7 @@ export default class CommunityBoard extends Component {
       event_data: [],
       loading: true,
       job_data: [],
+      outdoor_data: [],
     };
   }
   async sportPost() {
@@ -132,7 +133,7 @@ export default class CommunityBoard extends Component {
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Sport');
         this.setState({sport_data: data, loading: false});
-        console.log("data",data)
+        console.log('data', data);
       });
   }
   async EventPost() {
@@ -147,10 +148,20 @@ export default class CommunityBoard extends Component {
   async JobPost() {
     firebase
       .firestore()
-      .collection('Sport')
+      .collection('Create_Job')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Create_Job');
         this.setState({job_data: data, loading: false});
+      });
+  }
+
+  async outdoorPost() {
+    firebase
+      .firestore()
+      .collection('OutDoor')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('OutDoor');
+        this.setState({outdoor_data: data, loading: false});
       });
   }
 
@@ -158,6 +169,7 @@ export default class CommunityBoard extends Component {
     this.sportPost();
     this.EventPost();
     this.JobPost();
+    this.outdoorPost();
     this.setState({datasource: this.state.alldatasource});
 
     const {addListener} = this.props.navigation;
@@ -351,7 +363,7 @@ export default class CommunityBoard extends Component {
               height: responsiveHeight(6),
               backgroundColor: 'white',
               justifyContent: 'center',
-              width: '100%'
+              width: '100%',
             }}>
             <View
               style={{
@@ -359,7 +371,6 @@ export default class CommunityBoard extends Component {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                
               }}>
               <TouchableOpacity
                 style={{
