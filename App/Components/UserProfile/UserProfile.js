@@ -185,7 +185,6 @@ class UserProfile extends Component {
 
 
 
-    this.getPostData();
     this.getVisionBoardData();
     this.getGalleryData();
 
@@ -195,21 +194,12 @@ class UserProfile extends Component {
   }
 
   getPostData(val) {
-    // console.log("USSEEERR>>>>", val)
-    // await getDocByKeyValue('News', 'user_id', val).then((data) => {
-    //   console.log("POSSSTSS>>>>", data)
-    //   this.setState({ post_data: data });
-    // })
-    let uid = this.state.userId
-    console.log("USSEEERR>>>>", val)
     getDocByKeyValue("News", "user_id", val).then(res =>
-      
       this.setState({
         post_data: res,
       }, console.log("POSSSTSS>>>>", res)),
     );
   };
-
 
   async showPost(val) {
     firebase
