@@ -191,29 +191,29 @@ export default class Forms extends Component {
       company_name,
     } = this.state;
     let iteratorNum = 0;
-      _retrieveData('user').then(result =>
-        getData('Company_Profile', result).then(async user => {
-          await uploadJobImage(
-            this.state.ImageUrl,
-            this.state.imageType,
-            this.state.ImageName,
-            this.state.ImageName,
-            'Jobs',
-            result,
-            job_category,
-            job_title,
-            email_address_job,
-            job_description,
-            job_compensation,
-            about_job,
-            phone_job,
-            uploading_time,
-            company_name,
-            user.location,
-            user.user_name,
-          );
-        }),
-      );
+    _retrieveData('user').then(result =>
+      getData('Company_Profile', result).then(async user => {
+        await uploadJobImage(
+          this.state.ImageUrl,
+          this.state.imageType,
+          this.state.ImageName,
+          this.state.ImageName,
+          'Jobs',
+          result,
+          job_category,
+          job_title,
+          email_address_job,
+          job_description,
+          job_compensation,
+          about_job,
+          phone_job,
+          uploading_time,
+          company_name,
+          user.location,
+          user.user_name,
+        );
+      }),
+    );
     let that = this;
 
     let refreshId = setInterval(function() {
@@ -945,12 +945,13 @@ export default class Forms extends Component {
               style={{
                 borderRadius: 10,
                 width: '96%',
-                backgroundColor: 'white',       
+                backgroundColor: 'white',
                 elevation: 1,
                 alignSelf: 'center',
                 marginTop: 10,
               }}>
-              <TextInput value={vedio_post}
+              <TextInput
+                value={vedio_post}
                 onChangeText={vedio_post => this.setState({vedio_post})}
                 multiline={true}
                 numberOfLines={3}
@@ -960,60 +961,61 @@ export default class Forms extends Component {
                   alignSelf: 'flex-end',
                   borderRadius: 10,
                   marginRight: 10,
-                }}/>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: 'row',
-                    backgroundColor: '#32cd32',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 5,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    elevation: 1,
-                  }}
-                  onPress={() => {
-                    this.handlechooseVideo();
-                  }}>
-                  <FA name="video-camera" size={18} color="white" style={{}} />
-
-                  <Text
-                    style={{
-                      marginLeft: 5,
-                      fontSize: responsiveFontSize(1.8),
-                      color: 'white',
-                    }}>
-                    Video
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              
-              <View
+                }}
+              />
+              <TouchableOpacity
                 style={{
-                  borderRadius: 10,
-                  width: '96%',
-                  backgroundColor: 'white',
-
-                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  backgroundColor: '#32cd32',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   elevation: 1,
-                  alignSelf: 'center',
-                  marginTop: 10,
+                }}
+                onPress={() => {
+                  this.handlechooseVideo();
                 }}>
-                <TextInput
-                  value={about_you}
-                  onChangeText={about_you => this.setState({about_you})}
-                  multiline={true}
-                  numberOfLines={3}
-                  style={{
-                    textAlignVertical: 'top',
-                    fontSize: responsiveFontSize(2),
+                <FA name="video-camera" size={18} color="white" style={{}} />
 
-                    width: '100%',
-                    paddingHorizontal: 10,
-                  }}
-                  placeholder={'Tell viewers a little about you'}
-                />
-              </View>
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    fontSize: responsiveFontSize(1.8),
+                    color: 'white',
+                  }}>
+                  Video
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                borderRadius: 10,
+                width: '96%',
+                backgroundColor: 'white',
+
+                justifyContent: 'space-between',
+                elevation: 1,
+                alignSelf: 'center',
+                marginTop: 10,
+              }}>
+              <TextInput
+                value={about_you}
+                onChangeText={about_you => this.setState({about_you})}
+                multiline={true}
+                numberOfLines={3}
+                style={{
+                  textAlignVertical: 'top',
+                  fontSize: responsiveFontSize(2),
+
+                  width: '100%',
+                  paddingHorizontal: 10,
+                }}
+                placeholder={'Tell viewers a little about you'}
+              />
+            </View>
             <View
               style={{
                 flexDirection: 'row',
@@ -1342,6 +1344,7 @@ export default class Forms extends Component {
                   >
                     <Picker.Item label="Sports" value="Sport" />
                     <Picker.Item label="Event" value="Event" />
+                    <Picker.Item label="OutDoor" value="OutDoor" />
                   </Picker>
                 </View>
               </View>
@@ -1402,13 +1405,47 @@ export default class Forms extends Component {
                         value={
                           this.state.event_sub_category == 'birthday' ||
                           this.state.event_sub_category == 'Party' ||
-                          this.state.event_sub_category == 'Other'
+                          this.state.event_sub_category == 'Other' ||
+                          this.state.event_sub_category == 'Hiking' ||
+                          this.state.event_sub_category == 'Outing' ||
+                          this.state.event_sub_category == 'watch Movie'
                             ? this.setState({event_sub_category: 'football'})
                             : 'football'
                         }
                       />
                       <Picker.Item label="Cricket" value="Cricket" />
                       <Picker.Item label="Base Ball" value="baseball" />
+                    </Picker>
+                  ) : this.state.Event_Category == 'OutDoor' ? (
+                    <Picker
+                      selectedValue={this.state.event_sub_category}
+                      // onValueChange={this.updateSubCategory}
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                        color: '#7e7a7a',
+                      }}
+                      onValueChange={(value, itemIndex) =>
+                        this.setState({event_sub_category: value})
+                      }
+                      // onValueChange={(itemValue, itemIndex) =>
+                      //     this.setState({ language: itemValue })}
+                    >
+                      <Picker.Item
+                        label="Hiking"
+                        value={
+                          this.state.event_sub_category == 'birthday' ||
+                          this.state.event_sub_category == 'Party' ||
+                          this.state.event_sub_category == 'Other' ||
+                          this.state.event_sub_category == 'football' ||
+                          this.state.event_sub_category == 'Cricket' ||
+                          this.state.event_sub_category == 'baseball'
+                            ? this.setState({event_sub_category: 'Hiking'})
+                            : 'Hiking'
+                        }
+                      />
+                      <Picker.Item label="Outing" value="Outing" />
+                      <Picker.Item label="watching Movie" value="watch Movie" />
                     </Picker>
                   ) : (
                     <Picker
@@ -1425,7 +1462,12 @@ export default class Forms extends Component {
                       <Picker.Item
                         label="Birth Day"
                         value={
-                          this.state.event_sub_category === 'football'
+                          this.state.event_sub_category == 'Hiking' ||
+                          this.state.event_sub_category == 'Outing' ||
+                          this.state.event_sub_category == 'watch Movie' ||
+                          this.state.event_sub_category == 'football' ||
+                          this.state.event_sub_category == 'Cricket' ||
+                          this.state.event_sub_category == 'baseball'
                             ? this.setState({event_sub_category: 'birthday'})
                             : 'birthday'
                         }
@@ -1912,9 +1954,9 @@ export default class Forms extends Component {
                       img,
                       ending_timing_event,
                       company_atteched,
-                    ).then(async () => {
-                      await setTimeout(async () => {
-                        await this.Upload_Sport_Image();
+                    ).then(() => {
+                      setTimeout(async () => {
+                        // this.Upload_Sport_Image();
                       }, 300);
                     });
                   }}>
@@ -2781,7 +2823,21 @@ export default class Forms extends Component {
                   width: '100%',
                   borderRadius: 15,
                 }}
-                onPress={() => this.Upload_job()}>
+                onPress={() =>
+                  // this.Upload_job()
+                  Create_Job(
+                    job_category,
+                    img,
+                    job_title,
+                    email_address_job,
+                    job_description,
+                    job_compensation,
+                    about_job,
+                    phone_job,
+                    uploading_time,
+                    company_name,
+                  )
+                }>
                 <View
                   style={{
                     width: '40%',
