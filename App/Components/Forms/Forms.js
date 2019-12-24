@@ -587,7 +587,7 @@ export default class Forms extends Component {
 
       return (
         <View>
-          <ScrollView style={{marginBottom: 30}}>
+          <ScrollView style={{marginBottom: 30, height: '100%'}}>
             <View
               style={{
                 backgroundColor: 'white',
@@ -732,64 +732,6 @@ export default class Forms extends Component {
                 </View>
               </View>
 
-              {/* <View
-              style={{
-                marginTop: 0,
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                height: '6%',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  width: '70%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: responsiveFontSize(1.2),
-                    // fontWeight: 'bold',
-                    // padding: 5,
-                    color: '#000',
-
-                    textAlign: 'center',
-                  }}>
-                  Phone Number
-                </Text>
-              </View> */}
-              {/* <View
-                style={{
-                  backgroundColor: 'white',
-                  width: '25%',
-                  alignItems: 'flex-end',
-                }}>
-                <CheckBox
-                  checked={this.state.phoneNFlage}
-                  checkedIcon="check"
-                  uncheckedIcon="close"
-                  checkedColor="green"
-                  uncheckedColor="#fff"
-                  size={15}
-                  iconType="entypo"
-                  onPress={() => {
-                    this.setState({phoneNFlage: !this.state.phoneNFlage});
-                  }}
-                  containerStyle={{
-                    backgroundColor: '#fff',
-                    width: 20,
-                    height: 20,
-                    borderWidth: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                />
-              </View>
-            </View> */}
-
               <View
                 style={{
                   marginTop: 0,
@@ -807,8 +749,6 @@ export default class Forms extends Component {
                   <Text
                     style={{
                       fontSize: responsiveFontSize(1.8),
-                      // fontWeight: 'bold',
-                      // padding: 5,
                       color: '#000',
                     }}>
                     Email Address
@@ -949,6 +889,7 @@ export default class Forms extends Component {
                 elevation: 1,
                 alignSelf: 'center',
                 marginTop: 10,
+                height: responsiveHeight(6)
               }}>
               <TextInput
                 value={vedio_post}
@@ -999,7 +940,7 @@ export default class Forms extends Component {
                 justifyContent: 'space-between',
                 elevation: 1,
                 alignSelf: 'center',
-                marginTop: 10,
+                marginTop: responsiveHeight(10),
               }}>
               <TextInput
                 value={about_you}

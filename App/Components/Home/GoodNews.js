@@ -622,7 +622,7 @@ export default class GoodNews extends Component {
             />
           ) : (
               <View>
-                <View
+                {/* <View
                   style={{
                     backgroundColor: '#32cd32',
                     height: responsiveHeight(20),
@@ -680,9 +680,7 @@ export default class GoodNews extends Component {
                               color: 'white',
                               left: 0,
                             }}>
-                            {/* {this.state.posts[0].user_name} */}
                             {'got promotion '}
-                            {/* {this.state.posts[0].description} */}
                           </Text>
                         )}
                       </View>
@@ -831,7 +829,7 @@ export default class GoodNews extends Component {
                       </View>
                     </View>
                   </View>
-                </View>
+                </View> */}
 
                 <FlatList
                   data={this.state.post_data}
@@ -909,7 +907,6 @@ export default class GoodNews extends Component {
                               color: '#7e7a7a',
                             }}>
                             {date[0]} at {this.calculateTime(date[1])}
-                            {/* {console.log('ITEM NAME', item.name)} */}
                           </Text>
                         </View>
                       </View>
