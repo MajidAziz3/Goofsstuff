@@ -1,6 +1,6 @@
 import firebase from 'firebase';
-import {saveData, addToArray, getData, saveDataWithoutDocId} from '../Utility';
-import {_retrieveData} from '../AsyncStore/AsyncFunc';
+import {saveData, addToArray, getData, saveDataWithoutDocId} from './Utility';
+import {_retrieveData} from './AsyncStore/AsyncFunc';
 
 export async function JobPost(
   news_descriptions,

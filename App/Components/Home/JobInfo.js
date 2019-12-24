@@ -21,7 +21,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
-import {JobPost} from '../../Backend/Create/JobPost'
+import {JobPost} from '../../Backend/JobPost'
 
 import FA from 'react-native-vector-icons/FontAwesome';
 
