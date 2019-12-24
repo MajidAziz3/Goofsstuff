@@ -1349,7 +1349,7 @@ export default class Forms extends Component {
                           this.state.event_sub_category == 'Other' ||
                           this.state.event_sub_category == 'Hiking' ||
                           this.state.event_sub_category == 'Outing' ||
-                          this.state.event_sub_category == 'watch Movie'
+                          this.state.event_sub_category == 'watch_Movie'
                             ? this.setState({event_sub_category: 'football'})
                             : 'football'
                         }
@@ -1386,7 +1386,7 @@ export default class Forms extends Component {
                         }
                       />
                       <Picker.Item label="Outing" value="Outing" />
-                      <Picker.Item label="watching Movie" value="watch Movie" />
+                      <Picker.Item label="watching Movie" value="watch_Movie" />
                     </Picker>
                   ) : (
                     <Picker
@@ -1405,7 +1405,7 @@ export default class Forms extends Component {
                         value={
                           this.state.event_sub_category == 'Hiking' ||
                           this.state.event_sub_category == 'Outing' ||
-                          this.state.event_sub_category == 'watch Movie' ||
+                          this.state.event_sub_category == 'watch_Movie' ||
                           this.state.event_sub_category == 'football' ||
                           this.state.event_sub_category == 'Cricket' ||
                           this.state.event_sub_category == 'baseball'

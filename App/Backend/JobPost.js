@@ -2,36 +2,26 @@ import firebase from 'firebase';
 import {saveData, addToArray, getData, saveDataWithoutDocId} from '../Utility';
 import {_retrieveData} from '../AsyncStore/AsyncFunc';
 
-export async function Company_Profile(
-  company_name,
-  location,
-  opening,
-  closing_time,
-  days,
-  Descriptions,
-  admins,
-  members,
-  phone,
-  rating,
-  email,
+export async function JobPost(
+  news_descriptions,
+  uploading_time,
+  like,
+  favorite,
+  comments,
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
-      saveData('Company_Profile', user.userId, {
-        description: Descriptions,
-        Company_Name: company_name,
-        location: location,
-        opening_Time: opening,
-        closing_Time: closing_time,
-        days: days,
-        email: user.email,
-        phone: phone,
-        rating: rating,
-        Company_admins: admins,
+      saveDataWithoutDocId('jobPost', {
+        user_id: result,
         user_name: user.name,
-        members: members,
-        email: email,
-        userImg: user.profile_picture,
+        profile_image: user.profile_picture,
+        description: news_descriptions,
+        uploading_time: uploading_time,
+        like: like,
+        favorite: favorite,
+        comments: comments,
+        islike: false,
+        isfavorite: false,
       });
     }),
   );
