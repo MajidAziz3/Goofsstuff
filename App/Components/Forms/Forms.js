@@ -630,18 +630,10 @@ export default class Forms extends Component {
                 </View>
               </View>
 
-            <View
-              style={{
-                marginTop: 15,
-                backgroundColor: 'white',
-                borderRadius:10,
-                elevation:5,
-              }}>
               <View
                 style={{
                   backgroundColor: 'white',
-                 left:5,
-                  width: '90%',
+                  width: '100%',
                 }}>
                 <Text
                   style={{
@@ -658,7 +650,6 @@ export default class Forms extends Component {
                   will be displayed!
                 </Text>
               </View>
-            
 
               <View
                 style={{
@@ -670,11 +661,7 @@ export default class Forms extends Component {
                 }}>
                 <View
                   style={{
-                    fontSize: responsiveFontSize(1.8),
-                    // fontWeight: 'bold',
-                    // padding: 5,
-                    left:3.5,
-                    color: '#000',
+                    backgroundColor: 'white',
 
                     width: '100%',
                   }}>
@@ -814,11 +801,8 @@ export default class Forms extends Component {
                 }}>
                 <View
                   style={{
-                    fontSize: responsiveFontSize(1.8),
-                    // fontWeight: 'bold',
-                    // padding: 5,
-                    color: '#000',
-                    left:3.5
+                    backgroundColor: 'white',
+                    width: '70%',
                   }}>
                   <Text
                     style={{
@@ -877,96 +861,87 @@ export default class Forms extends Component {
                     height: 40,
                     justifyContent: 'center',
                     alignItems: 'center',
-                  }}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                marginTop: 20,
-                backgroundColor: 'white',
-                height: '10%',
-                flexDirection: 'row',
-                
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#32cd32',
-                  marginHorizontal: 10,
-                  width: 40,
-                  height: 40,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 1.41,
-                  elevation: 5,
-                  borderRadius: 100,
-                }}>
-                <Icon name="location" size={30} color="white" />
-              </TouchableOpacity>
-              <TextInput
-                value={location}
-                onChangeText={location => this.setState({location})}
-                placeholder="Type your location"
-                style={{
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '65%',
-                  height: responsiveHeight(5),
-                  shadowColor: 'black',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 1.41,
-                  elevation: 2,
-                  backgroundColor: 'white',
-                }}></TextInput>
-              <View style={{backgroundColor: 'white',left:23}}>
-                <CheckBox
-                  checked={locationFlage}
-                  checkedIcon="check"
-                  uncheckedIcon="close"
-                  checkedColor="green"
-                  uncheckedColor="#fff"
-                  size={15}
-                  iconType="entypo"
-                  onPress={() => {
-                    this.setState({locationFlage: !locationFlage});
-                  }}
-                  containerStyle={{
-                    backgroundColor: '#fff',
-                    width: 20,
-                    height: 20,
-                    borderWidth: 1,
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 1.41,
+                    elevation: 5,
+                    borderRadius: 100,
+                  }}>
+                  <Icon name="location" size={30} color="white" />
+                </TouchableOpacity>
+                <TextInput
+                  value={location}
+                  onChangeText={location => this.setState({location})}
+                  placeholder="Location"
+                  style={{
+                    fontSize: 12,
+                    padding: 5,
+                    borderRadius: 10,
                     justifyContent: 'center',
                     alignItems: 'center',
+                    width: '71%',
+                    height: responsiveHeight(5),
+                    shadowColor: 'black',
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 1.41,
+                    elevation: 2,
+                    backgroundColor: 'white',
+                  }}></TextInput>
+                <View
+                  style={{backgroundColor: 'white', width: '29%', left: 0.8}}>
+                  <CheckBox
+                    checked={locationFlage}
+                    checkedIcon="check"
+                    uncheckedIcon="close"
+                    checkedColor="green"
+                    uncheckedColor="#fff"
+                    size={15}
+                    iconType="entypo"
+                    onPress={() => {
+                      this.setState({locationFlage: !locationFlage});
+                    }}
+                    containerStyle={{
+                      backgroundColor: '#fff',
+                      width: 20,
+                      height: 20,
+                      borderWidth: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  />
+                </View>
+              </View>
+
+              <View
+                style={{
+                  borderRadius: 10,
+                  width: '96%',
+                  backgroundColor: 'white',
+
+                  elevation: 1,
+                  alignSelf: 'center',
+                  marginTop: 10,
+                }}>
+                <TextInput
+                  value={vedio_post}
+                  onChangeText={vedio_post => this.setState({vedio_post})}
+                  multiline={true}
+                  numberOfLines={4}
+                  style={{
+                    textAlignVertical: 'top',
+                    fontSize: responsiveFontSize(2),
+
+                    width: '100%',
+                    paddingHorizontal: 10,
                   }}
                   placeholder={
                     'Write a little about your video and what inspired you to share!'
                   }
                 />
               </View>
-            </View>
-</View>
-            <View
-              style={{
-                borderRadius: 10,
-                width: '96%',
-                backgroundColor: 'white',
-               
-                
-                elevation: 1,
-                alignSelf: 'center',
-                marginTop: 10,
-              }}>
-              <TextInput
-                value={vedio_post}
-                onChangeText={vedio_post => this.setState({vedio_post})}
-                multiline={true}
-                numberOfLines={3}
+
+              <View
                 style={{
                   height: responsiveHeight(4.5),
                   width: '33%',
