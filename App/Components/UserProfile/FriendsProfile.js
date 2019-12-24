@@ -957,12 +957,6 @@ class UserProfile extends Component {
                   </Text>
                   </View>
 
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('VisionBoard')}
-                    style={{ top: 4, right: 10, position: 'absolute' }}>
-                    <AntDesign name="pluscircle" color={'#32cd32'} size={20} />
-                  </TouchableOpacity>
-
                   <View style={{ top: 5 }}>
                     {this.state.VisionBoard ? (
                       <FlatList
