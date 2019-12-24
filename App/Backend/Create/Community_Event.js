@@ -39,6 +39,7 @@ export async function Community_Event(
           attech_company: company_atteeched,
           invite_friends: invite_friends,
           joining_members: joining_members,
+          userImg:user.profile_picture,
         });
       } else if (Event_Category == 'OutDoor') {
         addToArray(Event_Category, result, event_sub_category, {
@@ -58,7 +59,7 @@ export async function Community_Event(
           location: location_event,
           attech_company: company_atteeched,
           invite_friends: invite_friends,
-          joining_members: joining_members,
+          joining_members: joining_members, userImg:user.profile_picture,
         });
       } else {
         addToArray(Event_Category, result, event_sub_category, {
@@ -78,7 +79,7 @@ export async function Community_Event(
           location: location_event,
           attech_company: company_atteeched,
           invite_friends: invite_friends,
-          joining_members: joining_members,
+          joining_members: joining_members, userImg:user.profile_picture,
         });
       }
     }),

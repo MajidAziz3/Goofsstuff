@@ -20,6 +20,7 @@ export async function Create_Job(
         addToArray('Create_Job', result, job_category, {
           user_id: result,
           user_name: user.user_name,
+         
           title: job_title,
           phone: phone_job,
           email: email_address_job,

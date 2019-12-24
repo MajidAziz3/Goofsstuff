@@ -1522,7 +1522,7 @@ export default class Forms extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-
+{/* 
               <View
                 style={{
                   backgroundColor: 'white',
@@ -1561,9 +1561,9 @@ export default class Forms extends Component {
                     Time
                   </Text>
                 </View>
-              </View>
+              </View> */}
 
-              <View
+              {/* <View
                 style={{
                   height: '8%',
                   backgroundColor: 'white',
@@ -1638,7 +1638,7 @@ export default class Forms extends Component {
                     />
                   </View>
                 </View>
-              </View>
+              </View> */}
 
               <View
                 style={{

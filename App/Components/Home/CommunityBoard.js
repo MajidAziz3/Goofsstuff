@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import {Thumbnail, Item} from 'native-base';
 import {jsxAttribute} from '@babel/types';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import AIcon from 'react-native-vector-icons/AntDesign';
@@ -124,6 +125,15 @@ export default class CommunityBoard extends Component {
       loading: true,
       job_data: [],
       outdoor_data: [],
+      job_fin: [],
+      job_marketing: [],
+      job_office: [],
+      Football: [],
+      BaseBall: [],
+      outing: [],
+      movies: [],
+      birthdays: [],
+      other: [],
     };
   }
   async sportPost() {
@@ -132,8 +142,15 @@ export default class CommunityBoard extends Component {
       .collection('Sport')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Sport');
-        this.setState({sport_data: data, loading: false});
-        console.log('data', data);
+        data.map(item => {
+          this.setState({
+            sport_data: item.Cricket,
+            Football: item.football,
+            BaseBall: item.baseball,
+            loading: false,
+          });
+          console.log('data', item.Cricket);
+        });
       });
   }
   async EventPost() {
@@ -142,7 +159,14 @@ export default class CommunityBoard extends Component {
       .collection('Event')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Event');
-        this.setState({event_data: data, loading: false});
+        data.map(item => {
+          this.setState({
+            event_data: item.Party,
+            birthdays: item.birthday,
+            other: item.Other,
+            loading: false,
+          });
+        });
       });
   }
   async JobPost() {
@@ -151,7 +175,15 @@ export default class CommunityBoard extends Component {
       .collection('Create_Job')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Create_Job');
-        this.setState({job_data: data, loading: false});
+        data.map(item => {
+          this.setState({
+            job_data: item.Job_iT,
+            job_fin: item.job_FinanceDepartment,
+            job_marketing: item.job_Marketing,
+            job_office: item.job_OfficeWork,
+            loading: false,
+          });
+        });
       });
   }
 
@@ -161,7 +193,14 @@ export default class CommunityBoard extends Component {
       .collection('OutDoor')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('OutDoor');
-        this.setState({outdoor_data: data, loading: false});
+        data.map(item => {
+          this.setState({
+            outdoor_data: item.Hiking,
+            movies: item.watch_Movie,
+            outing: item.Outing,
+            loading: false,
+          });
+        });
       });
   }
 
@@ -468,10 +507,8 @@ export default class CommunityBoard extends Component {
             </View>
           </View>
           <ScrollView style={{height: '83%'}}>
-            <FlatList
-              data={this.state.datasource}
-              keyExtractor={item => item.id}
-              renderItem={({item, index}) => (
+            {this.state.allflag ? (
+              <View>
                 <View
                   style={{
                     backgroundColor: 'white',
@@ -498,7 +535,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      {item.name}
+                      Sport
                     </Text>
                   </View>
 
@@ -511,215 +548,46 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.datasource1}
+                      data={this.state.sport_data}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
-                      renderItem={({item, index}) => (
-                        <TouchableOpacity
-                          style={{backgroundColor: 'white', borderRadius: 20}}
-                          onPress={() => {
-                            this.state.jobflag === true
-                              ? this.props.navigation.navigate('JobInfo')
-                              : this.props.navigation.navigate(
-                                  'CommunityEvent',
-                                );
-                          }}>
-                          <View style={{backgroundColor: 'white', padding: 5}}>
-                            <View
-                              style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <Image
-                                source={require('../../Assets/watch.jpg')}
-                                style={{
-                                  width: responsiveHeight(15),
-                                  height: responsiveHeight(15),
-                                  borderRadius: 20,
-                                }}></Image>
-                            </View>
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
 
-                            <View
-                              style={{
-                                width: '100%',
-                                borderRadius: 0,
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                              }}>
-                              <Text
-                                style={{
-                                  fontSize: responsiveFontSize(1.4),
-                                  fontWeight: '600',
-                                  color: '#5e5d5d',
-                                }}>
-                                {this.state.jobflag ? (
-                                  <Text>Company Name</Text>
-                                ) : (
-                                  <Text>Sun,Sep 8,10:00 AM</Text>
-                                )}
-                              </Text>
-                            </View>
-                          </View>
-
-                          <View
-                            style={{
-                              backgroundColor: 'white',
-                              height: '45%',
-                              width: 150,
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
                             }}>
                             <View
-                              style={{
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <Text
-                                style={{
-                                  fontSize: responsiveFontSize(2),
-                                  fontWeight: '600',
-                                  color: '#5e5d5d',
-                                }}>
-                                {this.state.jobflag ? (
-                                  <Text>Job Title</Text>
-                                ) : (
-                                  <Text>Training Hike</Text>
-                                )}
-                              </Text>
-                            </View>
-
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                backgroundColor: 'white',
-                                height: '40%',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                              }}>
-                              <Thumbnail
-                                small
-                                source={{
-                                  uri:
-                                    'https://randomuser.me/api/portraits/men/45.jpg',
-                                }}
-                                style={{
-                                  left: 20,
-                                  borderRadius: 30,
-                                  shadowOpacity: 0.5,
-                                  shadowRadius: 2,
-                                  elevation: 5,
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  left: 30,
-                                  fontSize: responsiveFontSize(1.8),
-                                  fontWeight: '600',
-                                  color: '#5e5d5d',
-                                }}>
-                                {item.user_name}
-                              </Text>
-                            </View>
-
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                backgroundColor: 'white',
-                                height: '10%',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <EIcon
-                                name="location"
-                                size={20}
-                                color="green"
-                                style={{alignSelf: 'center'}}
-                              />
-                              <Text
-                                style={{
-                                  fontSize: responsiveFontSize(1.5),
-                                  fontWeight: '600',
-                                  color: 'black',
-                                }}>
-                                {item.location}
-                              </Text>
-                            </View>
-
-                            <View
-                              style={{
-                                backgroundColor: 'white',
-                                width: 130,
-                                height: '35%',
-                                flexDirection: 'row',
-                                left: 10,
-                                borderRadius: 10,
-                                top: 1,
-                              }}>
+                              style={{backgroundColor: 'white', padding: 5}}>
                               <View
                                 style={{
-                                  left: 10,
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  width: '70%',
-                                  height: '90%',
+                                  justifyContent: 'center',
                                   alignItems: 'center',
                                 }}>
-                                <Thumbnail
-                                  small
-                                  source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/women/43.jpg',
-                                  }}
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
                                   style={{
-                                    marginLeft: 0,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                    height: 30,
-                                    width: 30,
-                                  }}
-                                />
-                                <Thumbnail
-                                  small
-                                  source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/men/51.jpg',
-                                  }}
-                                  style={{
-                                    marginLeft: -10,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                    height: 30,
-                                    width: 30,
-                                  }}
-                                />
-                                <Thumbnail
-                                  small
-                                  source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/men/28.jpg',
-                                  }}
-                                  style={{
-                                    marginLeft: -10,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                    height: 30,
-                                    width: 30,
-                                  }}
-                                />
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
                               </View>
 
                               <View
                                 style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  width: '30%',
-                                  height: '100%',
+                                  width: '100%',
+                                  borderRadius: 0,
                                   justifyContent: 'flex-start',
                                   alignItems: 'center',
                                 }}>
@@ -727,19 +595,5112 @@ export default class CommunityBoard extends Component {
                                   style={{
                                     fontSize: responsiveFontSize(1.4),
                                     fontWeight: '600',
-                                    color: 'black',
+                                    color: '#5e5d5d',
                                   }}>
-                                  459
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
                                 </Text>
-                                <AIcon name="plus" size={10} color="#000" />
                               </View>
                             </View>
-                          </View>
-                        </TouchableOpacity>
-                      )}></FlatList>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
                   </View>
                 </View>
-              )}></FlatList>
+
+                {/* event_data */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Event
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.event_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Outdoor */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      OutDoor
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.outdoor_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Jobs */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Jobs
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.company_name}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{uri: item.userImg}}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}></View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : this.state.jobflag ? (
+              <View>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      IT Section
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* event_data */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Event
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.event_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Outdoor */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      OutDoor
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.outdoor_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',
+                                    {item: item},
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Jobs */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Jobs
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.company_name}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{uri: item.userImg}}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}></View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : this.state.eventsflag1 ? (
+              <View>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Sport
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.sport_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* event_data */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Event
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.event_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Outdoor */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      OutDoor
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.outdoor_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Jobs */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Jobs
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.company_name}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{uri: item.userImg}}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}></View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : this.state.sportsflag ? (
+              <View>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Sport
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.sport_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* event_data */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Event
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.event_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Outdoor */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      OutDoor
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.outdoor_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Jobs */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Jobs
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.company_name}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{uri: item.userImg}}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}></View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Sport
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.sport_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* event_data */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Event
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.event_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Outdoor */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      OutDoor
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.outdoor_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Company Name</Text>
+                                  ) : (
+                                    <Text>Sun,Sep 8,10:00 AM</Text>
+                                  )}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{
+                                    uri:
+                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                  }}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}>
+                                <View
+                                  style={{
+                                    left: 10,
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '70%',
+                                    height: '90%',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: 0,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                  <Thumbnail
+                                    small
+                                    source={{
+                                      uri:
+                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                    }}
+                                    style={{
+                                      marginLeft: -10,
+                                      borderRadius: 30,
+                                      shadowOpacity: 0.5,
+                                      shadowRadius: 2,
+                                      elevation: 5,
+                                      height: 30,
+                                      width: 30,
+                                    }}
+                                  />
+                                </View>
+
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    backgroundColor: 'white',
+                                    width: '30%',
+                                    height: '100%',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: responsiveFontSize(1.4),
+                                      fontWeight: '600',
+                                      color: 'black',
+                                    }}>
+                                    {item.joining_members.length}
+                                  </Text>
+                                  <AIcon name="plus" size={10} color="#000" />
+                                </View>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+
+                {/* Jobs */}
+
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: responsiveHeight(47),
+                    shadowOpacity: 0.5,
+                    shadowRadius: 2,
+                    elevation: 10,
+                    width: responsiveWidth(100),
+                    marginBottom: 10,
+                    top: 5,
+                    borderRadius: 20,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: '12%',
+                      justifyContent: 'flex-end',
+                      marginHorizontal: 10,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2.7),
+                        fontWeight: '600',
+                        color: 'black',
+                        marginLeft: 10,
+                      }}>
+                      Jobs
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      height: responsiveHeight(40),
+                      flexDirection: 'row',
+                      marginTop: 10,
+                      borderRadius: 20,
+                    }}>
+                    <FlatList
+                      data={this.state.job_data}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      keyExtractor={item => item.id}
+                      renderItem={({item, index}) => {
+                        // item.Cricket.map(itm => {
+                        {
+                          console.log(item);
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            style={{backgroundColor: 'white', borderRadius: 20}}
+                            onPress={() => {
+                              this.state.jobflag === true
+                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                : this.props.navigation.navigate(
+                                    'CommunityEvent',{item:item}
+                                  );
+                            }}>
+                            <View
+                              style={{backgroundColor: 'white', padding: 5}}>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Image
+                                  source={require('../../Assets/watch.jpg')}
+                                  style={{
+                                    width: responsiveHeight(15),
+                                    height: responsiveHeight(15),
+                                    borderRadius: 20,
+                                  }}></Image>
+                              </View>
+
+                              <View
+                                style={{
+                                  width: '100%',
+                                  borderRadius: 0,
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.4),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.company_name}
+                                </Text>
+                              </View>
+                            </View>
+
+                            <View
+                              style={{
+                                backgroundColor: 'white',
+                                height: '45%',
+                                width: 150,
+                              }}>
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(2),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {this.state.jobflag ? (
+                                    <Text>Job Title</Text>
+                                  ) : (
+                                    <Text>{item.sub_category}</Text>
+                                  )}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '40%',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}>
+                                <Thumbnail
+                                  small
+                                  source={{uri: item.userImg}}
+                                  style={{
+                                    left: 20,
+                                    borderRadius: 30,
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    elevation: 5,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    left: 30,
+                                    fontSize: responsiveFontSize(1.8),
+                                    fontWeight: '600',
+                                    color: '#5e5d5d',
+                                  }}>
+                                  {item.user_name}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  backgroundColor: 'white',
+                                  height: '10%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <EIcon
+                                  name="location"
+                                  size={20}
+                                  color="green"
+                                  style={{alignSelf: 'center'}}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: responsiveFontSize(1.5),
+                                    fontWeight: '600',
+                                    color: 'black',
+                                  }}>
+                                  {item.location}
+                                </Text>
+                              </View>
+
+                              <View
+                                style={{
+                                  backgroundColor: 'white',
+                                  width: 130,
+                                  height: '35%',
+                                  flexDirection: 'row',
+                                  left: 10,
+                                  borderRadius: 10,
+                                  top: 1,
+                                }}></View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+
+                        // });
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            )}
           </ScrollView>
         </View>
       </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,9 @@ import {
   FlatList,
   StatusBar,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
-import { Thumbnail } from 'native-base';
+import {Thumbnail} from 'native-base';
 import EIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,7 +27,7 @@ import AIcon from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
 import FA from 'react-native-vector-icons/FontAwesome';
 import firebase from 'firebase';
-import { getAllOfCollection } from '../../Backend/Utility';
+import {getAllOfCollection} from '../../Backend/Utility';
 
 class CommunityEvent extends Component {
   static navigationOptions = {
@@ -69,6 +69,7 @@ class CommunityEvent extends Component {
       sport_data: [],
       event_data: [],
       loading: true,
+      item: this.props.navigation.state.params.item,
     };
   }
 
@@ -76,7 +77,6 @@ class CommunityEvent extends Component {
   //   this.sportPost();
   //   this.EventPost();
   // }
-
 
   handleChoosePhoto = () => {
     var options = {
@@ -87,7 +87,6 @@ class CommunityEvent extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-
       if (response.didCancel) {
       } else if (response.error) {
       } else if (response.customButton) {
@@ -133,6 +132,7 @@ class CommunityEvent extends Component {
   }
 
   render() {
+    const {item} = this.state;
     return (
       <SafeAreaView
         style={{
@@ -141,7 +141,7 @@ class CommunityEvent extends Component {
         <ScrollView>
           <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-          <View style={{ marginBottom: 10 }}>
+          <View style={{marginBottom: 10}}>
             <Text style={styles.welcome}>Event Details</Text>
             <Ionicon
               name="ios-menu"
@@ -150,10 +150,9 @@ class CommunityEvent extends Component {
               onPress={() => this.props.navigation.openDrawer()}
               style={styles.menu}
             />
-
           </View>
 
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <View
               style={{
                 backgroundColor: 'white',
@@ -162,7 +161,7 @@ class CommunityEvent extends Component {
               }}>
               <Image
                 source={require('../../Assets/watch.jpg')}
-                style={{ width: '100%', height: '100%', borderRadius: 0 }}
+                style={{width: '100%', height: '100%', borderRadius: 0}}
               />
             </View>
 
@@ -172,7 +171,7 @@ class CommunityEvent extends Component {
                 height: responsiveHeight(32),
                 width: responsiveWidth(100),
                 borderRadius: 20,
-                shadowOffset: { width: 0, height: 2 },
+                shadowOffset: {width: 0, height: 2},
                 shadowOpacity: 0.5,
                 shadowRadius: 2,
                 elevation: 1,
@@ -193,8 +192,8 @@ class CommunityEvent extends Component {
                     color: '#32cd32',
                     fontWeight: 'bold',
                   }}>
-                  Event Name
-              </Text>
+                  {item.sub_category}
+                </Text>
               </View>
 
               <View
@@ -219,14 +218,14 @@ class CommunityEvent extends Component {
                     color: '#7e7474',
                   }}>
                   Address:
-                <Text
+                  <Text
                     style={{
                       letterSpacing: 1,
                       fontSize: responsiveFontSize(1.6),
                       fontWeight: '800',
                     }}>
-                    Plot 14 Street 12
-                </Text>
+                    {item.location}
+                  </Text>
                 </Text>
                 <Text
                   style={{
@@ -236,14 +235,14 @@ class CommunityEvent extends Component {
                     color: '#7e7474',
                   }}>
                   Email:
-                <Text
+                  <Text
                     style={{
                       letterSpacing: 1,
                       fontSize: responsiveFontSize(1.6),
                       fontWeight: '800',
                     }}>
-                    user123@gmail.com
-                </Text>
+                    {item.email}
+                  </Text>
                 </Text>
                 <Text
                   style={{
@@ -253,14 +252,14 @@ class CommunityEvent extends Component {
                     color: '#7e7474',
                   }}>
                   Phone#:
-                <Text
+                  <Text
                     style={{
                       letterSpacing: 1,
                       fontSize: responsiveFontSize(1.6),
                       fontWeight: '800',
                     }}>
-                    05133449
-                </Text>
+                    {item.phone}
+                  </Text>
                 </Text>
               </View>
               <View
@@ -287,8 +286,7 @@ class CommunityEvent extends Component {
                       color: '#7e7474',
                     }}>
                     9:00 AM - 5:00 PM
-                </Text>
-
+                  </Text>
                 </View>
               </View>
 
@@ -311,12 +309,8 @@ class CommunityEvent extends Component {
                     fontSize: responsiveFontSize(1.8),
                     color: '#7e7474',
                   }}>
-                  SimpleText is the native text editor for the Apple classic Mac
-                  OS. SimpleText allows editing including text formatting, fonts,
-                  and sizes. It was developed to integrate the features included
-                  in the different versions of TeachText that were created by
-                  various software development groups within Appl
-              </Text>
+                {item.description}
+                </Text>
               </View>
             </View>
           </View>
@@ -433,13 +427,13 @@ class CommunityEvent extends Component {
           <FlatList
             data={this.state.datasource}
             keyExtractor={item => item.id}
-            renderItem={({ item, index }) => (
+            renderItem={({item, index}) => (
               <View
                 key={index}
                 style={{
                   justifyContent: 'space-evenly',
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
+                  shadowOffset: {width: 0, height: 2},
                   shadowOpacity: 0.5,
                   shadowRadius: 2,
                   elevation: 2,
@@ -473,8 +467,8 @@ class CommunityEvent extends Component {
                     }}>
                     {/* <Thumbnail source={{ uri: item.imageName }} /> */}
                     <Image
-                      source={{ uri: item.imageName }}
-                      style={{ width: 60, height: 60, borderRadius: 60 }}
+                      source={{uri: item.imageName}}
+                      style={{width: 60, height: 60, borderRadius: 60}}
                     />
                   </View>
 
@@ -636,7 +630,7 @@ class CommunityEvent extends Component {
                     <Ionicon
                       name="ios-camera"
                       size={30}
-                      style={{ right: 15, position: 'absolute' }}
+                      style={{right: 15, position: 'absolute'}}
                       onPress={this.handleChoosePhoto}
                     />
                   </View>

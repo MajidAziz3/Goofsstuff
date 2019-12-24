@@ -37,6 +37,7 @@ export async function Watch(
         label: lebal,
         islike: false,
         isfavorite: false,
+        userImg: user.profile_picture,
       });
     }),
   );
