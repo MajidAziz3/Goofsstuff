@@ -1,46 +1,46 @@
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import RNFetchBlob from 'react-native-fetch-blob';
-import {Platform} from 'react-native';
-import {_storeData} from './AsyncStore/AsyncFunc';
+import { Platform } from 'react-native';
+import { _storeData } from './AsyncStore/AsyncFunc';
 import Forms from '../Components/Forms/Forms';
 
-// const config = {
-//   apiKey: 'AIzaSyD61wFXmxfskdl9ts3fu8XvjOtGgwp07fo',
-//   authDomain: 'smeet-7d3d8.firebaseapp.com',
-//   databaseURL: 'https://smeet-7d3d8.firebaseio.com',
-//   projectId: 'smeet-7d3d8',
-//   storageBucket: 'smeet-7d3d8.appspot.com',
-//   messagingSenderId: '1069142316343',
-//   appId: '1:1069142316343:web:fac015a6768f83de',
-//   timestampsInSnapshots: true,
-// };
-
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(config);
-// }
-
-var firebaseConfig = {
-  apiKey: 'AIzaSyDUmkLCvM2SyvevYYbTr9sA6RTxbxnddpU',
-  authDomain: 'good-stuff-191fd.firebaseapp.com',
-  databaseURL: 'https://good-stuff-191fd.firebaseio.com',
-  projectId: 'good-stuff-191fd',
-  storageBucket: 'good-stuff-191fd.appspot.com',
-  messagingSenderId: '400332779156',
-  appId: '1:400332779156:web:ba12bdbbb3a81f542c8e81',
-  measurementId: 'G-Z8H3QJ3CV5',
+const config = {
+  apiKey: 'AIzaSyAxmWs4jA7sWQQb32OKsLG7hOEotX9-RjM',
+  authDomain: 'good-stuff-e5570.firebaseapp.com',
+  databaseURL: 'https://good-stuff-e5570.firebaseio.com',
+  projectId: 'good-stuff-e5570',
+  storageBucket: 'good-stuff-e5570.appspot.com',
+  messagingSenderId: '1076008934710',
+  appId: '1:1076008934710:web:2271ca4becccad935e6797',
+  measurementId: 'G-PR728NDRT3',
 };
-// Initialize Firebase
+
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(config);
 }
+
+// var firebaseConfig = {
+//   apiKey: 'AIzaSyDUmkLCvM2SyvevYYbTr9sA6RTxbxnddpU',
+//   authDomain: 'good-stuff-191fd.firebaseapp.com',
+//   databaseURL: 'https://good-stuff-191fd.firebaseio.com',
+//   projectId: 'good-stuff-191fd',
+//   storageBucket: 'good-stuff-191fd.appspot.com',
+//   messagingSenderId: '400332779156',
+//   appId: '1:400332779156:web:ba12bdbbb3a81f542c8e81',
+//   measurementId: 'G-Z8H3QJ3CV5',
+// };
+// // Initialize Firebase
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// }
 export async function getAllOfCollection(collection) {
   let data = [];
   let querySnapshot = await firebase
     .firestore()
     .collection(collection)
     .get();
-  querySnapshot.forEach(function(doc) {
+  querySnapshot.forEach(function (doc) {
     if (doc.exists) {
       data.push(doc.data());
     } else {
@@ -57,7 +57,7 @@ export function getData(collection, doc, objectKey) {
       .collection(collection)
       .doc(doc)
       .get()
-      .then(function(doc) {
+      .then(function (doc) {
         if (doc.exists) {
           return doc.data();
         } else {
@@ -70,7 +70,7 @@ export function getData(collection, doc, objectKey) {
       .collection(collection)
       .doc(doc)
       .get()
-      .then(function(doc) {
+      .then(function (doc) {
         if (doc.exists && doc.data()[objectKey] != undefined) {
           return doc.data()[objectKey];
         } else {
@@ -86,7 +86,7 @@ export async function getDocRefByKeyValue(collection, key, value) {
     .collection(collection)
     .where(key, '==', value)
     .get()
-    .then(function(querySnapshot) {
+    .then(function (querySnapshot) {
       return querySnapshot.docs[0];
     });
 }
@@ -98,7 +98,7 @@ export async function getDocByKeyValue(collection, key, value) {
     .collection(collection)
     .where(key, '==', value)
     .get();
-  await querySnapshot.forEach(function(doc) {
+  await querySnapshot.forEach(function (doc) {
     data.push(doc.data());
   });
   return data;
@@ -119,8 +119,8 @@ export async function getDocWithinRange(collection, doc, strSearch) {
     .where(doc, '>=', startcode)
     .where(doc, '<', endcode)
     .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {});
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) { });
     });
 }
 
@@ -129,11 +129,11 @@ export async function saveData(collection, doc, jsonObject) {
     .firestore()
     .collection(collection)
     .doc(doc)
-    .set(jsonObject, {merge: true})
+    .set(jsonObject, { merge: true })
     .then(result => {
       return result;
     })
-    .catch(function(error) {
+    .catch(function (error) {
       alert('Error writing document: ', error);
     });
 }
@@ -152,22 +152,21 @@ export async function saveDataWithoutDocId(collection, jsonObject) {
     .firestore()
     .collection(collection)
     .add(jsonObject)
-    .then(async function(docRef) {
+    .then(async function (docRef) {
       if (docRef.id) {
         // new Forms().Upload_Image(docRef.id);
         _storeData('ref', docRef.id);
-        console.log('rrrrrrrrrrrrrrzzzr', docRef.id);
         let doc_Id = docRef.id;
         obj.post_id = docRef.id;
         await firebase
           .firestore()
           .collection(collection)
           .doc(doc_Id)
-          .set(obj, {merge: true})
+          .set(obj, { merge: true })
           .then(result => {
             return result;
           })
-          .catch(function(error) {
+          .catch(function (error) {
             alert('Error writing document: ', error);
           });
       }
@@ -183,19 +182,16 @@ export async function addToArray(collection, doc, array, value) {
     .firestore()
     .collection(collection)
     .doc(doc);
-
-  console.log('DOCREF', docRef);
   let docData = await docRef.get();
-  console.log('DOC DATA', docData.data());
   if (docData.exists && docData.data()[array] != undefined) {
     docRef.set(
       {
         [array]: firebase.firestore.FieldValue.arrayUnion(value),
       },
-      {merge: true},
+      { merge: true },
     );
   } else {
-    saveData(collection, doc, {[array]: [value]});
+    saveData(collection, doc, { [array]: [value] });
   }
 }
 
@@ -209,16 +205,97 @@ export async function uploadCommunityImage(
   docRef,
   sub_category,
 ) {
-  console.log(
-    'khanananannann',
-    imgUri,
-    mime,
-    imagePath,
-    name,
-    databaseCollection,
-    docRef,
-    sub_category,
+  //blob
+  const Blob = RNFetchBlob.polyfill.Blob;
+  const fs = RNFetchBlob.fs;
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  window.Blob = Blob;
+
+  const uploadUri =
+    Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
+  const imageRef = firebase.storage().ref(imagePath);
+
+  let readingFile = await fs.readFile(uploadUri, 'base64');
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+
+  // let progress = 0;
+  //Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    firebase.storage.TaskEvent.STATE_CHANGED,
+    function (snapshot) {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress < 30) progress += 10;
+      else if (progress >= 30) progress += 5;
+      else if (progress >= 85) progress += 1;
+      else if (progress >= 95) progress += 0.1;
+
+      _storeData('imageUploadProgress', progress.toString());
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED:
+          break;
+        case firebase.storage.TaskState.RUNNING:
+          break;
+      }
+    },
+    function (error) {
+      _storeData('imageUploadProgress', '-1');
+    },
+    function () {
+      // Upload completed successfully, now we can get the download URL
+      uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+        firebase
+          .firestore()
+          .collection(databaseCollection)
+          .doc(docRef)
+          .update({ football: [{ imageUrl: downloadURL }] });
+        //   addToArray(databaseCollection, docRef,sub_category, {imageUrl: downloadURL}).then(
+        //     () => {
+        //       _storeData('imageUploadProgress', '100');
+        //     },
+        //   );
+      });
+    },
   );
+}
+
+export async function deleteArray(collection, doc, array, index) {
+  let docRef = await firebase
+    .firestore()
+    .collection(collection)
+    .doc(doc);
+  let docData = await docRef.get();
+
+  if (docData.exists && docData.data()[array][index] != undefined) {
+    docRef.update({
+      [array]: firebase.firestore.FieldValue.arrayRemove(
+        docData.data()[array][index],
+      ),
+    });
+  }
+}
+
+export async function uploadJobImage(
+  imgUri,
+  //  mime = 'video/mp4',
+  mime = 'image/jpeg',
+  imagePath,
+  name,
+  databaseCollection,
+  docRef,
+  job_category,
+  job_title,
+  email_address_job,
+  job_description,
+  job_compensation,
+  about_job,
+  phone_job,
+  uploading_time,
+  company_name,
+  location,
+  user_name,
+) {
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -259,16 +336,112 @@ export async function uploadCommunityImage(
     function() {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        firebase
-          .firestore()
-          .collection(databaseCollection)
-          .doc(docRef)
-          .update({football: [{imageUrl: downloadURL}]});
-        //   addToArray(databaseCollection, docRef,sub_category, {imageUrl: downloadURL}).then(
-        //     () => {
-        //       _storeData('imageUploadProgress', '100');
-        //     },
-        //   );
+        console.log(
+          imgUri,
+          imagePath,
+          name,
+          databaseCollection,
+          docRef,
+          job_category,
+          job_title,
+          email_address_job,
+          job_description,
+          job_compensation,
+          about_job,
+          phone_job,
+          uploading_time,
+          company_name,
+          location,
+          user_name,
+          'titel',
+        );
+        addToArray(databaseCollection, docRef, job_category, {
+          imageUrl: downloadURL,
+          userId: docRef,
+          category: job_category,
+          description: job_description,
+          location: location,
+          title: job_title,
+          user_name: user_name,
+          email: email_address_job,
+          phone: phone_job,
+          date: uploading_time,
+          compensation: job_compensation,
+          company_name: company_name,
+          about_job: about_job,
+        }).then(() => {
+          _storeData('imageUploadProgress', '100');
+        });
+      });
+    },
+  );
+}
+
+export async function uploadGroupImage(
+  imgUri,
+  //  mime = 'video/mp4',
+  mime = 'image/jpeg',
+  imagePath,
+  name,
+  databaseCollection,
+  docRef,
+  group_admins,
+  group_member,
+  group_description,
+  group_location,
+  group_name,
+) {
+  //blob
+  const Blob = RNFetchBlob.polyfill.Blob;
+  const fs = RNFetchBlob.fs;
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  window.Blob = Blob;
+
+  const uploadUri =
+    Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
+  const imageRef = firebase.storage().ref(imagePath);
+
+  let readingFile = await fs.readFile(uploadUri, 'base64');
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
+
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
+
+  // let progress = 0;
+  //Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    firebase.storage.TaskEvent.STATE_CHANGED,
+    function(snapshot) {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress < 30) progress += 10;
+      else if (progress >= 30) progress += 5;
+      else if (progress >= 85) progress += 1;
+      else if (progress >= 95) progress += 0.1;
+
+      _storeData('imageUploadProgress', progress.toString());
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED:
+          break;
+        case firebase.storage.TaskState.RUNNING:
+          break;
+      }
+    },
+    function(error) {
+      _storeData('imageUploadProgress', '-1');
+    },
+    function() {
+      // Upload completed successfully, now we can get the download URL
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        addToArray(databaseCollection, docRef, 'group', {
+          imageUrl: downloadURL,
+          userId: docRef,
+          group_admins: group_admins,
+          group_description: group_description,
+          group_location: group_location,
+          group_member: group_member,
+          group_name: group_name,
+        }).then(() => {
+          _storeData('imageUploadProgress', '100');
+        });
       });
     },
   );
@@ -283,15 +456,6 @@ export async function uploadImage(
   databaseCollection,
   docRef,
 ) {
-  console.log(
-    'khanananannann',
-    imgUri,
-    mime,
-    imagePath,
-    name,
-    databaseCollection,
-    docRef,
-  );
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -303,15 +467,15 @@ export async function uploadImage(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
 
-  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function(snapshot) {
+    function (snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -326,13 +490,13 @@ export async function uploadImage(
           break;
       }
     },
-    function(error) {
+    function (error) {
       _storeData('imageUploadProgress', '-1');
     },
-    function() {
+    function () {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        saveData(databaseCollection, docRef, {imageUrl: downloadURL}).then(
+      uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+        saveData(databaseCollection, docRef, { imageUrl: downloadURL }).then(
           () => {
             _storeData('imageUploadProgress', '100');
           },
@@ -341,7 +505,8 @@ export async function uploadImage(
     },
   );
 }
-export async function uploadVisionImage(
+
+export async function uploadFamilyPostImage(
   imgUri,
   //  mime = 'video/mp4',
   mime = 'image/jpeg',
@@ -349,16 +514,15 @@ export async function uploadVisionImage(
   name,
   databaseCollection,
   docRef,
+  username,
+  userprofile_picture,
+  familyName,
+  view,
+  like,
+  favorite,
+  uploading_time,
+  description,
 ) {
-  console.log(
-    'khanananannann',
-    imgUri,
-    mime,
-    imagePath,
-    name,
-    databaseCollection,
-    docRef,
-  );
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -368,7 +532,6 @@ export async function uploadVisionImage(
   const uploadUri =
     Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
   const imageRef = firebase.storage().ref(imagePath);
-  console.log('image REF', imageRef);
   let readingFile = await fs.readFile(uploadUri, 'base64');
   let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
@@ -398,16 +561,80 @@ export async function uploadVisionImage(
     },
     () => {
       // Upload completed successfully, now we can get the download URL
+      uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+        addToArray(databaseCollection, docRef, 'family', {
+          name: username,
+          profile_picture: userprofile_picture,
+          familyName: familyName,
+          view: view,
+          like: like,
+          favorite: favorite,
+          time: uploading_time,
+          description: description,
+          userId: docRef,
+          imageUrl: downloadURL,
+        }).then(() => {
+          _storeData('imageUploadProgress', '100');
+        });
+      });
+    },
+  );
+}
+
+export async function uploadVisionImage(
+  imgUri,
+  //  mime = 'video/mp4',
+  mime = 'image/jpeg',
+  imagePath,
+  name,
+  databaseCollection,
+  docRef,
+) {
+  //blob
+  const Blob = RNFetchBlob.polyfill.Blob;
+  const fs = RNFetchBlob.fs;
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  window.Blob = Blob;
+
+  const uploadUri =
+    Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
+  const imageRef = firebase.storage().ref(imagePath);
+  let readingFile = await fs.readFile(uploadUri, 'base64');
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+
+  // let progress = 0;
+  //Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    firebase.storage.TaskEvent.STATE_CHANGED,
+    snapshot => {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress < 30) progress += 10;
+      else if (progress >= 30) progress += 5;
+      else if (progress >= 85) progress += 1;
+      else if (progress >= 95) progress += 0.1;
+
+      _storeData('imageUploadProgress', progress.toString());
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED:
+          break;
+        case firebase.storage.TaskState.RUNNING:
+          break;
+      }
+    },
+    error => {
+      _storeData('imageUploadProgress', '-1');
+    },
+    () => {
+      // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
-        console.log(downloadURL);
-        console.log(databaseCollection, docRef, downloadURL);
         await addToArray(
           databaseCollection,
           docRef,
           'vision',
           downloadURL,
         ).then(() => {
-          console.log('Task done');
           _storeData('imageUploadProgress', '100');
         });
       });
@@ -424,7 +651,6 @@ export async function uploadUserImage(
   databaseCollection,
   docRef,
 ) {
-  console.log(imgUri, mime, imagePath, name, databaseCollection, docRef);
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -436,15 +662,15 @@ export async function uploadUserImage(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
 
-  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function(snapshot) {
+    function (snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -459,21 +685,23 @@ export async function uploadUserImage(
           break;
       }
     },
-    function(error) {
+    function (error) {
       _storeData('imageUploadProgress', '-1');
     },
-    function() {
+    function () {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
         await firebase
           .firestore()
-          .clearPersistence()
-          .then(async () => {
-            await saveData(databaseCollection, docRef, {
-              profile_picture: downloadURL,
-            }).then(() => {
-              _storeData('imageUploadProgress', '100');
-            });
+          .collection(databaseCollection)
+          .doc(docRef)
+          .update({profile_picture: downloadURL})
+          // .then(async()=>)
+          // await saveData(databaseCollection, docRef, {
+          //   profile_picture: downloadURL,
+          // })
+          .then(() => {
+            _storeData('imageUploadProgress', '100');
           });
       });
     },
@@ -494,19 +722,31 @@ export async function uploadImageComment(
   uploadingTime,
   userPic,
 ) {
-  {
-    if (!imgUri) {
-      addToArray(databaseCollection, docRef, 'comments', {
-        comments: comments,
-        userId: userId,
-        userImage: userPic,
-        user_name: username,
-        time: uploadingTime,
-      });
-      return;
-    }
+  console.log(
+    'image',
+    imgUri,
+    (mime = 'image/jpeg'),
+    imagePath,
+    name,
+    databaseCollection,
+    docRef,
+    comments,
+    userId,
+    username,
+    uploadingTime,
+    userPic,
+  );
+  if (!imgUri) {
+    addToArray(databaseCollection, docRef, 'comments', {
+      comments: comments,
+      userId: userId,
+      userImage: userPic,
+      user_name: username,
+      time: uploadingTime,
+    });
+    return;
   }
-  console.log(imgUri, mime, imagePath, name, databaseCollection, docRef);
+
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -518,9 +758,9 @@ export async function uploadImageComment(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
 
-  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
@@ -545,27 +785,25 @@ export async function uploadImageComment(
       _storeData('imageUploadProgress', '-1');
     },
     () => {
-      console.log('HELLOOOs', docRef);
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref
         .getDownloadURL()
         .then(async function(downloadURL) {
-          
-              await addToArray(databaseCollection, docRef, 'comments', {
-                imageUrl: downloadURL,
-                comments: comments,
-                userId: userId,
-                userImage: userPic,
-                user_name: username,
-                time: uploadingTime,
-              });
-            });
-        // });
+          await addToArray(databaseCollection, docRef, 'comments', {
+            imageUrl: downloadURL,
+            comments: comments,
+            userId: userId,
+            userImage: userPic,
+            user_name: username,
+            time: uploadingTime,
+          });
+        });
+      // });
     },
   );
 }
 
-export async function uploadVideo(
+export async function uploadFamilyVideo(
   imgUri,
   //  mime = 'video/mp4',
   mime = 'video/mp4',
@@ -573,16 +811,15 @@ export async function uploadVideo(
   name,
   databaseCollection,
   docRef,
+  username,
+  userprofile_picture,
+  familyName,
+  view,
+  like,
+  favorite,
+  uploading_time,
+  description,
 ) {
-  console.log(
-    'khanananannann',
-    imgUri,
-    mime,
-    imagePath,
-    name,
-    databaseCollection,
-    docRef,
-  );
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -621,7 +858,73 @@ export async function uploadVideo(
       _storeData('imageUploadProgress', '-1');
     },
     function() {
-      // Upload completed successfully, now we can get the download URL
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        addToArray(databaseCollection, docRef, 'family', {
+          name: username,
+          profile_picture: userprofile_picture,
+          familyName: familyName,
+          view: view,
+          like: like,
+          favorite: favorite,
+          time: uploading_time,
+          description: description,
+          userId: docRef,
+          videoUrl: downloadURL,
+        }).then(() => {
+          _storeData('imageUploadProgress', '100');
+        });
+      });
+    },
+  );
+}
+
+export async function uploadVideo(
+  imgUri,
+  //  mime = 'video/mp4',
+  mime = 'video/mp4',
+  imagePath,
+  name,
+  databaseCollection,
+  docRef,
+) {
+  //blob
+  const Blob = RNFetchBlob.polyfill.Blob;
+  const fs = RNFetchBlob.fs;
+  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  window.Blob = Blob;
+
+  const uploadUri =
+    Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
+  const imageRef = firebase.storage().ref(imagePath);
+
+  let readingFile = await fs.readFile(uploadUri, 'base64');
+  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+
+  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+
+  // let progress = 0;
+  //Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    firebase.storage.TaskEvent.STATE_CHANGED,
+    function (snapshot) {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress < 30) progress += 10;
+      else if (progress >= 30) progress += 5;
+      else if (progress >= 85) progress += 1;
+      else if (progress >= 95) progress += 0.1;
+
+      _storeData('imageUploadProgress', progress.toString());
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED:
+          break;
+        case firebase.storage.TaskState.RUNNING:
+          break;
+      }
+    },
+    function (error) {
+      _storeData('imageUploadProgress', '-1');
+    },
+    function() {
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         saveData(databaseCollection, docRef, {videoUrl: downloadURL}).then(
           () => {

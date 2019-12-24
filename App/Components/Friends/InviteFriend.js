@@ -67,11 +67,8 @@ export default class InviteFriends extends Component {
         allowAndroidSendWithoutReadPermission: true
     }, (completed, cancelled, error) => {
         if(completed){
-          console.log('SMS Sent Completed');
         }else if(cancelled){
-          console.log('SMS Sent Cancelled');
         }else if(error){
-          console.log('Some error occured');
         }
     })
 
@@ -94,7 +91,7 @@ export default class InviteFriends extends Component {
           // error
         } else {
           // contacts returned in Array
-          contacts.map((item)=>console.log("hhhhhh",item.familyName,item.givenName))
+          // contacts.map((item)=>{})
           this.setState({
             Contacts_data:contacts
           })

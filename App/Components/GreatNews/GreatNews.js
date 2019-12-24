@@ -85,7 +85,6 @@ class GreatNews extends Component {
   }
 
   async CommentPost(item) {
-    // console.log('ittttttttttt', item);
     await _retrieveData('user').then(
       async result =>
         await getData('users', result).then(async res => {
@@ -305,7 +304,6 @@ class GreatNews extends Component {
                       //     </View>
                       //     <Text rkType="primary3 mediumLine">
                       //       {item.comments}
-                      //       {console.log('Messssssssssssaaage', item.comments)}
                       //     </Text>
                       //   </View>
                       // </View>;

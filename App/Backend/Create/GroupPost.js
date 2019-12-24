@@ -3,21 +3,20 @@ import {saveData, addToArray, getData, saveDataWithoutDocId} from '../Utility';
 import {_retrieveData} from '../AsyncStore/AsyncFunc';
 
 export async function GroupPost(
+  states,
   description,
   uploading_time,
   comment,
   like,
   favorite,
-  file,
 ) {
   _retrieveData('user').then(result =>
     getData('users', result).then(user => {
-      saveDataWithoutDocId('GroupPost', {
+      saveDataWithoutDocId(states, {
         user_id: result,
         user_name: user.name,
         profile_image: user.profile_picture,
         description: description,
-        file: file,
         uploading_time: uploading_time,
         like: like,
         favorite: favorite,

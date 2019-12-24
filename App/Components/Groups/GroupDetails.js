@@ -70,15 +70,16 @@ class GroupDetails extends Component {
       videoName: null,
       loading: true,
       post_data: [],
+      item: this.props.navigation.state.params.item,
     };
   }
 
   componentDidMount = async () => {
     await firebase
       .firestore()
-      .collection('GroupPost')
+      .collection(this.state.item.group_name)
       .onSnapshot(async () => {
-        let data = await getAllOfCollection('GroupPost');
+        let data = await getAllOfCollection(this.state.item.group_name);
         this.setState({post_data: data, loading: false});
       });
     var that = this;
@@ -94,6 +95,48 @@ class GroupDetails extends Component {
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
   };
+
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        this.state.item.group_name,
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
 
   handlechooseVideo = () => {
     const options = {
@@ -127,7 +170,7 @@ class GroupDetails extends Component {
         this.state.videoType,
         lastSegment,
         'video',
-        'GroupPost',
+        this.state.item.group_name,
         item,
       );
     });
@@ -170,7 +213,7 @@ class GroupDetails extends Component {
         this.state.imageType,
         this.state.ImageName,
         this.state.ImageName,
-        'GroupPost',
+        this.state.item.group_name,
         item,
       );
     });
@@ -248,6 +291,7 @@ class GroupDetails extends Component {
       file,
       item,
     } = this.state;
+    console.log('dfjsd', this.state.item);
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView>
@@ -265,7 +309,11 @@ class GroupDetails extends Component {
               size={25}
               color={'#32cd32'}
               style={styles.menu1}
-              onPress={() => this.props.navigation.navigate('EditGroup')}
+              onPress={() =>
+                this.props.navigation.navigate('EditGroup', {
+                  item: this.state.item,
+                })
+              }
             />
           </View>
 
@@ -544,6 +592,7 @@ class GroupDetails extends Component {
               }}
               onPress={() => {
                 GroupPost(
+                  this.state.item.group_name,
                   description,
                   uploading_time,
                   comment,
@@ -552,7 +601,11 @@ class GroupDetails extends Component {
                   file,
                 ).then(() => {
                   setTimeout(async () => {
-                    await this.upload_Video();
+                    if (this.state.videoPath) {
+                      await this.upload_Video();
+                    } else {
+                      await this.Upload_Image();
+                    }
                   }, 10000);
                 });
               }}>

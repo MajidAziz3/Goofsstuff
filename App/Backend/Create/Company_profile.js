@@ -28,7 +28,6 @@ export async function Company_Profile(
         phone: phone,
         rating: rating,
         Company_admins: admins,
-        admins: result,
         user_name: user.name,
         members: members,
         email: email,

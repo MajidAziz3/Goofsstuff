@@ -9,7 +9,6 @@ export async function Watch(
   location,
   locationFlage,
   vedio_post,
-  file,
   about_you,
   isChecked,
   watch_like,
@@ -24,7 +23,6 @@ export async function Watch(
         user_id: result,
         user_name: user.name,
         description: vedio_post,
-        file: file,
         address: locationFlage,
         email: emailFlage,
         name: firstNameFlage,
@@ -37,6 +35,8 @@ export async function Watch(
         favorite: watch_favorit,
         comments: watch_comments,
         label: lebal,
+        islike: false,
+        isfavorite: false,
       });
     }),
   );

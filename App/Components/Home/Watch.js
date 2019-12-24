@@ -28,7 +28,13 @@ import AIcon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalConst from '../../Backend/GlobalConst';
-import { getAllOfCollection, addToArray, saveData } from '../../Backend/Utility';
+import {
+  getAllOfCollection,
+  addToArray,
+  saveData,
+  getData,
+  deleteArray,
+} from '../../Backend/Utility';
 import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
@@ -39,7 +45,7 @@ const width = Dimensions.get('screen').width;
 export default class Watch extends Component {
   static navigationOptions = {
     header: null,
-  }
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -59,6 +65,7 @@ export default class Watch extends Component {
       video: false,
       viewsData: 0,
       Views: 0,
+      hit_favorite: true,
       popular: [
         {
           name: 'Harrison Ford',
@@ -130,19 +137,41 @@ export default class Watch extends Component {
           imageName: 'https://randomuser.me/api/portraits/men/45.jpg',
         },
       ],
-      hit_like: false,
-      hit_favorite: false,
+      hit_like: true,
     };
   }
   componentDidMount = async () => {
     firebase
       .firestore()
-      .collection('News')
-      .onSnapshot(async () => {
-        let data = await getAllOfCollection('Watch');
-        this.setState({ post_data: data, loading: false, viewsData: data.Views });
-        console.log(data);
-        console.log('\n');
+      .collection('Watch')
+      .onSnapshot(() => {
+        setTimeout(async () => {
+          let data = await getAllOfCollection('Watch');
+          this.setState({ post_data: data, loading: false }, async () => {
+            const { post_data } = this.state;
+            await _retrieveData('user').then(async user_id => {
+              await getData('watchLike', user_id).then(data => {
+                post_data.map(dt => {
+                  data.like.map(ft => {
+                    if (ft.post_id === dt.post_id) {
+                      dt.islike = true;
+                    }
+                  });
+                });
+              });
+              await getData('watchFavorite', user_id).then(data => {
+                post_data.map(dt => {
+                  data.favorite.map(ft => {
+                    if (ft.post_id === dt.post_id) {
+                      dt.isfavorite = true;
+                    }
+                  });
+                });
+              });
+              this.setState({ post_data }, () => { });
+            });
+          });
+        }, 400);
       });
 
     this.setState({ datasource: this.state.popular });
@@ -168,33 +197,123 @@ export default class Watch extends Component {
     ];
   };
 
-  likePost = async item => {
-    await _retrieveData('user').then(
-      async result =>
-        await addToArray('WatchLike', item, 'like', {
-          user_id: result,
-          post_id: item,
-        }),
-    );
+  likePost = async (item, ind) => {
+    await _retrieveData('user').then(async result => {
+      await getData('Watch', item).then(async res => {
+        if (res) {
+          if (res.like.length > 0) {
+            res.like.map(async (id, index) => {
+              if (id.post_id === item) {
+                await this.setState({ hit_like: false });
+                await deleteArray('watchLike', result, 'like', index);
+                await deleteArray('Watch', item, 'like', index);
+                await deleteArray('users', result, 'likes', index);
+              } else {
+                if (this.state.hit_like === true) {
+                  await addToArray('watchLike', result, 'like', {
+                    post_id: item,
+                  });
+                  await addToArray('Watch', item, 'like', {
+                    post_id: item,
+                  });
+                  await addToArray('users', result, 'likes', { post_id: item });
+                }
+                return;
+              }
+            });
+            return;
+          } else {
+            await addToArray('watchLike', result, 'like', {
+              post_id: item,
+            });
+            await addToArray('Watch', item, 'like', {
+              post_id: item,
+            });
+            await addToArray('users', result, 'likes', { post_id: item });
+          }
+        } else {
+          await addToArray('watchLike', result, 'like', {
+            post_id: item,
+          });
+          await addToArray('Watch', item, 'like', {
+            post_id: item,
+          });
+          await addToArray('users', result, 'likes', { post_id: item });
+        }
+      });
+    });
   };
 
+  calculateTime(time) {
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-  favoritePost = async item => {
-    await _retrieveData('user').then(
-      async result =>
-        await addToArray('WatchFavorite', item, 'Favorite', {
-          user_id: result,
-          post_id: item,
-        }),
-    );
-  };
+    if (time.length > 1) { // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
 
-  saveViews = async (item) => {
-    console.log(item)
-    let finalViews = this.state.viewsData + this.state.Views;
-    await saveData('Watch', item.post_id, { Views: finalViews })
+
   }
 
+  saveViews = async item => {
+    let finalViews = this.state.viewsData + this.state.Views;
+    await saveData('Watch', item.post_id, { Views: finalViews });
+  };
+
+  favoritePost = async item => {
+    await _retrieveData('user').then(async result => {
+      await getData('Watch', item).then(async res => {
+        if (res) {
+          if (res.favorite.length > 0) {
+            res.favorite.map(async (id, index) => {
+              if (id.post_id === item) {
+                await this.setState({ hit_favorite: false });
+                await deleteArray('watchFavorite', result, 'favorite', index);
+                await deleteArray('Watch', item, 'favorite', index);
+                await deleteArray('users', result, 'favorite', index);
+              } else {
+                if (this.state.hit_favorite === true) {
+                  await addToArray('watchFavorite', result, 'favorite', {
+                    post_id: item,
+                  });
+                  await addToArray('users', result, 'favorite', {
+                    post_id: item,
+                  });
+                  await addToArray('Watch', item, 'favorite', {
+                    post_id: item,
+                  });
+                }
+                return;
+              }
+            });
+            return;
+          } else {
+            await addToArray('watchFavorite', result, 'favorite', {
+              post_id: item,
+            });
+            await addToArray('users', result, 'favorite', {
+              post_id: item,
+            });
+            await addToArray('Watch', item, 'favorite', {
+              post_id: item,
+            });
+          }
+        } else {
+          await addToArray('watchFavorite', result, 'favorite', {
+            post_id: item,
+          });
+          await addToArray('users', result, 'favorite', {
+            post_id: item,
+          });
+          await addToArray('Watch', item, 'favorite', {
+            post_id: item,
+          });
+        }
+      });
+    });
+  };
 
   popularEventHandler() {
     this.setState({
@@ -280,13 +399,11 @@ export default class Watch extends Component {
   }
 
   render() {
-    console.log('statebbbbbbbbbbbbbbbbbbb', this.state.post_data);
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
     const myIcon = <Icon name="account" size={30} color="#900" />;
     return (
       <SafeAreaView style={styles.container}>
-
         <Text style={styles.welcome}>Watch</Text>
         <Ionicon
           name="ios-menu"
@@ -449,12 +566,16 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                <FontAwesome
-                            name="comment-o"
-                            size={30}
-                            color="#32cd32"
-                           
-                          />
+                  <FontAwesome
+                    name="comment-o"
+                    size={30}
+                    color="#32cd32"
+                    onPress={() => {
+                      this.setModalVisible();
+                      this.setState({ _id: item.post_id });
+                      this.CommentPost(item.post_id);
+                    }}
+                  />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -503,21 +624,17 @@ export default class Watch extends Component {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity>
-                <Ionicon
-                            name={
-                              this.state.hit_favorite
-                                ? 'md-heart'
-                                : 'md-heart-empty'
-                            }
-                            size={30}
-                            color={'#32cd32'}
-                            style={{top: 1}}
-                            onPress={() => {
-                              
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}/>
+                  <AIcon
+                    name="heart"
+                    size={20}
+                    color={this.state.hit_favorite ? '#32cd32' : null}
+                    onPress={() => {
+                      this.favoritePost(item.post_id);
+                      this.setState({
+                        hit_favorite: !this.state.hit_favorite,
+                      });
+                    }}
+                  />
                 </TouchableOpacity>
 
                 <Text
@@ -536,7 +653,7 @@ export default class Watch extends Component {
           <TouchableOpacity
             style={{ height: responsiveHeight(5), backgroundColor: 'white' }}
             onPress={() => {
-              this.props.navigation.navigate('LearnMore')
+              this.props.navigation.navigate('LearnMore');
             }}>
             <Text
               style={{
@@ -868,33 +985,29 @@ export default class Watch extends Component {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'flex-start',
-                      width: '70%',
-                      left: 10,
+                      width: '60%',
+                      flexDirection: 'column',
+                      marginLeft: responsiveWidth(2)
                     }}>
+                    <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text>
                     <Text
                       style={{
-                        fontSize: responsiveFontSize(2.5),
+                        fontSize: responsiveFontSize(3),
                         fontWeight: 'bold',
                       }}>
                       {item.user_name}
+                      {/* {console.log('ITEM NAME', item.name)} */}
                     </Text>
-                  </View>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      width: '15%',
-                      justifyContent: 'center',
-                    }}>
                     <Text
                       style={{
                         fontSize: responsiveFontSize(1.5),
-                        fontWeight: '400',
                         color: '#7e7a7a',
-                        right: 5,
                       }}>
-                      8h ago
+                      {date[0]} at {this.calculateTime(date[1])}
+                      {/* {console.log('ITEM NAME', item.name)} */}
                     </Text>
                   </View>
+
                 </View>
                 <View
                   style={{
@@ -906,7 +1019,6 @@ export default class Watch extends Component {
                     flexDirection: 'row',
                     marginBottom: 1,
                   }}>
-                    {console.log("My Video:", item.videoUrl)}
                   <VideoPlayer
                     source={{
                       uri: item.videoUrl,
@@ -916,12 +1028,15 @@ export default class Watch extends Component {
                     disableVolume={true}
                     disableFullscreen={true}
                     paused={true}
-                    // onPlay={()=>  this.setState({ Views: 1 })}
-                    // onPause={()=> this.setState({ Views: 0 })}
-                    // onEnd={()=> this.saveViews(item)}
-                    
+                  // onPlay={()=>  this.setState({ Views: 1 })}
+                  // onPause={()=> this.setState({ Views: 0 })}
+                  // onEnd={()=> this.saveViews(item)}
                   />
+                  
                 </View>
+                
+
+                
 
                 <View
                   style={{
@@ -932,28 +1047,6 @@ export default class Watch extends Component {
                     borderRadius: 25,
                     justifyContent: 'space-evenly',
                   }}>
-                  {/* <View
-                    style={{
-                      left: 15,
-                      backgroundColor: 'white',
-                      flexDirection: 'row',
-                      width: '25%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity>
-                      <Icon name="bookmark" size={20} color="#7e7a7a" />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        marginHorizontal: 2,
-                        fontSize: responsiveFontSize(1.8),
-                        fontWeight: '400',
-                        color: '#7e7a7a',
-                      }}>
-                      {item.label.length}
-                    </Text>
-                  </View> */}
                   <View
                     style={{
                       backgroundColor: 'white',
@@ -962,13 +1055,18 @@ export default class Watch extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
+                      
                     <TouchableOpacity>
-                    <FontAwesome
-                            name="comment-o"
-                            size={30}
-                            color="#32cd32"
-                           
-                          />
+                      <FontAwesome
+                        name="comment-o"
+                        size={30}
+                        color="#32cd32"
+                        onPress={() => {
+                          this.setModalVisible();
+                          this.setState({ _id: item.post_id });
+                          this.CommentPost(item.post_id);
+                        }}
+                      />
                     </TouchableOpacity>
                     <Text
                       style={{
@@ -988,16 +1086,14 @@ export default class Watch extends Component {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity>
-                    <AIcon
-                            name={this.state.hit_like ? 'like1' : 'like2'}
-                            size={28}
-                            color={'#32cd32'}
-                            onPress={() => {
-                              this.setState({
-                                hit_like: !this.state.hit_like,
-                              });
-                            }}
-                          />
+                      <AIcon
+                        name={item.islike ? 'like1' : 'like2'}
+                        size={28}
+                        color={'#32cd32'}
+                        onPress={() => {
+                          this.likePost(item.post_id, index);
+                        }}
+                      />
                     </TouchableOpacity>
                     <Text
                       style={{
@@ -1006,7 +1102,7 @@ export default class Watch extends Component {
                         fontWeight: '400',
                         color: '#7e7a7a',
                       }}>
-                      91
+                      {item.like.length}
                     </Text>
                   </View>
                   <View
@@ -1017,21 +1113,15 @@ export default class Watch extends Component {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity>
-                    <Ionicon
-                            name={
-                              this.state.hit_favorite
-                                ? 'md-heart'
-                                : 'md-heart-empty'
-                            }
-                            size={30}
-                            color={'#32cd32'}
-                            style={{top: 1}}
-                            onPress={() => {
-                              
-                              this.setState({
-                                hit_favorite: !this.state.hit_favorite,
-                              });
-                            }}/>
+                      <Ionicon
+                        name={item.isfavorite ? 'md-heart' : 'md-heart-empty'}
+                        size={30}
+                        color={'#32cd32'}
+                        style={{ top: 1 }}
+                        onPress={() => {
+                          this.favoritePost(item.post_id);
+                        }}
+                      />
                     </TouchableOpacity>
 
                     <Text
@@ -1041,7 +1131,7 @@ export default class Watch extends Component {
                         fontWeight: '400',
                         color: '#7e7a7a',
                       }}>
-                      878
+                      {item.favorite.length}
                     </Text>
                   </View>
                 </View>
@@ -1098,5 +1188,9 @@ const styles = StyleSheet.create({
   },
   container1: {
     marginTop: responsiveHeight(8.5),
+  },
+  separator: {
+    height: 1,
+    backgroundColor: 'black',
   },
 });

@@ -58,8 +58,6 @@ class ChatList extends Component {
       await getData('friends', id).then(result => {
         this.setState({ data: result.request }, () => {
           this.state.data.map(async (item) => {
-            console.log('333333333333333333333333333333333333333333333333')
-            console.log(item)
             await getData('users', item.userId).then((friend) => {
               friends.push(friend)
               this.setState({ friends: friends })
@@ -73,8 +71,6 @@ class ChatList extends Component {
       await getData('users', id).then(result => {
         this.setState({ data2: result.chatted }, () => {
           this.state.data2.map(async (item) => {
-            console.log('666666666666666666666666666666666666666666666666666666')
-            console.log(item)
             await getData('users', item).then((chat) => {
               chatted.push(chat)
               this.setState({ chatted: chatted, loading: false })
@@ -91,7 +87,6 @@ class ChatList extends Component {
   }
 
   render() {
-    console.log('data', this.state.data);
     const swipeoutBtns = (item) => [
       {
         //   text: 'Add', Message

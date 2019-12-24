@@ -34,7 +34,7 @@ import firebase from 'firebase';
 //frineds Screen
 const uri = 'https://randomuser.me/api/portraits/men/27.jpg';
 const KEYS_TO_FILTERS = ['name'];
-export default class FriendsList extends Component {
+export default class AppUser extends Component {
   static navigationOptions = {
     header: null,
   };
@@ -47,7 +47,6 @@ export default class FriendsList extends Component {
       searchTerm: '',
       modalVisible: false,
       loading: true,
-      friends: [],
       user: false,
       data_user: null,
       userId: null,
@@ -55,24 +54,57 @@ export default class FriendsList extends Component {
   }
 
   componentDidMount = async () => {
-    _retrieveData('user').then(async result => {
-      await firebase
-        .firestore()
-        .collection('users')
-        .onSnapshot(async () => {
-          await _retrieveData('user').then(async result => {
-            await getData('users', result).then(res => {
-              console.log('sold prooof', res);
-              this.setState({
-                data_user: res,
-                userId: res.userId,
-                loading: false,
-              });
-            });
-          });
+    await firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot(async () => {
+        await _retrieveData('user').then(async result => {
+          await getData('users', result).then(res =>
+            this.setState({
+              data_user: res,
+              userId: res.userId,
+              loading: false,
+            }),
+          );
         });
-    });
+      });
+    await firebase
+      .firestore()
+      .collection('users')
+      .onSnapshot(async () => {
+        await getAllOfCollection('users').then(result => {
+          this.setState(
+            {data: result, loading: false, user: !this.state.user},
+            async () => {
+              _retrieveData('user').then(async result => {
+                let data1 = this.state.data;
+                this.setState({data: []});
+                let data2 = [];
+                new Promise((resolve, reject) => {
+                  let i = 0;
+                  //   });
+                  data1.forEach(item => {
+                    i++;
+                    if (item.userId !== result) {
+                      console.log('data', item.userId !== result);
+                      data2.push(item);
+                      resolve();
+                    }
+                  });
+                }).then(result => {
+                  console.log('data', data2);
+                  this.setState({data: data2});
+                }); 
+              });
+            },
+          );
+        });
+      });
   };
+
+  toggleModal(visible) {
+    this.setState({modalVisible: visible});
+  }
 
   searchUpdated(term) {
     this.setState({searchTerm: term});
@@ -89,6 +121,38 @@ export default class FriendsList extends Component {
         }}
       />
     );
+  };
+
+  sendRequest = async item => {
+    _retrieveData('user').then(async result => {
+      await getData('users', result).then(
+        async check =>
+          await firebase
+            .firestore()
+            .collection('users')
+            .doc(item.userId)
+            .update({
+              pending_friends: firebase.firestore.FieldValue.arrayUnion({
+                userId: result,
+                name: check.name,
+                profile_picture: check.profile_picture,
+                bio: check.bio,
+              }),
+            })
+            .then(async () => {
+              await firebase
+                .firestore()
+                .collection('users')
+                .doc(result)
+                .update({
+                  send_request: firebase.firestore.FieldValue.arrayUnion({
+                    userId: item.userId,
+                  }),
+                })
+                .then(() => this.toggleModal(true));
+            }),
+      );
+    });
   };
 
   renderItem = ({item}) => {
@@ -142,6 +206,18 @@ export default class FriendsList extends Component {
                     style={styles.menu}
                   />
                 </TouchableOpacity>
+                {this.state.user ? (
+                  <TouchableOpacity
+                    style={[styles.button]}
+                    onPress={() => this.sendRequest(item)}>
+                    <Ionicon
+                      name="md-person-add"
+                      size={28}
+                      color={'#32cd32'}
+                      style={styles.menu}
+                    />
+                  </TouchableOpacity>
+                ) : null}
               </View>
               <Text style={styles.description}>{item.bio}</Text>
             </View>
@@ -160,7 +236,7 @@ export default class FriendsList extends Component {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#F5F5F5'}}>
         <View style={{marginBottom: 10}}>
-          <Text style={styles.welcome}> Friends</Text>
+          <Text style={styles.welcome}> Users</Text>
           <Ionicon
             name="ios-menu"
             size={35}
@@ -205,26 +281,29 @@ export default class FriendsList extends Component {
             />
           </View>
           <AntDesign
-            name="pluscircle"
+            name="back"
             size={40}
             color="#3fee4a"
             style={{marginTop: 5, marginLeft: 20}}
-            onPress={() => this.props.navigation.navigate('AppUser')}
+            onPress={() => this.props.navigation.navigate('FriendsList')}
           />
         </View>
-<View style={{flex:1}}>
+
         {this.state.searchTerm == '' && this.state.loading ? (
           <ActivityIndicator
             size={'large'}
             color="#32cd32"
-            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
+            }}
           />
-        ) : this.state.data_user.friends ? (
+        ) : (
           <ScrollView>
-            {this.state.data_user.friends
+            {this.state.data
               .filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
               .map(item => {
-                console.lo;
                 return (
                   <View style={styles.box}>
                     <TouchableOpacity
@@ -273,6 +352,19 @@ export default class FriendsList extends Component {
                             style={styles.menu}
                           />
                         </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={[styles.button]}
+                          onPress={async () => {
+                            await this.sendRequest(item);
+                          }}>
+                          <Ionicon
+                            name="md-person-add"
+                            size={28}
+                            color={'#32cd32'}
+                            style={styles.menu}
+                          />
+                        </TouchableOpacity>
                       </View>
                       <Text style={styles.description}>{item.bio}</Text>
                     </View>
@@ -280,17 +372,53 @@ export default class FriendsList extends Component {
                 );
               })}
           </ScrollView>
-        ) : (
-          <View
-            style={{
-              height: 500,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text>You have no friends </Text>
-          </View>
         )}
-        </View>
+
+        <Modal
+          animationType={'slide'}
+          transparent={false}
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {}}>
+          <View style={styles.modal}>
+            <View
+              style={{height: '50%', width: '100%', justifyContent: 'center'}}>
+              <Text style={{fontSize: responsiveFontSize(2), color: 'white'}}>
+                Friend Request Sent!
+              </Text>
+            </View>
+            <View
+              style={{
+                padding: 5,
+                height: '40%',
+                width: '100%',
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <TouchableHighlight
+                style={{
+                  marginEnd: 10,
+                  backgroundColor: 'white',
+                  height: 50,
+                  width: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 30,
+                }}>
+                <AIcon
+                  name="close"
+                  size={25}
+                  color="#0d4d28"
+                  style={{}}
+                  onPress={() => {
+                    this.toggleModal(!this.state.modalVisible);
+                  }}
+                />
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     );
   }

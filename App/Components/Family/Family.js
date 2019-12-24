@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,93 +8,139 @@ import {
   Alert,
   ScrollView,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
-import { responsiveHeight, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions";
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 //family Screen
 import FA from 'react-native-vector-icons/FontAwesome';
-import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
-import { getData} from '../../Backend/Utility';
+import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
+import {getData} from '../../Backend/Utility';
 
 export default class Family extends Component {
   static navigationOptions = {
     header: null,
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
       calls: [
-        { id: 1, name: "Mark Doe", status: "Sana Francisco", image: "https://bootdey.com/img/Content/avatar/avatar7.png" },
-        { id: 2, name: "Clark Man", status: "Sana Francisco", image: "https://bootdey.com/img/Content/avatar/avatar6.png" },
-        { id: 3, name: "Jaden Boor", status: "Sana Francisco", image: "https://bootdey.com/img/Content/avatar/avatar5.png" },
-        { id: 4, name: "Srick Tree", status: "Sana Francisco", image: "https://bootdey.com/img/Content/avatar/avatar4.png" },
-        { id: 5, name: "Erick Doe", status: "Sana Francisco", image: "https://bootdey.com/img/Content/avatar/avatar3.png" },
-
+        {
+          id: 1,
+          name: 'Mark Doe',
+          status: 'Sana Francisco',
+          image: 'https://bootdey.com/img/Content/avatar/avatar7.png',
+        },
+        {
+          id: 2,
+          name: 'Clark Man',
+          status: 'Sana Francisco',
+          image: 'https://bootdey.com/img/Content/avatar/avatar6.png',
+        },
+        {
+          id: 3,
+          name: 'Jaden Boor',
+          status: 'Sana Francisco',
+          image: 'https://bootdey.com/img/Content/avatar/avatar5.png',
+        },
+        {
+          id: 4,
+          name: 'Srick Tree',
+          status: 'Sana Francisco',
+          image: 'https://bootdey.com/img/Content/avatar/avatar4.png',
+        },
+        {
+          id: 5,
+          name: 'Erick Doe',
+          status: 'Sana Francisco',
+          image: 'https://bootdey.com/img/Content/avatar/avatar3.png',
+        },
       ],
       data_user: null,
       imgUrl: '',
+      loading: true,
     };
   }
 
-  componentDidMount (){
+  componentDidMount() {
     this.userData();
   }
 
   userData = async () => {
     await _retrieveData('user').then(async result => {
-      // console.log('uuuuuuuuu', result);
       let res = await getData('users', result);
       this.setState({
         data_user: res,
         imgUrl: res.profile_picture,
+        loading: false,
       });
     });
-
   };
 
-  
-
-  renderItem = ({ item }) => {
+  renderItem = ({item}) => {
     return (
       <TouchableOpacity>
         <View style={styles.row}>
-
-          <Image source={{ uri: item.image }} style={styles.pic} />
+          <Image source={{uri: item.profile_picture}} style={styles.pic} />
 
           <View style={{}}>
-
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+              <Text
+                style={styles.nameTxt}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.name}
+              </Text>
               <Text style={styles.mblTxt}>Mobile</Text>
             </View>
 
             <View style={styles.msgContainer}>
-              <Text style={styles.msgTxt}>{item.status}</Text>
+              <Text style={styles.msgTxt}>{item.bio}</Text>
             </View>
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F5F5', }} >
-        <View style={{ marginBottom: responsiveHeight(1.5) }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#F5F5F5'}}>
+        <View style={{marginBottom: responsiveHeight(1.5)}}>
           <Text style={styles.welcome}>My Family</Text>
-          <FA name="chevron-left" size={26} color={'#32cd32'} onPress={() => this.props.navigation.goBack()} style={styles.menu} />
-          
-           <Image source={{ uri: this.state.imgUrl}} style={styles.menu1} /> 
-           
+          <FA
+            name="chevron-left"
+            size={26}
+            color={'#32cd32'}
+            onPress={() => this.props.navigation.goBack()}
+            style={styles.menu}
+          />
+
+          <Image source={{uri: this.state.imgUrl}} style={styles.menu1} />
         </View>
-        <FlatList
-          extraData={this.state}
-          data={this.state.calls}
-          keyExtractor={(item) => {
-            return item.id;
-          }}
-          renderItem={this.renderItem} />
+        {this.state.loading ? (
+          <ActivityIndicator
+            size={'large'}
+            color="#32cd32"
+            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}
+          />
+        ) : this.state.data_user ? (
+          <FlatList
+            extraData={this.state}
+            data={this.state.data_user.family_member}
+            keyExtractor={item => {
+              return item.id;
+            }}
+            renderItem={this.renderItem}
+          />
+        ) : (
+          <Text>You have no family Member</Text>
+        )}
       </SafeAreaView>
     );
   }
@@ -135,10 +181,6 @@ const styles = StyleSheet.create({
     color: '#777',
     fontSize: responsiveFontSize(1.6),
     left: 40,
-
-
-
-
   },
   msgContainer: {
     flexDirection: 'row',
@@ -159,13 +201,11 @@ const styles = StyleSheet.create({
     margin: 7,
   },
   menu: {
-
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     marginTop: responsiveHeight(2.6),
     marginLeft: '4%',
-    position: 'absolute'
-
+    position: 'absolute',
   },
   menu1: {
     width: 10,
@@ -175,4 +215,4 @@ const styles = StyleSheet.create({
     marginLeft: '85%',
     position: 'absolute',
   },
-}); 
+});

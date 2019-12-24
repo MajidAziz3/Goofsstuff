@@ -89,7 +89,6 @@ class MoreVisionBoard extends Component {
         VisionBoard: res,
       }),
     );
-    console.log("Vision Board", this.state.VisionBoard)
 
   }
   render() {
