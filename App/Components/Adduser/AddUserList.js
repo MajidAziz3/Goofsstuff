@@ -112,11 +112,10 @@ export default class Chartlist extends Component {
             size={25}
             color={'#32cd32'}
             onPress={() => {
-              if (this.state.item) {
-                console.log('items', this.state.userData);
+              if (this.state.userData) {
                 this.props.navigation.navigate('AddGroup', {
                   items: this.state.userData,
-                });
+                } );
               } else {
                 this.props.navigation.goBack();
               }

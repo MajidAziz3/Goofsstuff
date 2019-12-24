@@ -955,15 +955,12 @@ export default class Forms extends Component {
               style={{
                 borderRadius: 10,
                 width: '96%',
-                backgroundColor: 'white',
-               
-                
+                backgroundColor: 'white',       
                 elevation: 1,
                 alignSelf: 'center',
                 marginTop: 10,
               }}>
-              <TextInput
-                value={vedio_post}
+              <TextInput value={vedio_post}
                 onChangeText={vedio_post => this.setState({vedio_post})}
                 multiline={true}
                 numberOfLines={3}
@@ -973,7 +970,7 @@ export default class Forms extends Component {
                   alignSelf: 'flex-end',
                   borderRadius: 10,
                   marginRight: 10,
-                }}>
+                }}/>
                 <TouchableOpacity
                   style={{
                     flexDirection: 'row',
@@ -1000,6 +997,7 @@ export default class Forms extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
+              
               <View
                 style={{
                   borderRadius: 10,
@@ -1026,7 +1024,6 @@ export default class Forms extends Component {
                   placeholder={'Tell viewers a little about you'}
                 />
               </View>
-            </View>
             <View
               style={{
                 flexDirection: 'row',

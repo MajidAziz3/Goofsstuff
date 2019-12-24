@@ -54,7 +54,6 @@ export default class AddGroup extends Component {
       group_name: '',
       group_location: '',
       group_description: '',
-      group_member: [],
       group_admins: [],
       photo: null,
       imageType: null,
@@ -64,6 +63,13 @@ export default class AddGroup extends Component {
       items: this.props.navigation.state.params.items,
     };
   }
+
+  componentDidMount = () => {
+    this.props.navigation.addListener('willFocus', async () => {
+      this.setState({items: this.props.navigation.state.params.items});
+    });
+  };
+
   toggleModal(visible) {
     this.setState({modalVisible: visible});
   }
@@ -119,14 +125,16 @@ export default class AddGroup extends Component {
       group_name,
       items,
     } = this.state;
-    console.log('items', this.state.items);
+    console.log('itemsssssssssssssssssssssssssss', this.state.items);
     let iteratorNum = 0;
     await _retrieveData('user').then(async item => {
       let data = group_admins;
       data.push(item);
-      let dataa = group_member;
-      dataa.push(items);
-      this.setState({group_admins: data, group_member: dataa});
+      // let dataa = group_member;
+      // dataa.push(items);
+      this.setState({group_admins: data});
+      // this.setState({group_member: dataa});
+      console.log('data', this.state.group_member);
       await uploadGroupImage(
         this.state.ImageUrl,
         this.state.imageType,
@@ -135,7 +143,7 @@ export default class AddGroup extends Component {
         'Create_Group',
         item,
         group_admins,
-        group_member,
+        items,
         group_description,
         group_location,
         group_name,
