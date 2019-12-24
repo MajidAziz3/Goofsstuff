@@ -43,8 +43,8 @@ class ChatList extends Component {
     this.state = {
       datasource: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
       datasource2: [1, 2],
-      data: [],
-      data2: [],
+      data: null,
+      data2: null,
       loading: true,
       searchTerm: '',
       friends: [],
@@ -57,12 +57,17 @@ class ChatList extends Component {
     await _retrieveData('user').then(async (id) => {
       await getData('friends', id).then(result => {
         this.setState({ data: result.request }, () => {
-          this.state.data.map(async (item) => {
-            await getData('users', item.userId).then((friend) => {
-              friends.push(friend)
-              this.setState({ friends: friends })
+          if (this.state.data != null) {
+            this.state.data.map(async (item) => {
+              await getData('users', item.userId).then((friend) => {
+                friends.push(friend)
+                this.setState({ friends: friends })
+              })
             })
-          })
+          }
+          else{
+            this.setState({ loading: false })
+          }
         });
       });
     })
@@ -70,12 +75,17 @@ class ChatList extends Component {
     await _retrieveData('user').then(async (id) => {
       await getData('users', id).then(result => {
         this.setState({ data2: result.chatted }, () => {
-          this.state.data2.map(async (item) => {
-            await getData('users', item).then((chat) => {
-              chatted.push(chat)
-              this.setState({ chatted: chatted, loading: false })
+          if (this.state.data2 != null) {
+            this.state.data2.map(async (item) => {
+              await getData('users', item).then((chat) => {
+                chatted.push(chat)
+                this.setState({ chatted: chatted, loading: false })
+              })
             })
-          })
+          }
+          else{
+            this.setState({ loading: false })
+          }
         });
       });
     })
@@ -95,7 +105,7 @@ class ChatList extends Component {
         // backgroundColor:'#3fee4a',
         component: (
           <TouchableOpacity
-          onPress={()=> this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })}
+            onPress={() => this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })}
             style={{
               borderRightWidth: 1,
               borderRightColor: bRightColor,
@@ -115,7 +125,7 @@ class ChatList extends Component {
             />
           </TouchableOpacity>
         ),
-        
+
       },
       {
         //   text: 'Update',Star
@@ -279,8 +289,8 @@ class ChatList extends Component {
                     renderItem={({ item, index }) => (
                       <View
                         key={index}
-                        
-                        
+
+
                       >
                         <Swipeout
                           buttonWidth={105}
@@ -288,8 +298,8 @@ class ChatList extends Component {
                           right={swipeoutBtns(item)}
                           style={{ borderRadius: 0 }}>
                           <TouchableOpacity onPress={() =>
-                          this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
-                        } style={styles.row}>
+                            this.props.navigation.navigate('Chat', { id: item.userId, name: item.name })
+                          } style={styles.row}>
                             <View
                               style={{
                                 backgroundColor: 'white',
@@ -437,9 +447,9 @@ class ChatList extends Component {
                                   borderRadius: 20,
                                 }}>
                                 <Image
-                                source={{ uri: item.profile_picture }}
-                                style={{ borderRadius: 10, width: '80%', height: '90%' }}
-                              />
+                                  source={{ uri: item.profile_picture }}
+                                  style={{ borderRadius: 10, width: '80%', height: '90%' }}
+                                />
                               </View>
                               <View
                                 style={{
