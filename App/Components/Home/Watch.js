@@ -525,10 +525,6 @@ export default class Watch extends Component {
     });
   }
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-
   render() {
     const uri =
       'https://facebook.github.io/react-native/docs/assets/favicon.png';
