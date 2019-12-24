@@ -79,11 +79,11 @@ export default class CommunityBoard extends Component {
       sportsdatasource: [
         {
           name: 'Cricket',
-          // data: this.state.sport_data,
+          //  data: this.state.sport_data,
         },
         {
           name: 'Football',
-          // data: this.state.sport_data,
+          //  data: this.state.sport_data,
         },
         {
           name: 'BaseBall',
@@ -123,6 +123,7 @@ export default class CommunityBoard extends Component {
       event_data: [],
       loading: true,
       job_data: [],
+      outdoor_data: [],
     };
   }
   async sportPost() {
@@ -131,7 +132,8 @@ export default class CommunityBoard extends Component {
       .collection('Sport')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Sport');
-        // this.setState({sport_data: data, loading: false});
+        this.setState({sport_data: data, loading: false});
+        console.log('data', data);
       });
   }
   async EventPost() {
@@ -140,16 +142,26 @@ export default class CommunityBoard extends Component {
       .collection('Event')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Event');
-        // this.setState({event_data: data, loading: false});
+        this.setState({event_data: data, loading: false});
       });
   }
   async JobPost() {
     firebase
       .firestore()
-      .collection('Sport')
+      .collection('Create_Job')
       .onSnapshot(async () => {
         let data = await getAllOfCollection('Create_Job');
-        // this.setState({job_data: data, loading: false});
+        this.setState({job_data: data, loading: false});
+      });
+  }
+
+  async outdoorPost() {
+    firebase
+      .firestore()
+      .collection('OutDoor')
+      .onSnapshot(async () => {
+        let data = await getAllOfCollection('OutDoor');
+        this.setState({outdoor_data: data, loading: false});
       });
   }
 
@@ -157,6 +169,7 @@ export default class CommunityBoard extends Component {
     this.sportPost();
     this.EventPost();
     this.JobPost();
+    this.outdoorPost();
     this.setState({datasource: this.state.alldatasource});
 
     const {addListener} = this.props.navigation;
@@ -350,7 +363,7 @@ export default class CommunityBoard extends Component {
               height: responsiveHeight(6),
               backgroundColor: 'white',
               justifyContent: 'center',
-              width: '100%'
+              width: '100%',
             }}>
             <View
               style={{
@@ -358,7 +371,6 @@ export default class CommunityBoard extends Component {
                 backgroundColor: 'white',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                
               }}>
               <TouchableOpacity
                 style={{

@@ -1,8 +1,8 @@
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { Platform } from 'react-native';
-import { _storeData } from './AsyncStore/AsyncFunc';
+import {Platform} from 'react-native';
+import {_storeData} from './AsyncStore/AsyncFunc';
 import Forms from '../Components/Forms/Forms';
 
 const config = {
@@ -40,7 +40,7 @@ export async function getAllOfCollection(collection) {
     .firestore()
     .collection(collection)
     .get();
-  querySnapshot.forEach(function (doc) {
+  querySnapshot.forEach(function(doc) {
     if (doc.exists) {
       data.push(doc.data());
     } else {
@@ -57,7 +57,7 @@ export function getData(collection, doc, objectKey) {
       .collection(collection)
       .doc(doc)
       .get()
-      .then(function (doc) {
+      .then(function(doc) {
         if (doc.exists) {
           return doc.data();
         } else {
@@ -70,7 +70,7 @@ export function getData(collection, doc, objectKey) {
       .collection(collection)
       .doc(doc)
       .get()
-      .then(function (doc) {
+      .then(function(doc) {
         if (doc.exists && doc.data()[objectKey] != undefined) {
           return doc.data()[objectKey];
         } else {
@@ -86,7 +86,7 @@ export async function getDocRefByKeyValue(collection, key, value) {
     .collection(collection)
     .where(key, '==', value)
     .get()
-    .then(function (querySnapshot) {
+    .then(function(querySnapshot) {
       return querySnapshot.docs[0];
     });
 }
@@ -98,7 +98,7 @@ export async function getDocByKeyValue(collection, key, value) {
     .collection(collection)
     .where(key, '==', value)
     .get();
-  await querySnapshot.forEach(function (doc) {
+  await querySnapshot.forEach(function(doc) {
     data.push(doc.data());
   });
   return data;
@@ -119,8 +119,8 @@ export async function getDocWithinRange(collection, doc, strSearch) {
     .where(doc, '>=', startcode)
     .where(doc, '<', endcode)
     .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) { });
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {});
     });
 }
 
@@ -129,11 +129,11 @@ export async function saveData(collection, doc, jsonObject) {
     .firestore()
     .collection(collection)
     .doc(doc)
-    .set(jsonObject, { merge: true })
+    .set(jsonObject, {merge: true})
     .then(result => {
       return result;
     })
-    .catch(function (error) {
+    .catch(function(error) {
       alert('Error writing document: ', error);
     });
 }
@@ -152,7 +152,7 @@ export async function saveDataWithoutDocId(collection, jsonObject) {
     .firestore()
     .collection(collection)
     .add(jsonObject)
-    .then(async function (docRef) {
+    .then(async function(docRef) {
       if (docRef.id) {
         // new Forms().Upload_Image(docRef.id);
         _storeData('ref', docRef.id);
@@ -162,11 +162,11 @@ export async function saveDataWithoutDocId(collection, jsonObject) {
           .firestore()
           .collection(collection)
           .doc(doc_Id)
-          .set(obj, { merge: true })
+          .set(obj, {merge: true})
           .then(result => {
             return result;
           })
-          .catch(function (error) {
+          .catch(function(error) {
             alert('Error writing document: ', error);
           });
       }
@@ -188,10 +188,10 @@ export async function addToArray(collection, doc, array, value) {
       {
         [array]: firebase.firestore.FieldValue.arrayUnion(value),
       },
-      { merge: true },
+      {merge: true},
     );
   } else {
-    saveData(collection, doc, { [array]: [value] });
+    saveData(collection, doc, {[array]: [value]});
   }
 }
 
@@ -216,15 +216,15 @@ export async function uploadCommunityImage(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function (snapshot) {
+    function(snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -239,17 +239,17 @@ export async function uploadCommunityImage(
           break;
       }
     },
-    function (error) {
+    function(error) {
       _storeData('imageUploadProgress', '-1');
     },
-    function () {
+    function() {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
         firebase
           .firestore()
           .collection(databaseCollection)
           .doc(docRef)
-          .update({ football: [{ imageUrl: downloadURL }] });
+          .update({football: [{imageUrl: downloadURL}]});
         //   addToArray(databaseCollection, docRef,sub_category, {imageUrl: downloadURL}).then(
         //     () => {
         //       _storeData('imageUploadProgress', '100');
@@ -431,17 +431,38 @@ export async function uploadGroupImage(
     function() {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        addToArray(databaseCollection, docRef, 'group', {
-          imageUrl: downloadURL,
-          userId: docRef,
-          group_admins: group_admins,
-          group_description: group_description,
-          group_location: group_location,
-          group_member: group_member,
-          group_name: group_name,
-        }).then(() => {
-          _storeData('imageUploadProgress', '100');
-        });
+        console.log(
+          'traffic',
+          docRef,
+          group_admins,
+          group_description,
+          group_location,
+          group_member,
+          group_name,
+          downloadURL,
+        );
+        setTimeout(() => {
+          addToArray(databaseCollection, docRef, 'group', {
+            imageUrl: downloadURL,
+            userId: docRef,
+            group_admins: group_admins,
+            group_description: group_description,
+            group_location: group_location,
+            group_member: group_member,
+            group_name: group_name,
+          }).then(() => {
+            group_member.map(item => {
+              firebase
+                .firestore()
+                .collection('users')
+                .doc(item)
+                .update({
+                  groups: firebase.firestore.FieldValue.arrayUnion(docRef),
+                });
+            });
+            _storeData('imageUploadProgress', '100');
+          });
+        }, 1000);
       });
     },
   );
@@ -467,15 +488,15 @@ export async function uploadImage(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function (snapshot) {
+    function(snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -490,13 +511,13 @@ export async function uploadImage(
           break;
       }
     },
-    function (error) {
+    function(error) {
       _storeData('imageUploadProgress', '-1');
     },
-    function () {
+    function() {
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-        saveData(databaseCollection, docRef, { imageUrl: downloadURL }).then(
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+        saveData(databaseCollection, docRef, {imageUrl: downloadURL}).then(
           () => {
             _storeData('imageUploadProgress', '100');
           },
@@ -600,9 +621,9 @@ export async function uploadVisionImage(
     Platform.OS === 'ios' ? imgUri.replace('file://', '') : imgUri;
   const imageRef = firebase.storage().ref(imagePath);
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
@@ -662,15 +683,15 @@ export async function uploadUserImage(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function (snapshot) {
+    function(snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -685,10 +706,10 @@ export async function uploadUserImage(
           break;
       }
     },
-    function (error) {
+    function(error) {
       _storeData('imageUploadProgress', '-1');
     },
-    function () {
+    function() {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
         await firebase
@@ -758,9 +779,9 @@ export async function uploadImageComment(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
@@ -898,15 +919,15 @@ export async function uploadVideo(
   const imageRef = firebase.storage().ref(imagePath);
 
   let readingFile = await fs.readFile(uploadUri, 'base64');
-  let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
+  let blob = await Blob.build(readingFile, {type: `${mime};BASE64`});
 
-  let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
+  let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
   // let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function (snapshot) {
+    function(snapshot) {
       var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
@@ -921,7 +942,7 @@ export async function uploadVideo(
           break;
       }
     },
-    function (error) {
+    function(error) {
       _storeData('imageUploadProgress', '-1');
     },
     function() {
