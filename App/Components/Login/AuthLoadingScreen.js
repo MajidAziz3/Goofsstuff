@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, Alert} from 'react-native';
 import SplashScreen from 'react-native-smart-splash-screen';
-import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
+import { _retrieveData, _storeData } from '../../Backend/AsyncStore/AsyncFunc';
 import { connectFirebase } from '../../Backend/Connection/FirebaseConnection';
 import firebase2 from 'react-native-firebase'
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class AuthLoadingScreen extends Component {
   constructor(props) {
@@ -40,7 +41,8 @@ export default class AuthLoadingScreen extends Component {
     if (fcmToken) {
       console.log(fcmToken);
       this.showAlert('Your Firebase Token is:', fcmToken);
-      await _storeData('fcmToken', fcmToken);
+      console.log('FCCMM TOKENN', fcmToken);
+      await AsyncStorage.setItem('fcmToken',fcmToken)
       // this.setState({fcmToken})
     } else {
       this.showAlert('Failed', 'No token received');

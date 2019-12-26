@@ -5,6 +5,7 @@ import img from '../../Assets/animation.gif';
 import {_retrieveData} from '../../Backend/AsyncStore/AsyncFunc';
 import {connectFirebase} from '../../Backend/Connection/FirebaseConnection';
 import SplashScreen from 'react-native-smart-splash-screen';
+import { saveData } from '../../Backend/Utility';
 
 export default class Animation extends Component {
   constructor(props) {
@@ -40,8 +41,21 @@ export default class Animation extends Component {
         this.props.navigation.navigate('MainAuth');
       }, 8000);
     } else {
+      await _retrieveData('fcmToken').then(async(fcm)=>{
+
+        if(fcm){
+        console.log('TOKEEEEEEEEENNNNNNNNNN',this.state.value)
+        console.log('FCM', fcm)
+      await saveData('users',this.state.value,{fcmToken:fcm}).then(()=>{
       this.setState({flag: false});
       this.props.navigation.navigate('App');
+      })
+      .catch((error)=>{
+        alert(error.message)
+      })
+    }
+      })
+    
     }
   };
 
