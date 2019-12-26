@@ -31,6 +31,7 @@ export async function Company_Profile(
         user_name: user.name,
         members: members,
         email: email,
+        userImg: user.profile_picture,
       });
     }),
   );

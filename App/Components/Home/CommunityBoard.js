@@ -563,9 +563,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -598,7 +601,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -625,7 +628,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -643,8 +646,7 @@ export default class CommunityBoard extends Component {
                                 <Thumbnail
                                   small
                                   source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                    uri: item.userImg,
                                   }}
                                   style={{
                                     left: 20,
@@ -711,8 +713,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -743,8 +744,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/28.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: -10,
@@ -844,9 +844,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -879,7 +882,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -906,7 +909,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -924,8 +927,7 @@ export default class CommunityBoard extends Component {
                                 <Thumbnail
                                   small
                                   source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                    uri: item.userImg,
                                   }}
                                   style={{
                                     left: 20,
@@ -992,8 +994,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -1008,8 +1009,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: -10,
@@ -1125,9 +1125,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -1160,7 +1163,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -1187,7 +1190,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -1205,8 +1208,7 @@ export default class CommunityBoard extends Component {
                                 <Thumbnail
                                   small
                                   source={{
-                                    uri:
-                                      'https://randomuser.me/api/portraits/men/45.jpg',
+                                    uri:item.userImg,
                                   }}
                                   style={{
                                     left: 20,
@@ -1273,8 +1275,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -1289,8 +1290,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/51.jpg',
+                                      uri:item.userImg,
                                     }}
                                     style={{
                                       marginLeft: -10,
@@ -1406,9 +1406,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -1464,7 +1467,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -1605,7 +1608,8 @@ export default class CommunityBoard extends Component {
                                     item: item,
                                   })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -1638,7 +1642,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -1665,7 +1669,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -1727,96 +1731,6 @@ export default class CommunityBoard extends Component {
                                   }}>
                                   {item.location}
                                 </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}>
-                                <View
-                                  style={{
-                                    left: 10,
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '70%',
-                                    height: '90%',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: 0,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/51.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/28.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                </View>
-
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '30%',
-                                    height: '100%',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: responsiveFontSize(1.4),
-                                      fontWeight: '600',
-                                      color: 'black',
-                                    }}>
-                                    {item.joining_members.length}
-                                  </Text>
-                                  <AIcon name="plus" size={10} color="#000" />
-                                </View>
                               </View>
                             </View>
                           </TouchableOpacity>
@@ -1856,7 +1770,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Event
+                      Finance Department
                     </Text>
                   </View>
 
@@ -1869,7 +1783,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.event_data}
+                      data={this.state.job_fin}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -1884,9 +1798,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -1919,7 +1836,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -1946,7 +1863,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -2008,96 +1925,6 @@ export default class CommunityBoard extends Component {
                                   }}>
                                   {item.location}
                                 </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}>
-                                <View
-                                  style={{
-                                    left: 10,
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '70%',
-                                    height: '90%',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: 0,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/51.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/28.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                </View>
-
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '30%',
-                                    height: '100%',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: responsiveFontSize(1.4),
-                                      fontWeight: '600',
-                                      color: 'black',
-                                    }}>
-                                    {item.joining_members.length}
-                                  </Text>
-                                  <AIcon name="plus" size={10} color="#000" />
-                                </View>
                               </View>
                             </View>
                           </TouchableOpacity>
@@ -2137,7 +1964,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      OutDoor
+                      Marking
                     </Text>
                   </View>
 
@@ -2150,7 +1977,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.outdoor_data}
+                      data={this.state.job_marketing}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -2165,7 +1992,9 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
                                     'CommunityEvent',
                                     {item: item},
@@ -2201,7 +2030,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -2228,7 +2057,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -2291,96 +2120,6 @@ export default class CommunityBoard extends Component {
                                   {item.location}
                                 </Text>
                               </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}>
-                                <View
-                                  style={{
-                                    left: 10,
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '70%',
-                                    height: '90%',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: 0,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/51.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                  <Thumbnail
-                                    small
-                                    source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/men/28.jpg',
-                                    }}
-                                    style={{
-                                      marginLeft: -10,
-                                      borderRadius: 30,
-                                      shadowOpacity: 0.5,
-                                      shadowRadius: 2,
-                                      elevation: 5,
-                                      height: 30,
-                                      width: 30,
-                                    }}
-                                  />
-                                </View>
-
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    backgroundColor: 'white',
-                                    width: '30%',
-                                    height: '100%',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Text
-                                    style={{
-                                      fontSize: responsiveFontSize(1.4),
-                                      fontWeight: '600',
-                                      color: 'black',
-                                    }}>
-                                    {item.joining_members.length}
-                                  </Text>
-                                  <AIcon name="plus" size={10} color="#000" />
-                                </View>
-                              </View>
                             </View>
                           </TouchableOpacity>
                         );
@@ -2419,7 +2158,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Jobs
+                      Office Work
                     </Text>
                   </View>
 
@@ -2432,7 +2171,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.job_data}
+                      data={this.state.job_office}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -2447,9 +2186,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -2505,7 +2247,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -2586,7 +2328,7 @@ export default class CommunityBoard extends Component {
                   </View>
                 </View>
               </View>
-            ) : this.state.eventsflag1 ? (
+            ) : this.state.eventsflag ? (
               <View>
                 <View
                   style={{
@@ -2614,7 +2356,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Sport
+                      Party
                     </Text>
                   </View>
 
@@ -2627,7 +2369,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.sport_data}
+                      data={this.state.event_data}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -2642,9 +2384,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -2677,7 +2422,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -2704,7 +2449,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -2790,8 +2535,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -2895,7 +2639,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Event
+                      Birth Day
                     </Text>
                   </View>
 
@@ -2908,7 +2652,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.event_data}
+                      data={this.state.birthdays}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -2923,9 +2667,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -2958,7 +2705,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -2985,7 +2732,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -3071,8 +2818,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -3176,7 +2922,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      OutDoor
+                      Others
                     </Text>
                   </View>
 
@@ -3189,7 +2935,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.outdoor_data}
+                      data={this.state.other}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -3204,9 +2950,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -3239,7 +2988,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -3266,7 +3015,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -3352,8 +3101,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -3419,201 +3167,6 @@ export default class CommunityBoard extends Component {
                                   <AIcon name="plus" size={10} color="#000" />
                                 </View>
                               </View>
-                            </View>
-                          </TouchableOpacity>
-                        );
-
-                        // });
-                      }}
-                    />
-                  </View>
-                </View>
-
-                {/* Jobs */}
-
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    height: responsiveHeight(47),
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 10,
-                    width: responsiveWidth(100),
-                    marginBottom: 10,
-                    top: 5,
-                    borderRadius: 20,
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: '12%',
-                      justifyContent: 'flex-end',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(2.7),
-                        fontWeight: '600',
-                        color: 'black',
-                        marginLeft: 10,
-                      }}>
-                      Jobs
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: responsiveHeight(40),
-                      flexDirection: 'row',
-                      marginTop: 10,
-                      borderRadius: 20,
-                    }}>
-                    <FlatList
-                      data={this.state.job_data}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      keyExtractor={item => item.id}
-                      renderItem={({item, index}) => {
-                        // item.Cricket.map(itm => {
-                        {
-                          console.log(item);
-                        }
-
-                        return (
-                          <TouchableOpacity
-                            style={{backgroundColor: 'white', borderRadius: 20}}
-                            onPress={() => {
-                              this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
-                                : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
-                                  );
-                            }}>
-                            <View
-                              style={{backgroundColor: 'white', padding: 5}}>
-                              <View
-                                style={{
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Image
-                                  source={require('../../Assets/watch.jpg')}
-                                  style={{
-                                    width: responsiveHeight(15),
-                                    height: responsiveHeight(15),
-                                    borderRadius: 20,
-                                  }}></Image>
-                              </View>
-
-                              <View
-                                style={{
-                                  width: '100%',
-                                  borderRadius: 0,
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.4),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.company_name}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View
-                              style={{
-                                backgroundColor: 'white',
-                                height: '45%',
-                                width: 150,
-                              }}>
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(2),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
-                                  ) : (
-                                    <Text>{item.sub_category}</Text>
-                                  )}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '40%',
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Thumbnail
-                                  small
-                                  source={{uri: item.userImg}}
-                                  style={{
-                                    left: 20,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                  }}
-                                />
-                                <Text
-                                  style={{
-                                    left: 30,
-                                    fontSize: responsiveFontSize(1.8),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.user_name}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '10%',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <EIcon
-                                  name="location"
-                                  size={20}
-                                  color="green"
-                                  style={{alignSelf: 'center'}}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.5),
-                                    fontWeight: '600',
-                                    color: 'black',
-                                  }}>
-                                  {item.location}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}></View>
                             </View>
                           </TouchableOpacity>
                         );
@@ -3652,7 +3205,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Sport
+                      Cricket
                     </Text>
                   </View>
 
@@ -3680,9 +3233,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -3715,7 +3271,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -3742,7 +3298,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -3828,8 +3384,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -3933,7 +3488,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Event
+                      Foot Ball
                     </Text>
                   </View>
 
@@ -3946,7 +3501,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.event_data}
+                      data={this.state.Football}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -3961,9 +3516,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -3996,7 +3554,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -4023,7 +3581,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -4109,8 +3667,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -4214,7 +3771,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      OutDoor
+                      Base Ball
                     </Text>
                   </View>
 
@@ -4227,7 +3784,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.outdoor_data}
+                      data={this.state.BaseBall}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -4242,9 +3799,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -4277,7 +3837,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -4304,7 +3864,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -4390,8 +3950,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -4457,201 +4016,6 @@ export default class CommunityBoard extends Component {
                                   <AIcon name="plus" size={10} color="#000" />
                                 </View>
                               </View>
-                            </View>
-                          </TouchableOpacity>
-                        );
-
-                        // });
-                      }}
-                    />
-                  </View>
-                </View>
-
-                {/* Jobs */}
-
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    height: responsiveHeight(47),
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 10,
-                    width: responsiveWidth(100),
-                    marginBottom: 10,
-                    top: 5,
-                    borderRadius: 20,
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: '12%',
-                      justifyContent: 'flex-end',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(2.7),
-                        fontWeight: '600',
-                        color: 'black',
-                        marginLeft: 10,
-                      }}>
-                      Jobs
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: responsiveHeight(40),
-                      flexDirection: 'row',
-                      marginTop: 10,
-                      borderRadius: 20,
-                    }}>
-                    <FlatList
-                      data={this.state.job_data}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      keyExtractor={item => item.id}
-                      renderItem={({item, index}) => {
-                        // item.Cricket.map(itm => {
-                        {
-                          console.log(item);
-                        }
-
-                        return (
-                          <TouchableOpacity
-                            style={{backgroundColor: 'white', borderRadius: 20}}
-                            onPress={() => {
-                              this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
-                                : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
-                                  );
-                            }}>
-                            <View
-                              style={{backgroundColor: 'white', padding: 5}}>
-                              <View
-                                style={{
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Image
-                                  source={require('../../Assets/watch.jpg')}
-                                  style={{
-                                    width: responsiveHeight(15),
-                                    height: responsiveHeight(15),
-                                    borderRadius: 20,
-                                  }}></Image>
-                              </View>
-
-                              <View
-                                style={{
-                                  width: '100%',
-                                  borderRadius: 0,
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.4),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.company_name}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View
-                              style={{
-                                backgroundColor: 'white',
-                                height: '45%',
-                                width: 150,
-                              }}>
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(2),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
-                                  ) : (
-                                    <Text>{item.sub_category}</Text>
-                                  )}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '40%',
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Thumbnail
-                                  small
-                                  source={{uri: item.userImg}}
-                                  style={{
-                                    left: 20,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                  }}
-                                />
-                                <Text
-                                  style={{
-                                    left: 30,
-                                    fontSize: responsiveFontSize(1.8),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.user_name}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '10%',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <EIcon
-                                  name="location"
-                                  size={20}
-                                  color="green"
-                                  style={{alignSelf: 'center'}}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.5),
-                                    fontWeight: '600',
-                                    color: 'black',
-                                  }}>
-                                  {item.location}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}></View>
                             </View>
                           </TouchableOpacity>
                         );
@@ -4690,7 +4054,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Sport
+                      Outing
                     </Text>
                   </View>
 
@@ -4703,7 +4067,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.sport_data}
+                      data={this.state.outing}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -4718,9 +4082,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -4753,7 +4120,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -4780,7 +4147,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -4866,8 +4233,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -4971,7 +4337,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      Event
+                      Watching Movies
                     </Text>
                   </View>
 
@@ -4984,7 +4350,7 @@ export default class CommunityBoard extends Component {
                       borderRadius: 20,
                     }}>
                     <FlatList
-                      data={this.state.event_data}
+                      data={this.state.movies}
                       showsHorizontalScrollIndicator={false}
                       horizontal={true}
                       keyExtractor={item => item.id}
@@ -4999,9 +4365,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -5034,7 +4403,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -5061,7 +4430,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -5147,8 +4516,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -5252,7 +4620,7 @@ export default class CommunityBoard extends Component {
                         color: 'black',
                         marginLeft: 10,
                       }}>
-                      OutDoor
+                      Hiking
                     </Text>
                   </View>
 
@@ -5280,9 +4648,12 @@ export default class CommunityBoard extends Component {
                             style={{backgroundColor: 'white', borderRadius: 20}}
                             onPress={() => {
                               this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
+                                ? this.props.navigation.navigate('JobInfo', {
+                                    item: item,
+                                  })
                                 : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
+                                    'CommunityEvent',
+                                    {item: item},
                                   );
                             }}>
                             <View
@@ -5315,7 +4686,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Company Name</Text>
+                                    <Text>{item.company_name}</Text>
                                   ) : (
                                     <Text>Sun,Sep 8,10:00 AM</Text>
                                   )}
@@ -5342,7 +4713,7 @@ export default class CommunityBoard extends Component {
                                     color: '#5e5d5d',
                                   }}>
                                   {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
+                                    <Text>{item.title}</Text>
                                   ) : (
                                     <Text>{item.sub_category}</Text>
                                   )}
@@ -5428,8 +4799,7 @@ export default class CommunityBoard extends Component {
                                   <Thumbnail
                                     small
                                     source={{
-                                      uri:
-                                        'https://randomuser.me/api/portraits/women/43.jpg',
+                                      uri: item.userImg,
                                     }}
                                     style={{
                                       marginLeft: 0,
@@ -5495,201 +4865,6 @@ export default class CommunityBoard extends Component {
                                   <AIcon name="plus" size={10} color="#000" />
                                 </View>
                               </View>
-                            </View>
-                          </TouchableOpacity>
-                        );
-
-                        // });
-                      }}
-                    />
-                  </View>
-                </View>
-
-                {/* Jobs */}
-
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    height: responsiveHeight(47),
-                    shadowOpacity: 0.5,
-                    shadowRadius: 2,
-                    elevation: 10,
-                    width: responsiveWidth(100),
-                    marginBottom: 10,
-                    top: 5,
-                    borderRadius: 20,
-                  }}>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: '12%',
-                      justifyContent: 'flex-end',
-                      marginHorizontal: 10,
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: responsiveFontSize(2.7),
-                        fontWeight: '600',
-                        color: 'black',
-                        marginLeft: 10,
-                      }}>
-                      Jobs
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: responsiveHeight(40),
-                      flexDirection: 'row',
-                      marginTop: 10,
-                      borderRadius: 20,
-                    }}>
-                    <FlatList
-                      data={this.state.job_data}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={true}
-                      keyExtractor={item => item.id}
-                      renderItem={({item, index}) => {
-                        // item.Cricket.map(itm => {
-                        {
-                          console.log(item);
-                        }
-
-                        return (
-                          <TouchableOpacity
-                            style={{backgroundColor: 'white', borderRadius: 20}}
-                            onPress={() => {
-                              this.state.jobflag === true
-                                ? this.props.navigation.navigate('JobInfo',{item:item})
-                                : this.props.navigation.navigate(
-                                    'CommunityEvent',{item:item}
-                                  );
-                            }}>
-                            <View
-                              style={{backgroundColor: 'white', padding: 5}}>
-                              <View
-                                style={{
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Image
-                                  source={require('../../Assets/watch.jpg')}
-                                  style={{
-                                    width: responsiveHeight(15),
-                                    height: responsiveHeight(15),
-                                    borderRadius: 20,
-                                  }}></Image>
-                              </View>
-
-                              <View
-                                style={{
-                                  width: '100%',
-                                  borderRadius: 0,
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.4),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.company_name}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View
-                              style={{
-                                backgroundColor: 'white',
-                                height: '45%',
-                                width: 150,
-                              }}>
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(2),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {this.state.jobflag ? (
-                                    <Text>Job Title</Text>
-                                  ) : (
-                                    <Text>{item.sub_category}</Text>
-                                  )}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '40%',
-                                  justifyContent: 'flex-start',
-                                  alignItems: 'center',
-                                }}>
-                                <Thumbnail
-                                  small
-                                  source={{uri: item.userImg}}
-                                  style={{
-                                    left: 20,
-                                    borderRadius: 30,
-                                    shadowOpacity: 0.5,
-                                    shadowRadius: 2,
-                                    elevation: 5,
-                                  }}
-                                />
-                                <Text
-                                  style={{
-                                    left: 30,
-                                    fontSize: responsiveFontSize(1.8),
-                                    fontWeight: '600',
-                                    color: '#5e5d5d',
-                                  }}>
-                                  {item.user_name}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  backgroundColor: 'white',
-                                  height: '10%',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}>
-                                <EIcon
-                                  name="location"
-                                  size={20}
-                                  color="green"
-                                  style={{alignSelf: 'center'}}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: responsiveFontSize(1.5),
-                                    fontWeight: '600',
-                                    color: 'black',
-                                  }}>
-                                  {item.location}
-                                </Text>
-                              </View>
-
-                              <View
-                                style={{
-                                  backgroundColor: 'white',
-                                  width: 130,
-                                  height: '35%',
-                                  flexDirection: 'row',
-                                  left: 10,
-                                  borderRadius: 10,
-                                  top: 1,
-                                }}></View>
                             </View>
                           </TouchableOpacity>
                         );

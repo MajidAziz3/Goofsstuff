@@ -21,6 +21,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import AIcon from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-picker';
+import {JobPost} from '../../Backend/JobPost'
 
 import FA from 'react-native-vector-icons/FontAwesome';
 
@@ -29,6 +30,80 @@ class JobInfo extends Component {
     header: null,
   };
 
+  handleChoosePhoto = () => {
+    var options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      let source = response;
+      //let source = { uri: 'data:image/jpeg;base64,' + response.data };
+      this.setState(
+        {
+          photo: source.uri,
+          imageType: source.type,
+        },
+        async () => {
+          await ImageResizer.createResizedImage(
+            this.state.photo,
+            Dimensions.get('window').width,
+            Dimensions.get('window').height / 3,
+            'JPEG',
+            50,
+          ).then(resizedImage => {
+            this.setState({
+              ImageName: resizedImage.name,
+              ImageUrl: resizedImage.uri,
+            });
+          });
+        },
+      );
+    });
+  };
+  async Upload_Image() {
+    let iteratorNum = 0;
+    await _retrieveData('ref').then(async item => {
+      await uploadImage(
+        this.state.ImageUrl,
+        this.state.imageType,
+        this.state.ImageName,
+        this.state.ImageName,
+        'jobPost',
+        item,
+      );
+    });
+    let that = this;
+
+    let refreshId = setInterval(function() {
+      iteratorNum += 1;
+      _retrieveData('imageUploadProgress').then(data => {
+        that.setState({uploadProgress: data});
+        if (Number(data) >= 100) {
+          clearInterval(refreshId);
+          alert('Uploaded', 'Profile is updated', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (data == '-1') {
+          clearInterval(refreshId);
+          alert('goes wrong', 'Something went wrong', [
+            {text: 'OK', onPress: () => that.props.navigation.goBack()},
+          ]);
+        }
+        if (iteratorNum == 120) {
+          clearInterval(refreshId);
+          alert(
+            'To Long TIme',
+            'Picture uploading taking too long. Please upload a low resolution picture',
+            [{text: 'OK', onPress: () => that.props.navigation.goBack()}],
+          );
+        }
+      });
+    }, 1000);
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -61,6 +136,7 @@ class JobInfo extends Component {
           imageName: 'https://randomuser.me/api/portraits/men/94.jpg',
         },
       ],
+      item: this.props.navigation.state.params.item,
     };
   }
   handleChoosePhoto = () => {
@@ -72,7 +148,6 @@ class JobInfo extends Component {
       },
     };
     ImagePicker.showImagePicker(options, response => {
-
       if (response.didCancel) {
       } else if (response.error) {
       } else if (response.customButton) {
@@ -90,6 +165,7 @@ class JobInfo extends Component {
   };
 
   render() {
+    const {item} = this.state;
     return (
       <View
         style={{
@@ -98,7 +174,7 @@ class JobInfo extends Component {
         <ScrollView>
           <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-          <Text style={styles.welcome}>Company Name</Text>
+          <Text style={styles.welcome}>{item.company_name}</Text>
           <Ionicon
             name="ios-menu"
             size={35}
@@ -108,7 +184,7 @@ class JobInfo extends Component {
           />
           <Image
             source={{
-              uri: 'https://randomuser.me/api/portraits/men/28.jpg',
+              uri: item.company_pic,
             }}
             style={{
               height: 250,
@@ -126,7 +202,7 @@ class JobInfo extends Component {
             <Thumbnail
               small
               source={{
-                uri: 'https://randomuser.me/api/portraits/men/45.jpg',
+                uri: item.userImg,
               }}
               style={{
                 borderRadius: 30,
@@ -138,7 +214,7 @@ class JobInfo extends Component {
             />
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('CompanyProfile')}>
-              <Text style={{top: 10}}>Company Profile</Text>
+              <Text style={{top: 10}}>{item.company_name} Profile</Text>
             </TouchableOpacity>
           </View>
 
@@ -147,16 +223,24 @@ class JobInfo extends Component {
               marginTop: 60,
               marginHorizontal: 20,
             }}>
-            <Text style={styles.fontsize}>Company Phone Number:</Text>
-            <Text style={styles.fontsize}>Email Address:</Text>
+            <Text style={styles.fontsize}>
+              Company Phone Number:{item.phone}
+            </Text>
+            <Text style={styles.fontsize}>Email Address:{item.email}</Text>
             <View
               style={{
                 marginTop: 10,
               }}>
-              <Text style={styles.fontsize}>Job Title:</Text>
-              <Text style={styles.fontsize}>Descriptions:</Text>
-              <Text style={styles.fontsize}>Compensation:</Text>
-              <Text style={styles.fontsize}>Best Thing About This Job:</Text>
+              <Text style={styles.fontsize}>Job Title:{item.title}</Text>
+              <Text style={styles.fontsize}>
+                Descriptions:{item.description}
+              </Text>
+              <Text style={styles.fontsize}>
+                Compensation:{item.job_compensation}{' '}
+              </Text>
+              <Text style={styles.fontsize}>
+                Best Thing About This Job:{item.about_job}{' '}
+              </Text>
             </View>
           </View>
           <View
@@ -229,7 +313,13 @@ class JobInfo extends Component {
                 elevation: 1,
               }}
               onPress={() => {
-                alert('Posted');
+                JobPost(
+                  news_descriptions,
+                  uploading_time,
+                  like,
+                  favorite,
+                  comments,
+                );
               }}>
               <FA name="video-camera" size={18} color="#32cd32" style={{}} />
 
