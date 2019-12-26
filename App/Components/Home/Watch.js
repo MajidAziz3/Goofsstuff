@@ -246,17 +246,17 @@ export default class Watch extends Component {
         date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
     });
 
-    let data1 = await getAllOfCollection('users');
-    this.setState({ speaker: data1 });
-    let sID = [];
+    // let data1 = await getAllOfCollection('users');
+    // this.setState({ speaker: data1 });
+    // let sID = [];
 
-    let data12 = this.state.post_data;
-    let data123 = data12[0];
-    let data321 = [];
-    data321.push(data12[0])
-    this.setState({speaker1: data321, loading: false })
+    // let data12 = this.state.post_data;
+    // let data123 = data12[0];
+    // let data321 = [];
+    // data321.push(data12[0])
+    // this.setState({speaker1: data321, loading: false })
 
-    console.log("'NEW DATAA>>>>>>", this.state.speakerID)
+    // console.log("'NEW DATAA>>>>>>", this.state.speakerID)
   };
   setModalVisible() {
     this.setState({ modalVisible: !this.state.modalVisible });
