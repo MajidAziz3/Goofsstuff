@@ -178,6 +178,7 @@ export async function saveDataWithoutDocId(collection, jsonObject) {
   // return docRef;
 }
 export async function addToArray(collection, doc, array, value) {
+  console.log("thererererererererer")
   let docRef = await firebase
     .firestore()
     .collection(collection)
@@ -391,9 +392,11 @@ export async function uploadGroupImage(
   group_location,
   group_name,
 ) {
-  //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
+
+  //keep reference to original value
+  const originalXMLHttpRequest = window.XMLHttpRequest;
   window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
   window.Blob = Blob;
 
@@ -406,42 +409,46 @@ export async function uploadGroupImage(
 
   let uploadTask = imageRef.put(blob, {contentType: mime, name: name});
 
-  // let progress = 0;
+  let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
-    function(snapshot) {
-      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    snapshot => {
+      console.log('Bytes transferred ' + snapshot.bytesTransferred);
+      console.log('Total bytes ' + snapshot.totalBytes);
+      // var progress = ( (snapshot.bytesTransferred / snapshot.totalBytes) * 100 );
       if (progress < 30) progress += 10;
       else if (progress >= 30) progress += 5;
       else if (progress >= 85) progress += 1;
       else if (progress >= 95) progress += 0.1;
 
-      _storeData('imageUploadProgress', progress.toString());
+      _storeData(
+        GlobalConst.STORAGE_KEYS.imageUploadProgress,
+        progress.toString(),
+      );
       switch (snapshot.state) {
         case firebase.storage.TaskState.PAUSED:
+          console.log('Upload is paused');
           break;
         case firebase.storage.TaskState.RUNNING:
+          console.log('Upload is running');
           break;
       }
     },
-    function(error) {
-      _storeData('imageUploadProgress', '-1');
+    error => {
+      console.log(error);
+      _storeData('imageUploadProgress', '-1').then(
+        () => {
+          return 0;
+        },
+      );
     },
-    function() {
+    () => {
+      window.XMLHttpRequest = originalXMLHttpRequest;
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-        console.log(
-          'traffic',
-          docRef,
-          group_admins,
-          group_description,
-          group_location,
-          group_member,
-          group_name,
-          downloadURL,
-        );
+      uploadTask.snapshot.ref.getDownloadURL().then(async downloadURL => {
         setTimeout(() => {
+          console.log('the digit techs..............');
           addToArray(databaseCollection, docRef, 'group', {
             imageUrl: downloadURL,
             userId: docRef,

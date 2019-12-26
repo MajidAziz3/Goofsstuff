@@ -60,7 +60,7 @@ export default class AddGroup extends Component {
       ImageName: null,
       ImageUrl: null,
       item: this.props.navigation.state.params.item,
-      items: this.props.navigation.state.params.items,
+      items: [],
     };
   }
 

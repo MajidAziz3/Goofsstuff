@@ -892,7 +892,7 @@ export default class GoodNews extends Component {
                             flexDirection: 'column',
                             marginLeft: responsiveWidth(2)
                           }}>
-                          <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text>
+                          {/* <Text style={{ fontSize: 1, color: 'white' }}>{date = item.uploading_time.split(' ')}</Text> */}
                           <Text
                             style={{
                               fontSize: responsiveFontSize(3),
@@ -906,7 +906,7 @@ export default class GoodNews extends Component {
                               fontSize: responsiveFontSize(1.5),
                               color: '#7e7a7a',
                             }}>
-                            {date[0]} at {this.calculateTime(date[1])}
+                            {/* {date[0]} at {this.calculateTime(date[1])} */}
                           </Text>
                         </View>
                       </View>
