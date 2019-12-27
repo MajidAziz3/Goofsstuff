@@ -44,9 +44,6 @@ export default class Chartlist extends Component {
   }
 
   componentDidMount = async () => {
-    let data = this.state.userData;
-    data.push(this.state.item);
-    this.setState({userData: data});
     await firebase
       .firestore()
       .collection('friends')
@@ -95,7 +92,6 @@ export default class Chartlist extends Component {
         <TouchableOpacity
           style={styles.InviteFriendsContainer}
           onPress={() => this.groupInvitation(item)}>
-          {/* <Ionicon name='md-person-add' size={25} color='#3fee4a' style={{}}/> */}
           <Entypo name="plus" size={25} color="#3fee4a" style={{}} />
         </TouchableOpacity>
       </View>

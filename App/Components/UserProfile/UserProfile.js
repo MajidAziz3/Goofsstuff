@@ -167,10 +167,7 @@ class UserProfile extends Component {
   }
 
   componentDidMount = async () => {
-    await firebase
-      .firestore()
-      .collection('users')
-      .onSnapshot(async () => {
+    this.props.navigation.addListener('willFocus', async () => {
         await _retrieveData('user').then(async result => {
           await getData('users', result).then(async res =>
             this.setState(
@@ -182,29 +179,24 @@ class UserProfile extends Component {
               this.getPostData(res.userId),
               // this.groupData(res.groups)
               await res.groups.map(async itm => {
-                await firebase
-                  .firestore()
-                  .collection('Create_Group')
-                  .onSnapshot(async () => {
-                    await getData('Create_Group', itm).then(response => {
-                      response.group.map(res => {
-                        let data2 = this.state.group_data;
-                        new Promise((resolve, reject) => {
-                          let i = 0;
-                          //   });
-                          res.group_member.forEach(item => {
-                            i++;
-                            if (item == result) {
-                              data2.push(response.group);
+                await getData('Create_Group', itm).then(response => {
+                  response.group.map(res => {
+                    let data2 = [];
+                    new Promise((resolve, reject) => {
+                      let i = 0;
+                      //   });
+                      res.group_member.forEach(item => {
+                        i++;
+                        if (item == result) {
+                          data2.push(response.group);
 
-                              resolve();
-                            }
-                          });
-                        }).then(result => {
-                          this.setState({group_data: data2});
-                        });
+                          resolve();
+                        }
                       });
+                    }).then(result => {
+                      this.setState({group_data: data2});
                     });
+                      });
                   });
               }),
             ),

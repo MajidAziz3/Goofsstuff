@@ -61,6 +61,7 @@ export default class AddGroup extends Component {
       ImageUrl: null,
       item: this.props.navigation.state.params.item,
       items: [],
+      group_invitation:[]
     };
   }
 
@@ -124,6 +125,7 @@ export default class AddGroup extends Component {
       group_location,
       group_name,
       items,
+      group_invitation
     } = this.state;
     console.log('itemsssssssssssssssssssssssssss', this.state.items);
     let iteratorNum = 0;
@@ -147,6 +149,7 @@ export default class AddGroup extends Component {
         group_description,
         group_location,
         group_name,
+        group_invitation
       );
     });
     let that = this;
