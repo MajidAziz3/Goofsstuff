@@ -220,7 +220,7 @@ class MainAuth extends Component {
                     alignItems: 'center',
                     marginBottom: 30,
                   }}
-                  onPress={() => this.props.navigation.navigate('Signup')}>
+                  onPress={() => this.props.navigation.navigate('Login')}>
                   <Text
                     style={{
                       fontSize: responsiveFontSize(2.6),
@@ -228,7 +228,7 @@ class MainAuth extends Component {
                       color: 'white',
                       marginright: 10,
                     }}>
-                    SignUp
+                    Login
                     <AIcon name="arrowright" size={20} color="white" />
                   </Text>
                 </TouchableOpacity>

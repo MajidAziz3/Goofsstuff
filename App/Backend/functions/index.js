@@ -36,48 +36,42 @@ function getUser(userToken) {
 }
 
     exports.sendNotification = functions.firestore
-    .document('Orders/{id}')
+    .document('users/{id}')
     .onUpdate(async (change, context) => {
         console.log(context)
-        console.log(change.after.data())
-        console.log(change.before.data())
+        console.log(change.after.data().send_request)
+        index = change.after.data().send_request.length
+        request = change.after.data().send_request[index-1]
+        console.log('Request',request);
 
-        length = change.after.data().Orders.length
-        let Order = change.after.data().Orders[length-1]
-        console.log(Order)
+        await getUser(request.userId).then(async(reciever)=>{
+            await getUser(context.params.id).then(async(sender)=>{
+                const payload = {
+                            notification: {
+                                title: "Friend Request",
+                                body: `${sender.name} sent you a friend request.`,
+                                // icon: follower.photoURL
+                            }
+                        };
+                        
+                        console.log(payload)
+                        return admin.messaging().sendToDevice(reciever.fcmToken, payload).then(reponse => {
+                            return console.log(`A new notification`);
+                        });
 
-        await getRestaurant(Order.restaurantId).then((Restaurants)=>{
-
-            if(Order.cancelled == true)
-            {
-            const payload = {
-                notification: {
-                    title: "Reservation Cancelled",
-                    body: `Reservation # ${Order.reservationCode} cancelled from ${Order.customerName}.`,
-                    // icon: follower.photoURL
-                }
-            };
+            })
+        })
+         // console.log(change.before.data())
+        // const payload = {
+        //         notification: {
+        //             title: "Friend Request",
+        //             body: `Reservation # ${Order.reservationCode} cancelled from ${Order.customerName}.`,
+        //             // icon: follower.photoURL
+        //         }
+        //     };
             
-            console.log(payload)
-            return admin.messaging().sendToDevice(Restaurants.fcmToken, payload).then(reponse => {
-                return console.log(`A new notification for ${Order}`);
-            });
-        }
-        else{
-            const payload = {
-                notification: {
-                    title: "New Reservation",
-                    body: `${Order.customerName} has reserved slot for date ${Order.date} and time ${Order.time}\nReservation code ${Order.reservationCode}.`,
-                    // icon: follower.photoURL
-                }
-            };
-            
-            console.log(payload)
-            return admin.messaging().sendToDevice(Restaurants.fcmToken, payload).then(reponse => {
-                return console.log(`A new notification for ${Order}`);
-            });
-        }
-           
-
-        });        
+        //     console.log(payload)
+        //     return admin.messaging().sendToDevice(Restaurants.fcmToken, payload).then(reponse => {
+        //         return console.log(`A new notification for ${Order}`);
+        //     });
     });

@@ -25,6 +25,8 @@ import {
 } from 'react-native-responsive-dimensions';
 import validator from 'validator';
 import {signinUser} from '../../Backend/Authentication/SigninUser';
+import { saveData } from '../../Backend/Utility';
+import { _retrieveData } from '../../Backend/AsyncStore/AsyncFunc';
 
 ///Login 5th Screen
 const uri = 'https://facebook.github.io/react-native/docs/assets/favicon.png';
@@ -53,11 +55,19 @@ class Login extends Component {
     //   passwordInput.focus();
     //   return;
     // }
-    await signinUser(email, password).then(result => {
+    await signinUser(email, password).then(async (result) => {
       if (result == undefined) {
         this.props.navigation.navigate('App');
       } else {
-        this.props.navigation.navigate('App');
+        
+        await _retrieveData('user').then(async(token)=>{
+          await _retrieveData('fcmToken').then(async(fcm)=>{
+            await saveData('users',token,{fcmToken:fcm}).then(async()=>{
+              this.props.navigation.navigate('App');
+            })
+          })
+        })
+        
       }
     });
   };
