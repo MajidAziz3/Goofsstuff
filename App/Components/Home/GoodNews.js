@@ -36,11 +36,8 @@ import ImagePicker from 'react-native-image-picker';
 import ImageView from 'react-native-image-view';
 import {
   getAllOfCollection,
-  getDocByKeyValue,
-  getDocRefByKeyValue,
   getData,
   addToArray,
-  uploadImage,
   uploadImageComment,
   deleteArray,
 } from '../../Backend/Utility';
@@ -1045,7 +1042,6 @@ export default class GoodNews extends Component {
                           flexDirection: 'row',
                           paddingHorizontal: 0,
                           backgroundColor: 'white',
-
                           // alignItems: item.imageUrl || item.videoUrl ?null: 'center',
                           // alignSelf: item.imageUrl || item.videoUrl ?null: 'center',
                           marginHorizontal: 10,

@@ -98,6 +98,7 @@ export default class Notification extends Component {
       loading: true,
       data_user: null,
       data: [],
+      group_invitation: [],
     };
   }
 
@@ -107,15 +108,37 @@ export default class Notification extends Component {
       .collection('users')
       .onSnapshot(async () => {
         await _retrieveData('user').then(async result => {
-          await getData('users', result).then(res =>
+          await getData('users', result).then(res => {
+            return res.group_invitation.map(async item => {
+              await getData('Create_Group', item).then(response => {
+                response.group.map(resp => {
+                  let data2 = [];
+                  new Promise((resolve, reject) => {
+                    let i = 0;
+                    //   });
+                    resp.group_invitation.forEach(item => {
+                      i++;
+                      if (item == result) {
+                        data2.push(response.group);
+
+                        resolve();
+                      }
+                    });
+                  }).then(result => {
+                    this.setState({group_invitation: data2});
+                  });
+                })
+              })
+            
             this.setState({
               data_user: res,
               friend_request: res.pending_friends,
               userId: res.userId,
               loading: false,
               data: res.familyInvitation,
-            }),
-          );
+            });
+          });
+          });
         });
       });
   };
@@ -377,7 +400,7 @@ export default class Notification extends Component {
               }>
               <FlatList
                 style={styles.root}
-                data={this.state.data}
+                data={this.state.group_invitation}
                 extraData={this.state}
                 ItemSeparatorComponent={() => {
                   return <View style={styles.separator} />;

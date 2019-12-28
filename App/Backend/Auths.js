@@ -52,6 +52,7 @@ export async function signUp(
             kindness: kindness,
             send_request: send_request,
             familyInvitation: familyInvitation,
+            group_invitation:familyInvitation
           }).then(res => {
             return res;
           });
