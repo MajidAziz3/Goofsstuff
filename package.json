@@ -15,7 +15,7 @@
     "@react-native-community/viewpager": "^2.0.1",
     "@valdio/react-native-scrollable-tabview": "^0.8.12",
     "firebase": "^7.2.2",
-    "lodash": "^4.13.1",
+    "lodash": "^4.17.19",
     "native-base": "^2.13.8",
     "node": "^10.17.0",
     "react": "16.9.0",
